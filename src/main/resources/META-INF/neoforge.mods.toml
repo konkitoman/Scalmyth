@@ -1,0 +1,43 @@
+modLoader="javafml" #mandatory
+loaderVersion="[1,)" #mandatory
+
+license="MIT"
+
+[[mods]] #mandatory
+modId="scalmyth"
+version="0.0.1" #mandatory
+displayName="Scalmyth" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+# A URL for the "homepage" for this mod, displayed in the mod UI
+#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
+# A file name (in the root of the mod JAR) containing a logo for display
+#logoFile="examplemod.png" #optional
+# A text field displayed in the mod UI
+#credits="" #optional
+# A text field displayed in the mod UI
+authors="Nyxane" #optional
+description='''Rawr'''
+
+# The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+#[[mixins]]
+#config="shrinkem.mixins.json"
+
+# The [[accessTransformers]] block allows you to declare where your AT file is.
+# If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
+#[[accessTransformers]]
+#file="META-INF/accesstransformer.cfg"
+
+[[dependencies.shrinkem]] #optional
+    modId="neoforge" #mandatory
+    type="required" #mandatory
+    versionRange="[21.1.128,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.shrinkem]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1]"
+    ordering="NONE"
+    side="BOTH"
