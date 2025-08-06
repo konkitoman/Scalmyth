@@ -6,19 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ScalmythModel extends GeoModel<ScalmythEntity> {
-    @Override
-    public ResourceLocation getModelResource(ScalmythEntity animatable) {
-        return ScalmythAPI.rl("geo/scalamyth.geo.json");
-    }
+  @Override
+  public ResourceLocation getModelResource(ScalmythEntity animatable) {
+    return ScalmythAPI.rl("geo/scalamyth.geo.json");
+  }
 
-    @Override
-    public ResourceLocation getTextureResource(ScalmythEntity animatable) {
-        return ScalmythAPI.rl("textures/scalamyth.png");
-    }
+  @Override
+  public ResourceLocation getTextureResource(ScalmythEntity animatable) {
+    return ScalmythAPI.rl("textures/scalamyth.png");
+  }
 
-    @Override
-    public ResourceLocation getAnimationResource(ScalmythEntity animatable) {
-        return ScalmythAPI.rl("animations/scalamyth.animation.json");
+  @Override
+  public ResourceLocation getAnimationResource(ScalmythEntity animatable) {
+    return ScalmythAPI.rl("animations/scalamyth.animation.json");
 
-    }
+  }
 }

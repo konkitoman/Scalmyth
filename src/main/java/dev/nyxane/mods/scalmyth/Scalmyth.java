@@ -4,6 +4,7 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.Entities;
+import dev.nyxane.mods.scalmyth.registry.Sounds;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -17,16 +18,17 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 public class Scalmyth
 {
 
-    public Scalmyth(IEventBus modEventBus, ModContainer modContainer)
-    {
-        Entities.register(modEventBus);
-    }
-    @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-                public static void onClientSetup(FMLClientSetupEvent event) {
+  public Scalmyth(IEventBus modEventBus, ModContainer modContainer)
+  {
+    Entities.register(modEventBus);
+    Sounds.register(modEventBus);
+  }
+  @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+  public static class ClientModEvents {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
 
-            EntityRenderers.register(Entities.SCALMYTH.get(), ScalmythRenderer::new);
-        }
+      EntityRenderers.register(Entities.SCALMYTH.get(), ScalmythRenderer::new);
     }
+  }
 }

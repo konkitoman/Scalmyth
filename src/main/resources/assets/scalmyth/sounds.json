@@ -1,0 +1,30 @@
+{
+    "scalmyth.attack": {
+        "sounds": [
+            "scalmyth:spider_monkey_attack_1_v1",
+            "scalmyth:spider_monkey_attack_2_v1"
+        ]
+    },
+    "scalmyth.death": {
+        "subtitle": "meep",
+
+        "sounds": [
+            {
+                "name":"scalmyth:spider_monkey_death_1",
+                "volume": 0.4
+            }
+        ]
+    },
+    "scalmyth.footsteps": {
+        "subtitle": "meep",
+
+        "sounds": [
+            {
+                "name":"scalmyth:spider_monkey_footstep_1_v1"
+            },
+            {
+                "name":"scalmyth:spider_monkey_footstep_2_v1"
+            }
+        ]
+    }
+}
