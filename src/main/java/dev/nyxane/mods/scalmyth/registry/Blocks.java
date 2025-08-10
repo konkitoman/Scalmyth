@@ -3,6 +3,7 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.PedestalBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
+import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 public class Blocks {
   public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
   public static final DeferredBlock<Block> ASHEN_GRASS = BLOCKS.register("ashen_grass", AshenGrassBlock::new);
+  public static final DeferredBlock<Block> ASHEN_SHORT_GRASS = BLOCKS.register("ashen_short_grass", AshenShortGrassBlock::new);
 //  DeferredHolder<Block,? extends Block> PEDESTAL = registerBlock("pedestal", () -> new PedestalBlock());
     //redid the register to be more viable for bulk i guess, my methods are whatever though
 

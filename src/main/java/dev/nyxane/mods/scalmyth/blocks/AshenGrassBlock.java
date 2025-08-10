@@ -3,6 +3,7 @@ package dev.nyxane.mods.scalmyth.blocks;
 import net.minecraft.world.level.block.Block;
 
 import net.neoforged.neoforge.common.util.DeferredSoundType;
+import dev.nyxane.mods.scalmyth.block_operations.AshenGrassBonemeal;
 
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,9 +70,6 @@ public class AshenGrassBlock extends Block implements BonemealableBlock {
 
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState blockstate) {
-        BlockPos checkPos = BlockPos.containing(pos.getX(), pos.getY() + 1, pos.getZ());
-        if (world.isEmptyBlock(checkPos)) {
-            world.setBlock(checkPos, Blocks.BRICKS.defaultBlockState(), 3);
-        }
+        AshenGrassBonemeal.useOn(world,pos);
     }
 }

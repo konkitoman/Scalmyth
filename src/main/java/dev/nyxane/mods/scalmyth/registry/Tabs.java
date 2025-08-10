@@ -33,6 +33,8 @@ public class Tabs {
             tabData.accept(Blocks.ASHEN_GRASS.get().asItem());
         } else if (tabData.getTabKey().equals(SCALMYTH_TAB.getKey())) {
             tabData.accept(Items.SCALMYTH_SPAWN_EGG.get().asItem());
+            tabData.accept(Items.ASHEN_SHORT_GRASS.get().asItem());
+            tabData.accept(Items.ASH_DUST.get());
         }
     }
 }
