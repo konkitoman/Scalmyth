@@ -14,8 +14,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class Entities {
   public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ScalmythAPI.MOD_ID);
-  public static final DeferredHolder<EntityType<?>, EntityType<ScalmythEntity>> SCALMYTH = ENTITY_TYPES.register("scalmyth",()-> EntityType.Builder.of(ScalmythEntity::new, MobCategory.MONSTER).sized(1.0f,1.0f).build(ScalmythAPI.rl("scalmyth").toString()));
-
+  public static final DeferredHolder<EntityType<?>, EntityType<ScalmythEntity>>
+          SCALMYTH = ENTITY_TYPES.register("scalmyth",()->
+              EntityType.Builder.of(ScalmythEntity::new,
+                      MobCategory.MONSTER).sized(8.0f,4.0f).build(ScalmythAPI.rl("scalmyth").toString()));
 
   public static void register(IEventBus eventBus) {
     ENTITY_TYPES.register(eventBus);
