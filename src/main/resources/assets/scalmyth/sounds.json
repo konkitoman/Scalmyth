@@ -26,5 +26,61 @@
                 "name":"scalmyth:spider_monkey_footstep_2_v1"
             }
         ]
-    }
+    },
+  "ashen.earth.break": {
+    "subtitle": "subtitles.ashen.earth.break",
+    "sounds": [
+      {
+        "name": "scalmyth:ashen.earth.break2",
+        "stream": false
+      },
+      {
+        "name": "scalmyth:ashen.earth.break1",
+        "stream": false
+      },
+      {
+        "name": "scalmyth:ashen.earth.break0",
+        "stream": false
+      }
+    ]
+  },
+  "ashen.earth.place": {
+    "subtitle": "subtitles.ashen.earth.place",
+    "sounds": [
+      {
+        "name": "scalmyth:ashen.earth.place0",
+        "stream": false
+      }
+    ]
+  },
+  "ashen.earth.step": {
+    "subtitle": "subtitles.ashen.earth.step",
+    "sounds": [
+      {
+        "name": "scalmyth:ashen.earth.step2",
+        "stream": false
+      },
+      {
+        "name": "scalmyth:ashen.earth.step1",
+        "stream": false
+      },
+      {
+        "name": "scalmyth:ashen.earth.step0",
+        "stream": false
+      }
+    ]
+  },
+  "ashen.earth.mine": {
+    "subtitle": "subtitles.ashen.earth.mine",
+    "sounds": [
+      {
+        "name": "scalmyth:ashen.earth.mine1",
+        "stream": false
+      },
+      {
+        "name": "scalmyth:ashen.earth.mine0",
+        "stream": false
+      }
+    ]
+  }
 }

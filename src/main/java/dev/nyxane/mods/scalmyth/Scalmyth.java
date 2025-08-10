@@ -5,6 +5,9 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.Entities;
 import dev.nyxane.mods.scalmyth.registry.Sounds;
+import dev.nyxane.mods.scalmyth.registry.Items;
+import dev.nyxane.mods.scalmyth.registry.Blocks;
+import dev.nyxane.mods.scalmyth.registry.Tabs;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -21,7 +24,10 @@ public class Scalmyth
   public Scalmyth(IEventBus modEventBus, ModContainer modContainer)
   {
     Entities.register(modEventBus);
+    Tabs.REGISTRY.register(modEventBus);
     Sounds.register(modEventBus);
+    Items.REGISTRY.register(modEventBus);
+    Blocks.register(modEventBus);
   }
   @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
   public static class ClientModEvents {
