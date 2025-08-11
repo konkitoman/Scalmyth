@@ -45,6 +45,7 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   protected static final RawAnimation WALK = RawAnimation.begin().then("walk",Animation.LoopType.LOOP);
   protected static final RawAnimation WALKING = RawAnimation.begin().then("walking",Animation.LoopType.LOOP);
   private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+  private Level tempWorld; //reusable value for world, declared here to save ram access costs
 
   public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
     super(entityType, level);
@@ -96,8 +97,6 @@ public class ScalmythEntity extends Monster implements GeoEntity {
       }
     }
     return PlayState.CONTINUE;
-
-
   }
 
   @Override
@@ -107,7 +106,7 @@ public class ScalmythEntity extends Monster implements GeoEntity {
 
   public static AttributeSupplier setAttributes() {
     AttributeSupplier.Builder builder = Mob.createMobAttributes();
-    builder = builder.add(Attributes.MOVEMENT_SPEED, 0.32);
+    builder = builder.add(Attributes.MOVEMENT_SPEED, 0.3);
     builder = builder.add(Attributes.MAX_HEALTH, 200);
     builder = builder.add(Attributes.ARMOR, 0);
     builder = builder.add(Attributes.ATTACK_DAMAGE, 4);
@@ -116,38 +115,28 @@ public class ScalmythEntity extends Monster implements GeoEntity {
     return builder.build();
   }
 
-/*    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new RandomStrollGoal(this,0.5f,50));
-    }*/
-
   @Override
   protected void registerGoals() {
     super.registerGoals();
     this.goalSelector.addGoal(1, new BreathAirGoal(this) {
       @Override
       public boolean canUse() {
-        double x = ScalmythEntity.this.getX();
-        double y = ScalmythEntity.this.getY();
-        double z = ScalmythEntity.this.getZ();
-        Entity entity = ScalmythEntity.this;
-        Level world = ScalmythEntity.this.level();
-        return super.canUse() && entity.isInWater();
+        tempWorld = ScalmythEntity.this.level(); //is run actively, unlike addGoal, so this is needed to be set constantly
+        return super.canUse() && ScalmythEntity.this.isInWater();
       }
       @Override
       public boolean canContinueToUse() {
-        double x = ScalmythEntity.this.getX();
-        double y = ScalmythEntity.this.getY();
-        double z = ScalmythEntity.this.getZ();
-        Entity entity = ScalmythEntity.this;
-        Level world = ScalmythEntity.this.level();
-        return super.canContinueToUse() && entity.isInWater();
+        tempWorld = ScalmythEntity.this.level(); //is run actively, unlike addGoal, so this is needed to be set constantly
+        return super.canContinueToUse() && ScalmythEntity.this.isInWater();
       }
     });
     this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true) {
       @Override
       protected boolean canPerformAttack(LivingEntity entity) {
-        return this.isTimeToAttack() && this.mob.distanceToSqr(entity) < (this.mob.getBbWidth() * this.mob.getBbWidth() + entity.getBbWidth()) && this.mob.getSensing().hasLineOfSight(entity);
+        return (isTimeToAttack() &&
+                mob.distanceToSqr(entity) < (mob.getBbWidth() * mob.getBbWidth() + entity.getBbWidth())
+                && mob.getSensing().hasLineOfSight(entity)
+            );
       }
     });
     this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, false, false));
@@ -162,20 +151,21 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   }
 
   @Override
-  public boolean hurt(DamageSource damagesource, float amount) {
-    if (damagesource.is(DamageTypes.IN_FIRE))
+  public boolean hurt(DamageSource damagesource, float amount) { //commented out for now, to make it impossible to damage- in most cases
+//    if (damagesource.is(DamageTypes.IN_FIRE))
+//      return false;
+//    if (damagesource.is(DamageTypes.FALL))
+//      return false;
+//    if (damagesource.is(DamageTypes.DROWN))
+//      return false;
+//    if (damagesource.is(DamageTypes.LIGHTNING_BOLT))
+//      return false;
+//    if (damagesource.is(DamageTypes.DRAGON_BREATH))
+//      return false;
+//    if (damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
+//      return false;
+//    return super.hurt(damagesource, amount);
       return false;
-    if (damagesource.is(DamageTypes.FALL))
-      return false;
-    if (damagesource.is(DamageTypes.DROWN))
-      return false;
-    if (damagesource.is(DamageTypes.LIGHTNING_BOLT))
-      return false;
-    if (damagesource.is(DamageTypes.DRAGON_BREATH))
-      return false;
-    if (damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
-      return false;
-    return super.hurt(damagesource, amount);
   }
 
   @Override

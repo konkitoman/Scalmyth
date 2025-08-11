@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.nyxane.mods.scalmyth.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AxeItemMixin",
+    "NoiseGeneratorSettingsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

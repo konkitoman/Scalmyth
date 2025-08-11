@@ -13,14 +13,17 @@ public class Sounds {
   public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
     DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ScalmythAPI.MOD_ID);
 
-  public static final Supplier<SoundEvent> SCALMYTH_ATTACK = registerSoundEvent("scalmyth.attack");
-  public static final Supplier<SoundEvent> SCALMYTH_DEATH = registerSoundEvent("scalmyth.death");
-  public static final Supplier<SoundEvent> SCALMYTH_FOOTSTEPS = registerSoundEvent("scalmyth.footsteps");
-  public static final Supplier<SoundEvent> SCALMYTH_JUMP = registerSoundEvent("scalmyth.jump");
-  public static final Supplier<SoundEvent> SCALMYTH_LAND = registerSoundEvent("scalmyth.land");
-  public static final Supplier<SoundEvent> SCALMYTH_SHRIEK = registerSoundEvent("scalmyth.shriek");
-  public static final Supplier<SoundEvent> SCALMYTH_IDLE = registerSoundEvent("scalmyth.idle");
-
+    public static final Supplier<SoundEvent> SCALMYTH_ATTACK = registerSoundEvent("scalmyth.attack");
+    public static final Supplier<SoundEvent> SCALMYTH_DEATH = registerSoundEvent("scalmyth.death");
+    public static final Supplier<SoundEvent> SCALMYTH_FOOTSTEPS = registerSoundEvent("scalmyth.footsteps");
+    public static final Supplier<SoundEvent> SCALMYTH_JUMP = registerSoundEvent("scalmyth.jump");
+    public static final Supplier<SoundEvent> SCALMYTH_LAND = registerSoundEvent("scalmyth.land");
+    public static final Supplier<SoundEvent> SCALMYTH_SHRIEK = registerSoundEvent("scalmyth.shriek");
+    public static final Supplier<SoundEvent> SCALMYTH_IDLE = registerSoundEvent("scalmyth.idle");
+    public static final Supplier<SoundEvent> SCALMYTH_ASHEN_EARTH_PLACE = registerSoundEvent("ashen.earth.place");
+    public static final Supplier<SoundEvent> SCALMYTH_ASHEN_EARTH_BREAK = registerSoundEvent("ashen.earth.break");
+    public static final Supplier<SoundEvent> SCALMYTH_ASHEN_EARTH_MINE = registerSoundEvent("ashen.earth.mine");
+    public static final Supplier<SoundEvent> SCALMYTH_ASHEN_EARTH_STEP = registerSoundEvent("ashen.earth.step");
 
   private static Supplier<SoundEvent> registerSoundEvent(String name) {
     ResourceLocation id = ScalmythAPI.rl(name);
