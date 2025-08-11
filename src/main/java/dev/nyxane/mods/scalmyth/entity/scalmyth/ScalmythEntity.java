@@ -2,10 +2,14 @@ package dev.nyxane.mods.scalmyth.entity.scalmyth;
 
 import dev.nyxane.mods.scalmyth.registry.Sounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,11 +25,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class ScalmythEntity extends Monster implements GeoEntity {
@@ -43,6 +49,21 @@ public class ScalmythEntity extends Monster implements GeoEntity {
 
   public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
     super(entityType, level);
+  }
+
+  public static void applyDarknessAround(ServerLevel level, Vec3 pos, @Nullable Entity source, int radius) {
+    MobEffectInstance mobeffectinstance = new MobEffectInstance(MobEffects.DARKNESS, 260, 0, false, false);
+    MobEffectUtil.addEffectToPlayersAround(level, source, pos, (double) radius, mobeffectinstance, 200);
+  }
+
+  @Override
+  protected void customServerAiStep() {
+    super.customServerAiStep();
+    ServerLevel serverlevel = (ServerLevel) this.level();
+
+    if ((this.tickCount + this.getId()) % 120 == 0) {
+      applyDarknessAround(serverlevel, this.position(), this, 30);
+    }
   }
 
   @Override
