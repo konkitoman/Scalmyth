@@ -20,7 +20,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 @Mod(ScalmythAPI.MOD_ID)
 public class Scalmyth
 {
-
   public Scalmyth(IEventBus modEventBus, ModContainer modContainer)
   {
     Entities.register(modEventBus);
