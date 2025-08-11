@@ -1,9 +1,8 @@
 {
   "item.scalmyth.scalmyth_spawn_egg": "Scalmyth Spawn Egg",
-  "subtitles.ashen.earth.break": "Ashen Earth Block Broken",
-  "subtitles.ashen.earth.place": "Ashen Earth Block Placed",
-  "subtitles.ashen.earth.step": "Steps On Ashen Earth",
-  "subtitles.ashen.earth.mine": "Digging Ashen Earth",
-  "block.scalmyth.ashen_grass": "Ashen Grass",
+  "block.scalmyth.ashen_grass": "Ashen Grass Block",
+  "block.scalmyth.black_log": "Black Log",
+  "block.scalmyth.stripped_black_log": "Stripped Black Log",
+  "block.scalmyth.ashen_short_grass": "Short Ashen Grass",
   "item_group.scalmyth.scalmyth_tab": "Scalmyth"
 }
