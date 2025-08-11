@@ -28,7 +28,7 @@
         ]
     },
   "ashen.earth.break": {
-    "subtitle": "subtitles.ashen.earth.break",
+    "subtitle": "subtitles.block.generic.break",
     "sounds": [
       {
         "name": "scalmyth:ashen.earth.break2",
@@ -45,7 +45,7 @@
     ]
   },
   "ashen.earth.place": {
-    "subtitle": "subtitles.ashen.earth.place",
+    "subtitle": "subtitles.block.generic.place",
     "sounds": [
       {
         "name": "scalmyth:ashen.earth.place0",
@@ -54,7 +54,7 @@
     ]
   },
   "ashen.earth.step": {
-    "subtitle": "subtitles.ashen.earth.step",
+    "subtitle": "subtitles.block.generic.footsteps",
     "sounds": [
       {
         "name": "scalmyth:ashen.earth.step2",
@@ -71,7 +71,7 @@
     ]
   },
   "ashen.earth.mine": {
-    "subtitle": "subtitles.ashen.earth.mine",
+    "subtitle": "subtitles.block.generic.hit",
     "sounds": [
       {
         "name": "scalmyth:ashen.earth.mine1",

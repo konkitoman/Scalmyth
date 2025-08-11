@@ -50,7 +50,7 @@ public class Blocks {
 
   }
 
-    public static void register(IEventBus eventBus) {
-        BLOCKS.register(eventBus);
-    }
+  public static void register(IEventBus eventBus) {
+      BLOCKS.register(eventBus);
+  }
 }
