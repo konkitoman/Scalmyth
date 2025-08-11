@@ -59,7 +59,7 @@ public class AshenShortGrassBlock extends FlowerBlock implements BonemealableBlo
             int y = pos.getY();
             int z = pos.getZ();
             additionalCondition = ((world.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.ASHEN_GRASS.get()
-                    && world.isEmptyBlock(BlockPos.containing(x, y, z))
+                    && world.isEmptyBlock(BlockPos.containing(x, y + 1, z))
             );
         }
         return groundState.is(Blocks.ASHEN_GRASS.get()) && additionalCondition;
