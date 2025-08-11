@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "scalmyth:block/blackgrass_tall_1"
+  }
+}

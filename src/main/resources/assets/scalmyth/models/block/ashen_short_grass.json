@@ -1,10 +1,9 @@
 {
   "parent": "scalmyth:block/grass_short",
   "textures": {
-    "all": "scalmyth:block/blackgrass_short_1",
-    "particle": "scalmyth:block/blackgrass_tall_1",
     "0": "scalmyth:block/blackgrass_short_1",
-    "1": "scalmyth:block/blackgrass_short_2"
+    "1": "scalmyth:block/blackgrass_short_2",
+    "particle": "scalmyth:block/blackgrass_tall_1"
   },
   "render_type": "cutout"
 }

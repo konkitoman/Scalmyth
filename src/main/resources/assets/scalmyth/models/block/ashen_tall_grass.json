@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "scalmyth:block/blackgrass_tall_1",
+    "particle": "scalmyth:block/blackgrass_tall_1"
+  },
+  "render_type": "cutout"
+}

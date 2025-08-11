@@ -4,5 +4,11 @@
   "block.scalmyth.black_log": "Black Log",
   "block.scalmyth.stripped_black_log": "Stripped Black Log",
   "block.scalmyth.ashen_short_grass": "Short Ashen Grass",
+  "subtitles.ashen.earth.break": "Ashen Earth Block Broken",
+  "subtitles.ashen.earth.place": "Ashen Earth Block Placed",
+  "subtitles.ashen.earth.step": "Steps On Ashen Earth",
+  "subtitles.ashen.earth.mine": "Digging Ashen Earth",
+  "item.scalmyth.ash_dust": "Ash",
+  "biome.scalmyth.ashen_biome": "Ashen Biome",
   "item_group.scalmyth.scalmyth_tab": "Scalmyth"
 }
