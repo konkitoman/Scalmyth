@@ -1,11 +1,13 @@
 package dev.nyxane.mods.scalmyth.entity.scalmyth;
 
+import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.registry.Sounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -47,6 +49,9 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
   private Level tempWorld; //reusable value for world, declared here to save ram access costs
 
+  private int stage = 0;
+  private int stage_tick = 0;
+
   public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
     super(entityType, level);
   }
@@ -62,7 +67,7 @@ public class ScalmythEntity extends Monster implements GeoEntity {
     ServerLevel serverlevel = (ServerLevel) this.level();
 
     if ((this.tickCount + this.getId()) % 120 == 0) {
-      applyDarknessAround(serverlevel, this.position(), this, 30);
+      applyDarknessAround(serverlevel, this.position(), this, 50);
     }
   }
 
@@ -118,6 +123,30 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   @Override
   protected void registerGoals() {
     super.registerGoals();
+
+    AvoidEntityGoal avoid_player = new AvoidEntityGoal(this, Player.class, 50F, 3D, 1.0D){
+      @Override
+      public boolean canUse() {
+        if (stage != 1) return false;
+
+        return super.canUse();
+      }
+
+      @Override
+      public boolean canContinueToUse() {
+        if (stage != 1) return false;
+
+        if (!this.pathNav.isDone()) return true;
+
+        if (toAvoid != null && distanceTo(toAvoid) > 40){
+          stage = 2;
+          this.stop();
+        }
+
+        return false;
+      }
+    };
+
     this.goalSelector.addGoal(1, new BreathAirGoal(this) {
       @Override
       public boolean canUse() {
@@ -132,13 +161,52 @@ public class ScalmythEntity extends Monster implements GeoEntity {
     });
     this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true) {
       @Override
+      public boolean canUse() {
+        if (stage == 0 || stage == 2){
+          return super.canUse();
+        }
+        return false;
+      }
+
+      @Override
+      public boolean canContinueToUse() {
+        if (stage == 0 || stage == 2){
+          return super.canContinueToUse();
+        }
+        return false;
+      }
+
+      @Override
       protected boolean canPerformAttack(LivingEntity entity) {
-        return (isTimeToAttack() &&
-                mob.distanceToSqr(entity) < (mob.getBbWidth() * mob.getBbWidth() + entity.getBbWidth())
-                && mob.getSensing().hasLineOfSight(entity)
-            );
+        switch (stage){
+          case 0:
+            ScalmythAPI.LOGGER.info("Distance: {}", this.mob.distanceToSqr(entity));
+            if (this.mob.distanceTo(entity) < 11 ){
+              if (stage_tick > 50){
+                ScalmythAPI.LOGGER.info("RUN");
+                stage = 1;
+                this.stop();
+              }
+
+              stage_tick += 1;
+            }
+            break;
+          case 1: return false;
+          case 2:
+            boolean res = this.isTimeToAttack() && this.mob.distanceTo(entity) < 11 && this.mob.getSensing().hasLineOfSight(entity);
+
+/*            if (res){
+              stage = 0;
+              stage_tick = 0;
+            }*/
+
+            return res;
+        }
+
+        return false;
       }
     });
+    targetSelector.addGoal(1, avoid_player);
     this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, false, false));
     this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, ServerPlayer.class, false, false));
     this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
@@ -152,19 +220,9 @@ public class ScalmythEntity extends Monster implements GeoEntity {
 
   @Override
   public boolean hurt(DamageSource damagesource, float amount) { //commented out for now, to make it impossible to damage- in most cases
-//    if (damagesource.is(DamageTypes.IN_FIRE))
-//      return false;
-//    if (damagesource.is(DamageTypes.FALL))
-//      return false;
-//    if (damagesource.is(DamageTypes.DROWN))
-//      return false;
-//    if (damagesource.is(DamageTypes.LIGHTNING_BOLT))
-//      return false;
-//    if (damagesource.is(DamageTypes.DRAGON_BREATH))
-//      return false;
-//    if (damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
-//      return false;
-//    return super.hurt(damagesource, amount);
+      if (damagesource.is(DamageTypes.GENERIC_KILL) || damagesource.is(DamageTypes.IN_WALL)){
+        return super.hurt(damagesource, amount);
+      }
       return false;
   }
 
