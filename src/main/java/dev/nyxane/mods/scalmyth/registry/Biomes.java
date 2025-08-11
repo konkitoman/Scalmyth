@@ -1,5 +1,6 @@
 package dev.nyxane.mods.scalmyth.registry;
 
+import net.minecraft.world.level.biome.*;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,10 +14,6 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
-import net.minecraft.world.level.biome.FeatureSorter;
-import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +23,7 @@ import net.minecraft.core.Holder;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import com.mojang.datafixers.util.Pair;
 
@@ -44,17 +42,21 @@ public class Biomes {
                 ChunkGenerator chunkGenerator = levelStem.generator();
                 // Inject biomes to biome source
                 if (chunkGenerator.getBiomeSource() instanceof MultiNoiseBiomeSource noiseSource) {
-                    List<Pair<Climate.ParameterPoint, Holder<Biome>>> parameters = new ArrayList<>(noiseSource.parameters().values());
+                  List<Pair<Climate.ParameterPoint, Holder<Biome>>> parameters = new ArrayList<>(noiseSource.parameters().values());
+
                     addParameterPoint(parameters, new Pair<>(new Climate.ParameterPoint(Climate.Parameter.span(-0.3f, 1.5f), Climate.Parameter.span(-1.5f, 0.1f), Climate.Parameter.span(-0.5f, 1.2f), Climate.Parameter.span(-2f, -0.2f),
                             Climate.Parameter.point(0.0f), Climate.Parameter.span(-0.3f, 1f), 0), biomeRegistry.getHolderOrThrow(ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome")))));
                     addParameterPoint(parameters, new Pair<>(new Climate.ParameterPoint(Climate.Parameter.span(-0.3f, 1.5f), Climate.Parameter.span(-1.5f, 0.1f), Climate.Parameter.span(-0.5f, 1.2f), Climate.Parameter.span(-2f, -0.2f),
                             Climate.Parameter.point(1.0f), Climate.Parameter.span(-0.3f, 1f), 0), biomeRegistry.getHolderOrThrow(ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome")))));
-                    chunkGenerator.biomeSource = MultiNoiseBiomeSource.createFromList(new Climate.ParameterList<>(parameters));
+                    MultiNoiseBiomeSource biomeSource = MultiNoiseBiomeSource.createFromList(new Climate.ParameterList<>(parameters));
+                    chunkGenerator.biomeSource = biomeSource;
+                    Function<Holder<Biome>, BiomeGenerationSettings> generationSettings = chunkGenerator.generationSettingsGetter;
                     chunkGenerator.featuresPerStep = Suppliers
-                            .memoize(() -> FeatureSorter.buildFeaturesPerStep(List.copyOf(chunkGenerator.biomeSource.possibleBiomes()), biome -> chunkGenerator.generationSettingsGetter.apply(biome).features(), true));
+                            .memoize(() -> FeatureSorter.buildFeaturesPerStep(List.copyOf(biomeSource.possibleBiomes()), biome -> generationSettings.apply(biome).features(), true));
+
                 }
                 if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
-                    ((ScalmythModNoiseGeneratorSettings) (Object) noiseGenerator.settings.value()).setscalmythDimensionTypeReference(dimensionType);
+                  ((ScalmythModNoiseGeneratorSettings) (Object) noiseGenerator.settings.value()).setscalmythDimensionTypeReference(dimensionType);
                 }
             }
         }
@@ -70,13 +72,14 @@ public class Biomes {
         List<SurfaceRules.RuleSource> customSurfaceRules = new ArrayList<>();
         customSurfaceRules.add(preliminarySurfaceRule(ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome")), dev.nyxane.mods.scalmyth.registry.Blocks.ASHEN_GRASS.get().defaultBlockState(), Blocks.DIRT.defaultBlockState(),
                 Blocks.GRAVEL.defaultBlockState()));
-        if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource sequenceRuleSource) {
-            customSurfaceRules.addAll(sequenceRuleSource.sequence());
+
+          if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource(List<SurfaceRules.RuleSource> sequence)){
+            customSurfaceRules.addAll(sequence);
             return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-        } else {
+          }else{
             customSurfaceRules.add(currentRuleSource);
             return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-        }
+          }
     }
 
     private static SurfaceRules.RuleSource preliminarySurfaceRule(ResourceKey<Biome> biomeKey, BlockState groundBlock, BlockState undergroundBlock, BlockState underwaterBlock) {
