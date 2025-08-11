@@ -9,11 +9,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
-
-import java.util.function.Supplier;
 
 public class Blocks {
   public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
@@ -35,20 +32,6 @@ public class Blocks {
                           .sound(SoundType.WOOD)
                   // .ignitedByLava()
           ));
-//  DeferredHolder<Block,? extends Block> PEDESTAL = registerBlock("pedestal", () -> new PedestalBlock());
-    //redid the register to be more viable for bulk i guess, my methods are whatever though
-
-//  net.minecraft.world.level.block.Blocks
-
-  private static <T extends Block> DeferredHolder<Block,T> registerBlock(String name, Supplier<T> block) {
-    DeferredHolder<Block, T> ret = BLOCKS.register(name,block);
-//    registerBlockItem(name, block);
-    return ret;
-  }
-
-  private static <T extends Block> void registerBlockItem(String name, DeferredHolder<Block, T> block) {
-
-  }
 
   public static void register(IEventBus eventBus) {
       BLOCKS.register(eventBus);
