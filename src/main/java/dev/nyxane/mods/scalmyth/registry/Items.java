@@ -20,6 +20,8 @@ public class Items {
     public static final DeferredItem<Item> ASHEN_GRASS = block(Blocks.ASHEN_GRASS);
     public static final DeferredItem<Item> ASH_DUST = REGISTRY.register("ash_dust", AshDustItem::new);
     public static final DeferredItem<Item> ASHEN_SHORT_GRASS = block(Blocks.ASHEN_SHORT_GRASS);
+    public static final DeferredItem<Item> BLACK_LOG = block(Blocks.BLACK_LOG);
+    public static final DeferredItem<Item> STRIPPED_BLACK_LOG = block(Blocks.STRIPPED_BLACK_LOG);
 
     // Start of user code block custom items
     // End of user code block custom items

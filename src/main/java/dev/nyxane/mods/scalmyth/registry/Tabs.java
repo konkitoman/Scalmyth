@@ -35,6 +35,8 @@ public class Tabs {
             tabData.accept(Items.SCALMYTH_SPAWN_EGG.get().asItem());
             tabData.accept(Items.ASHEN_SHORT_GRASS.get().asItem());
             tabData.accept(Items.ASH_DUST.get());
+            tabData.accept(Items.BLACK_LOG.get());
+            tabData.accept(Items.STRIPPED_BLACK_LOG.get());
         }
     }
 }
