@@ -31,6 +31,7 @@ import com.google.common.base.Suppliers;
 
 @EventBusSubscriber
 public class Biomes {
+    // THE MONOLITH GAVE ME LIME DISEASE
     @SubscribeEvent
     public static void onServerAboutToStart(ServerAboutToStartEvent event) {
         MinecraftServer server = event.getServer();
@@ -73,10 +74,10 @@ public class Biomes {
         customSurfaceRules.add(preliminarySurfaceRule(ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome")), dev.nyxane.mods.scalmyth.registry.Blocks.ASHEN_GRASS.get().defaultBlockState(), Blocks.DIRT.defaultBlockState(),
                 Blocks.GRAVEL.defaultBlockState()));
 
-          if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource(List<SurfaceRules.RuleSource> sequence)){
+          if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource(List<SurfaceRules.RuleSource> sequence)) {
             customSurfaceRules.addAll(sequence);
             return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-          }else{
+          } else {
             customSurfaceRules.add(currentRuleSource);
             return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
           }
