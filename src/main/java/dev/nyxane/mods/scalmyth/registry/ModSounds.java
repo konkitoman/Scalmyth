@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class Sounds {
+public class ModSounds {
   public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
     DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ScalmythAPI.MOD_ID);
 

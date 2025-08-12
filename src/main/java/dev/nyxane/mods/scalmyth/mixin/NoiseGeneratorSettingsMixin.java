@@ -1,6 +1,6 @@
 package dev.nyxane.mods.scalmyth.mixin;
 
-import dev.nyxane.mods.scalmyth.registry.Biomes;
+import dev.nyxane.mods.scalmyth.registry.ModBiomes;
 
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 
 @Mixin(NoiseGeneratorSettings.class)
-public class NoiseGeneratorSettingsMixin implements Biomes.ScalmythModNoiseGeneratorSettings {
+public class NoiseGeneratorSettingsMixin implements ModBiomes.ScalmythModNoiseGeneratorSettings {
     @Unique
     private Holder<DimensionType> scalmyth_dimensionTypeReference;
 
@@ -22,7 +22,7 @@ public class NoiseGeneratorSettingsMixin implements Biomes.ScalmythModNoiseGener
     public SurfaceRules.RuleSource surfaceRule(Operation<SurfaceRules.RuleSource> original) {
         SurfaceRules.RuleSource retval = original.call();
         if (this.scalmyth_dimensionTypeReference != null) {
-            retval = Biomes.adaptSurfaceRule(retval, this.scalmyth_dimensionTypeReference);
+            retval = ModBiomes.adaptSurfaceRule(retval, this.scalmyth_dimensionTypeReference);
         }
         return retval;
     }

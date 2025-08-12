@@ -1,6 +1,6 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
-import dev.nyxane.mods.scalmyth.registry.Blocks;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -17,14 +17,14 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        otherWhenSilkTouch(Blocks.ASHEN_GRASS.get(), net.minecraft.world.level.block.Blocks.DIRT);
-        dropWhenSilkTouch(Blocks.ASHEN_SHORT_GRASS.get());
-        dropSelf(Blocks.BLACK_LOG.get());
-        dropSelf(Blocks.STRIPPED_BLACK_LOG.get());
+        otherWhenSilkTouch(ModBlocks.ASHEN_GRASS.get(), net.minecraft.world.level.block.Blocks.DIRT);
+        dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
+        dropSelf(ModBlocks.BLACK_LOG.get());
+        dropSelf(ModBlocks.STRIPPED_BLACK_LOG.get());
     }
 
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
-        return Blocks.BLOCKS.getEntries().stream().map(Holder::value)::iterator;
+        return ModBlocks.BLOCKS.getEntries().stream().map(Holder::value)::iterator;
     }
 }

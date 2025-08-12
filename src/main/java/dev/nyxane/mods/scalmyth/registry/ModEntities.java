@@ -12,7 +12,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class Entities {
+public class ModEntities {
   public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ScalmythAPI.MOD_ID);
   public static final DeferredHolder<EntityType<?>, EntityType<ScalmythEntity>>
           SCALMYTH = ENTITY_TYPES.register("scalmyth",()->
@@ -26,7 +26,7 @@ public class Entities {
   public static class ModEvents {
     @SubscribeEvent
     public static void entityAttributeEvent(final EntityAttributeCreationEvent event) {
-      event.put(Entities.SCALMYTH.get(), ScalmythEntity.setAttributes());
+      event.put(ModEntities.SCALMYTH.get(), ScalmythEntity.setAttributes());
     }
   }
 }

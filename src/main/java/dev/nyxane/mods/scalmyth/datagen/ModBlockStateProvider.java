@@ -1,10 +1,9 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.registry.Blocks;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -20,11 +19,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        logBlock((RotatedPillarBlock) Blocks.BLACK_LOG.get());
-        logBlock((RotatedPillarBlock) Blocks.STRIPPED_BLACK_LOG.get());
-        blockWithItem(Blocks.ASHEN_SHORT_GRASS);
-        blockWithItem(Blocks.ASHEN_GRASS);
-
+        logBlock((RotatedPillarBlock) ModBlocks.BLACK_LOG.get());
+        logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_BLACK_LOG.get());
+        blockWithItem(ModBlocks.ASHEN_SHORT_GRASS);
+        blockWithItem(ModBlocks.ASHEN_GRASS);
     }
 
     private void blockWithItem(DeferredBlock<?> deferredBlock) {

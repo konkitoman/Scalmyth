@@ -1,5 +1,6 @@
 package dev.nyxane.mods.scalmyth.blocks;
 
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.world.level.block.Block;
 
 import net.neoforged.neoforge.common.util.DeferredSoundType;
@@ -9,7 +10,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.BlockGetter;
@@ -52,7 +52,7 @@ public class AshenGrassBlock extends Block implements BonemealableBlock {
             goalZ = z + Mth.nextInt(RandomSource.create(), -1, 1);
             if ((world.getBlockState(BlockPos.containing(goalX, goalY, goalZ))).getBlock() == Blocks.DIRT) {
                 if (!world.getBlockState(BlockPos.containing(goalX, goalY + 1, goalZ)).canOcclude()) {
-                    world.setBlock(BlockPos.containing(goalX, goalY, goalZ), dev.nyxane.mods.scalmyth.registry.Blocks.ASHEN_GRASS.get().defaultBlockState(), 3);
+                    world.setBlock(BlockPos.containing(goalX, goalY, goalZ), ModBlocks.ASHEN_GRASS.get().defaultBlockState(), 3);
                 }
             }
         }

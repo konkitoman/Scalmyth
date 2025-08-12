@@ -1,11 +1,10 @@
 package dev.nyxane.mods.scalmyth.block_operations;
 
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.core.BlockPos;
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import net.minecraft.world.level.block.Blocks;
 
 public class AshenGrassBonemeal{
     public static void useOn(LevelAccessor world, BlockPos pos) {
@@ -22,9 +21,9 @@ public class AshenGrassBonemeal{
             goalX = x + Mth.nextInt(RandomSource.create(), -1, 1);
             goalY = y + Mth.nextInt(RandomSource.create(), -2, 1);
             goalZ = z + Mth.nextInt(RandomSource.create(), -1, 1);
-            if ((world.getBlockState(BlockPos.containing(goalX, goalY - 1, goalZ))).getBlock() == dev.nyxane.mods.scalmyth.registry.Blocks.ASHEN_GRASS.get()) {
+            if ((world.getBlockState(BlockPos.containing(goalX, goalY - 1, goalZ))).getBlock() == ModBlocks.ASHEN_GRASS.get()) {
                 if (world.getBlockState(BlockPos.containing(goalX, goalY, goalZ)).getBlock().defaultBlockState().isAir()) {
-                    world.setBlock(BlockPos.containing(goalX, goalY, goalZ), dev.nyxane.mods.scalmyth.registry.Blocks.ASHEN_SHORT_GRASS.get().defaultBlockState(), 3);
+                    world.setBlock(BlockPos.containing(goalX, goalY, goalZ), ModBlocks.ASHEN_SHORT_GRASS.get().defaultBlockState(), 3);
                 }
             }
         }

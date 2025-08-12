@@ -1,7 +1,7 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.registry.Blocks;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -19,7 +19,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_AXE)
-                .add(Blocks.BLACK_LOG.get())
-                .add(Blocks.STRIPPED_BLACK_LOG.get());
+                .add(ModBlocks.BLACK_LOG.get())
+                .add(ModBlocks.STRIPPED_BLACK_LOG.get());
     }
 }

@@ -1,16 +1,12 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.registry.Blocks;
-import dev.nyxane.mods.scalmyth.registry.Items;
+import dev.nyxane.mods.scalmyth.registry.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +20,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(ItemTags.LOGS_THAT_BURN)
-                .add(Items.BLACK_LOG.get())
-                .add(Items.STRIPPED_BLACK_LOG.get());
+                .add(ModItems.BLACK_LOG.get())
+                .add(ModItems.STRIPPED_BLACK_LOG.get());
     }
 }

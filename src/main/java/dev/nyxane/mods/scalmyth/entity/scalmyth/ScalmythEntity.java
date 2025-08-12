@@ -1,13 +1,12 @@
 package dev.nyxane.mods.scalmyth.entity.scalmyth;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.registry.Sounds;
+import dev.nyxane.mods.scalmyth.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -233,16 +232,16 @@ public class ScalmythEntity extends Monster implements GeoEntity {
 
   @Override
   protected SoundEvent getDeathSound() {
-    return Sounds.SCALMYTH_DEATH.get();
+    return ModSounds.SCALMYTH_DEATH.get();
   }
 
   @Override
   protected void playAttackSound() {
-    this.playSound(Sounds.SCALMYTH_ATTACK.get());
+    this.playSound(ModSounds.SCALMYTH_ATTACK.get());
   }
 
   @Override
   protected void playStepSound(BlockPos pos, BlockState state) {
-    this.playSound(Sounds.SCALMYTH_FOOTSTEPS.get());
+    this.playSound(ModSounds.SCALMYTH_FOOTSTEPS.get());
   }
 }

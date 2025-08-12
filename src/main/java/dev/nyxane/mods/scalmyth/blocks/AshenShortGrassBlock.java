@@ -1,6 +1,6 @@
 package dev.nyxane.mods.scalmyth.blocks;
 
-import dev.nyxane.mods.scalmyth.registry.Blocks;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import dev.nyxane.mods.scalmyth.block_operations.AshenGrassBonemeal;
 
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.material.PushReaction;
@@ -73,17 +72,17 @@ public class AshenShortGrassBlock extends FlowerBlock implements BonemealableBlo
 
     @Override
     public boolean mayPlaceOn(BlockState groundState, BlockGetter worldIn, BlockPos pos) {
-        return groundState.is(Blocks.ASHEN_GRASS.get());
+        return groundState.is(ModBlocks.ASHEN_GRASS.get());
     }
 
     @Override
     public boolean canSurvive(BlockState blockstate, LevelReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.below()).getBlock() == Blocks.ASHEN_GRASS.get();
+        return worldIn.getBlockState(pos.below()).getBlock() == ModBlocks.ASHEN_GRASS.get();
     }
 
     @Override
     public void neighborChanged(BlockState blockstate, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        if (world.getBlockState(pos.below()).getBlock() != Blocks.ASHEN_GRASS.get()) {
+        if (world.getBlockState(pos.below()).getBlock() != ModBlocks.ASHEN_GRASS.get()) {
             world.destroyBlock(pos, false);
         }
     }
