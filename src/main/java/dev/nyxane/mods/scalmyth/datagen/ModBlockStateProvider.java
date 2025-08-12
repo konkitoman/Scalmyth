@@ -2,11 +2,15 @@ package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -21,8 +25,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         logBlock((RotatedPillarBlock) ModBlocks.BLACK_LOG.get());
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_BLACK_LOG.get());
-        blockWithItem(ModBlocks.ASHEN_SHORT_GRASS);
         blockWithItem(ModBlocks.ASHEN_GRASS);
+        doorBlockWithRenderType((DoorBlock) ModBlocks.BLACK_DOOR.get(),
+                blockTexture(ModBlocks.BLACK_DOOR.get(), "_bottom"),
+                blockTexture(ModBlocks.BLACK_DOOR.get(), "_top"),
+                "cutout"
+        );
+        blockWithItem(ModBlocks.BLACK_LEAVES);
+    }
+
+    private ResourceLocation blockTexture(Block block, String suffix) {
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
+        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + name.getPath()+suffix);
     }
 
     private void blockWithItem(DeferredBlock<?> deferredBlock) {
@@ -30,14 +44,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private void blockWithItem(DeferredBlock<?> deferredBlock, String appendix) {
-        simpleBlockWithItem(deferredBlock.get(), blockModelFile(blockName(deferredBlock) + appendix));
+        simpleBlockWithItem(deferredBlock.get(), blockModelFile(name(deferredBlock) + appendix));
     }
 
     private ModelFile blockModelFile(String path) {
         return new ModelFile.UncheckedModelFile(ScalmythAPI.MOD_ID + ":" + "block/" + path);
     }
 
-    private String blockName(DeferredBlock<?> block) {
+    private String name(DeferredBlock<?> block) {
         return Objects.requireNonNull(block.getId().getPath());
     }
 

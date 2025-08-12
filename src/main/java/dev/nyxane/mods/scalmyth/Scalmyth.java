@@ -8,6 +8,8 @@ import dev.nyxane.mods.scalmyth.registry.ModSounds;
 import dev.nyxane.mods.scalmyth.registry.ModItems;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import dev.nyxane.mods.scalmyth.registry.ModTabs;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -32,7 +34,6 @@ public class Scalmyth
   public static class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-
       EntityRenderers.register(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
     }
   }

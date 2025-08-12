@@ -49,6 +49,8 @@ public class ModItems {
     );
     public static final DeferredItem<Item> BLACK_LOG = block(ModBlocks.BLACK_LOG);
     public static final DeferredItem<Item> STRIPPED_BLACK_LOG = block(ModBlocks.STRIPPED_BLACK_LOG);
+    public static final DeferredItem<Item> BLACK_DOOR = block(ModBlocks.BLACK_DOOR);
+    public static final DeferredItem<Item> BLACK_LEAVES = block(ModBlocks.BLACK_LEAVES);
 
     // Start of user code block custom items
     // End of user code block custom items

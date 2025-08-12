@@ -14,5 +14,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         basicItem(ModItems.ASH_DUST.get());
+        basicItem(ModItems.BLACK_DOOR.asItem());
     }
 }

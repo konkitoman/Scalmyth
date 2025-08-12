@@ -36,6 +36,8 @@ public class ModTabs {
             tabData.accept(ModItems.ASH_DUST.get());
             tabData.accept(ModItems.BLACK_LOG.get());
             tabData.accept(ModItems.STRIPPED_BLACK_LOG.get());
+            tabData.accept(ModItems.BLACK_DOOR.get());
+            tabData.accept(ModItems.BLACK_LEAVES.get());
         }
     }
 }
