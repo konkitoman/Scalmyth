@@ -24,3 +24,5 @@ runs
 run-data
 
 repo
+/gradle/
+/src/generated/
