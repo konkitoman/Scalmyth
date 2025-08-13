@@ -21,7 +21,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 net.minecraft.world.level.block.Blocks.DIRT);
 
         dropSelf(ModBlocks.BLOOD_FLOWER.get());
-
+        add(ModBlocks.POTTED_BLOOD_FLOWER.get(), createPotFlowerItemTable(ModBlocks.BLOOD_FLOWER.get()));
         dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
         dropSelf(ModBlocks.ASHEN_LOG.get());
         dropSelf(ModBlocks.ASHEN_WOOD.get());

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -49,6 +50,19 @@ public class ModBlocks {
                             .pushReaction(PushReaction.DESTROY)
                             .noOcclusion()
             ));
+
+    public static final DeferredBlock<Block> POTTED_BLOOD_FLOWER = BLOCKS.register("potted_bloodflower", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, BLOOD_FLOWER,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.PLANT)
+                    .noCollission()
+                    .instabreak()
+                    .sound(SoundType.GRASS)
+                    .offsetType(BlockBehaviour.OffsetType.XYZ)
+                    .ignitedByLava()
+                    .pushReaction(PushReaction.DESTROY)
+                    .noOcclusion()
+            ));
+
 
   public static final DeferredBlock<Block> ASHEN_LOG = BLOCKS.register("ashen_log",
           () -> new RotatedPillarBlock(
@@ -178,6 +192,7 @@ public class ModBlocks {
                           .strength(2.0f)
                           .sound(SoundType.WOOD)
           ));
+
 
   public static void register(IEventBus eventBus) {
       BLOCKS.register(eventBus);
