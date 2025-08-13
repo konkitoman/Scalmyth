@@ -22,6 +22,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         planksFromLog(recipeOutput, ModItems.ASHEN_PLANKS.get(), ModItems.TAG_LOGS, 4);
+        woodFromLogs(recipeOutput, ModItems.ASHEN_WOOD, ModItems.ASHEN_LOG);
         fenceBuilder(ModItems.ASHEN_FENCE, Ingredient.of(ModItems.ASHEN_PLANKS))
                 .group("ashen")
                 .unlockedBy("has_ashen",has(ModItems.ASHEN_LOG))
@@ -39,6 +40,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_ashen", has(ModItems.ASHEN_PLANKS))
                 .save(recipeOutput);
         slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModItems.ASHEN_SLAB, ModItems.ASHEN_PLANKS);
+        trapdoorBuilder(ModItems.ASHEN_TRAPDOOR, Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen", has(ModItems.ASHEN_PLANKS))
+                .save(recipeOutput);
+        doorBuilder(ModItems.ASHEN_DOOR, Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen", has(ModItems.ASHEN_PLANKS))
+                .save(recipeOutput);
     }
 
     protected static void foodCooking(RecipeOutput recipeOutput, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult,
