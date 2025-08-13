@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "variant=short": { "model": "scalmyth:block/ashen_short_grass" },
-    "variant=tall": { "model": "scalmyth:block/ashen_tall_grass" }
-  }
-}

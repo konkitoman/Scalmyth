@@ -18,23 +18,26 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(ScalmythAPI.MOD_ID)
 public class Scalmyth
 {
-  public Scalmyth(IEventBus modEventBus, ModContainer modContainer)
-  {
-    ModEntities.register(modEventBus);
-    ModTabs.REGISTRY.register(modEventBus);
-    ModSounds.register(modEventBus);
-    ModItems.REGISTRY.register(modEventBus);
-    ModBlocks.register(modEventBus);
-  }
-  @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-  public static class ClientModEvents {
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-      EntityRenderers.register(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
+    public Scalmyth(IEventBus modEventBus, ModContainer modContainer)  {
+        ModEntities.register(modEventBus);
+        ModTabs.register(modEventBus);
+        ModSounds.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
     }
-  }
+
+
+    @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
+        }
+    }
 }

@@ -57,7 +57,7 @@ public class ModBiomes {
 
                 }
                 if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
-                  ((ScalmythModNoiseGeneratorSettings) (Object) noiseGenerator.settings.value()).setscalmythDimensionTypeReference(dimensionType);
+                  ((ScalmythModNoiseGeneratorSettings) (Object) noiseGenerator.settings.value()).scalmyth$setScalmythDimensionTypeReference(dimensionType);
                 }
             }
         }
@@ -98,6 +98,6 @@ public class ModBiomes {
     }
 
     public interface ScalmythModNoiseGeneratorSettings {
-        void setscalmythDimensionTypeReference(Holder<DimensionType> dimensionType);
+        void scalmyth$setScalmythDimensionTypeReference(Holder<DimensionType> dimensionType);
     }
 }

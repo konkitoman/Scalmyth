@@ -1,6 +1,7 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
+import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,6 +33,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 "cutout"
         );
         blockWithItem(ModBlocks.BLACK_LEAVES);
+        getVariantBuilder(ModBlocks.ASHEN_SHORT_GRASS.get())
+                .partialState().with(AshenShortGrassBlock.TALL, false)
+                .modelForState().modelFile(blockModelFile(name(ModBlocks.ASHEN_SHORT_GRASS))).addModel()
+                .partialState().with(AshenShortGrassBlock.TALL, true)
+                .modelForState().modelFile(blockModelFile(name(ModBlocks.ASHEN_SHORT_GRASS)+"_long")).addModel();
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {

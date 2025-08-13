@@ -2,6 +2,7 @@ package dev.nyxane.mods.scalmyth.mixin;
 
 import dev.nyxane.mods.scalmyth.registry.ModBiomes;
 
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -28,7 +29,7 @@ public class NoiseGeneratorSettingsMixin implements ModBiomes.ScalmythModNoiseGe
     }
 
     @Override
-    public void setscalmythDimensionTypeReference(Holder<DimensionType> dimensionType) {
+    public void scalmyth$setScalmythDimensionTypeReference(Holder<DimensionType> dimensionType) {
         this.scalmyth_dimensionTypeReference = dimensionType;
     }
 }

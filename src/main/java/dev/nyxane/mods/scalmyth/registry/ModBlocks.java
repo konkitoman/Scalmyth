@@ -3,6 +3,7 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
+import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -10,17 +11,26 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 public class ModBlocks {
   public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
   public static final DeferredBlock<Block> ASHEN_GRASS = BLOCKS.register("ashen_grass", AshenGrassBlock::new);
-  public static final DeferredBlock<AshenShortGrassBlock> ASHEN_SHORT_GRASS = BLOCKS.register(
+  public static final DeferredBlock<Block> ASHEN_SHORT_GRASS = BLOCKS.register(
           "ashen_short_grass",
-          AshenShortGrassBlock::new
-  );
-
+          () -> new AshenShortGrassBlock(
+                  BlockBehaviour.Properties.of()
+                          .mapColor(MapColor.PLANT)
+                          .replaceable()
+                          .noCollission()
+                          .instabreak()
+                          .sound(SoundType.GRASS)
+                          .offsetType(BlockBehaviour.OffsetType.XYZ)
+                          .ignitedByLava()
+                          .pushReaction(PushReaction.DESTROY)
+          ));
   public static final DeferredBlock<Block> BLACK_LOG = BLOCKS.register("black_log",
           () -> new RotatedPillarBlock(
             BlockBehaviour.Properties.of()
