@@ -38,6 +38,7 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_STAIR.get());
         output.accept(ModItems.ASHEN_FENCE.get());
         output.accept(ModItems.ASHEN_FENCE_GATE.get());
+        output.accept(ModItems.ASHEN_PRESSURE_PLATE.get());
     }
 
     public static void register(IEventBus eventBus) {

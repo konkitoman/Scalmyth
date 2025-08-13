@@ -84,6 +84,15 @@ public class ModBlocks {
                     // .ignitedByLava()
             ));
 
+    public static final DeferredBlock<Block> ASHEN_PRESSURE_PLATE = BLOCKS.register("ashen_pressure_plate",
+            () -> new PressurePlateBlock(new BlockSetType("ashen"),
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
     public static final DeferredBlock<Block> ASHEN_FENCE_GATE = BLOCKS.register("ashen_fence_gate",
             () -> new FenceGateBlock(new WoodType("ashen", new BlockSetType("ashen")),
                     BlockBehaviour.Properties.of()

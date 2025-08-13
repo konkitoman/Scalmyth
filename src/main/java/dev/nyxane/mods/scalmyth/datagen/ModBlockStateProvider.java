@@ -30,8 +30,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         stairsBlock((StairBlock)ModBlocks.ASHEN_STAIR.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         blockItem(ModBlocks.ASHEN_STAIR);
         fenceBlock((FenceBlock)ModBlocks.ASHEN_FENCE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        blockItem(ModBlocks.ASHEN_FENCE);
         fenceGateBlock((FenceGateBlock) ModBlocks.ASHEN_FENCE_GATE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         blockItem(ModBlocks.ASHEN_FENCE_GATE);
+        pressurePlateBlock((PressurePlateBlock)ModBlocks.ASHEN_PRESSURE_PLATE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         logBlock((RotatedPillarBlock) ModBlocks.ASHEN_LOG.get());
         blockItem(ModBlocks.ASHEN_LOG);
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_LOG.get());

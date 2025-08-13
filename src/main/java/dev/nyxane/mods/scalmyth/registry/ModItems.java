@@ -29,6 +29,8 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_STAIR = block(ModBlocks.ASHEN_STAIR);
     public static final DeferredItem<Item> ASHEN_FENCE = block(ModBlocks.ASHEN_FENCE);
     public static final DeferredItem<Item> ASHEN_FENCE_GATE = block(ModBlocks.ASHEN_FENCE_GATE);
+    public static final DeferredItem<Item> ASHEN_PRESSURE_PLATE = block(ModBlocks.ASHEN_PRESSURE_PLATE);
+
 
     private static DeferredItem<Item> block(DeferredBlock<?> block) {
         return block(block, new Item.Properties());
