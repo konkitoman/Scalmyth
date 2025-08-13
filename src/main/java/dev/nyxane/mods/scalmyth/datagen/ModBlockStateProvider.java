@@ -48,6 +48,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
         block(ModBlocks.BLOOD_FLOWER);
         simpleBlockWithItem(ModBlocks.POTTED_BLOOD_FLOWER.get(), models().singleTexture("potted_bloodflower", ResourceLocation.withDefaultNamespace("flower_pot_cross"), "plant", blockTexture(ModBlocks.BLOOD_FLOWER.get())).renderType("cutout") );
         blockItem(ModBlocks.BLOOD_FLOWER);
+        simpleBlock(ModBlocks.ASHEN_STONE_BRICK.get());
+        blockItem(ModBlocks.ASHEN_STONE_BRICK);
+        simpleBlock(ModBlocks.ASHEN_GROOVED_STONE_BRICK.get());
+        blockItem(ModBlocks.ASHEN_GROOVED_STONE_BRICK);
+        simpleBlock(ModBlocks.ASHEN_BRICKS.get());
+        blockItem(ModBlocks.ASHEN_BRICKS);
+
 
         doorBlockWithRenderType((DoorBlock) ModBlocks.ASHEN_DOOR.get(),
                 blockTexture(ModBlocks.ASHEN_DOOR.get(), "_bottom"),

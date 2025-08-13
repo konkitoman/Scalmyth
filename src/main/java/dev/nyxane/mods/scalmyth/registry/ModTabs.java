@@ -44,6 +44,9 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_PRESSURE_PLATE.get());
         output.accept(ModItems.ASHEN_BUTTON.get());
         output.accept(ModItems.ASHEN_TRAPDOOR.get());
+        output.accept(ModItems.ASHEN_STONE_BRICK.get());
+        output.accept(ModItems.ASHEN_GROOVED_STONE_BRICK.get());
+        output.accept(ModItems.ASHEN_BRICKS.get());
     }
 
     public static void register(IEventBus eventBus) {

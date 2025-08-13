@@ -191,8 +191,34 @@ public class ModBlocks {
                           .sound(SoundType.WOOD)
           ));
 
+    public static final DeferredBlock<Block> ASHEN_STONE_BRICK = BLOCKS.register("ashen_stone_brick",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.STONE)
+                    // .ignitedByLava()
+            ));
+    public static final DeferredBlock<Block> ASHEN_GROOVED_STONE_BRICK = BLOCKS.register("ashen_grooved_stone_brick",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.STONE)
+                    // .ignitedByLava()
+            ));
+    public static final DeferredBlock<Block> ASHEN_BRICKS = BLOCKS.register("ashen_bricks",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.STONE)
+                    // .ignitedByLava()
+            ));
 
-  public static void register(IEventBus eventBus) {
+
+
+    public static void register(IEventBus eventBus) {
       BLOCKS.register(eventBus);
   }
 }

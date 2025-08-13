@@ -35,6 +35,9 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_PRESSURE_PLATE = block(ModBlocks.ASHEN_PRESSURE_PLATE);
     public static final DeferredItem<Item> ASHEN_BUTTON = block(ModBlocks.ASHEN_BUTTON);
     public static final DeferredItem<Item> ASHEN_TRAPDOOR = block(ModBlocks.ASHEN_TRAPDOOR);
+    public static final DeferredItem<Item> ASHEN_STONE_BRICK = block(ModBlocks.ASHEN_STONE_BRICK);
+    public static final DeferredItem<Item> ASHEN_GROOVED_STONE_BRICK = block(ModBlocks.ASHEN_GROOVED_STONE_BRICK);
+    public static final DeferredItem<Item> ASHEN_BRICKS = block(ModBlocks.ASHEN_BRICKS);
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 
