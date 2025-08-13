@@ -147,6 +147,14 @@ public class ModBlocks {
                           .pushReaction(PushReaction.DESTROY)
           ));
 
+    public static final DeferredBlock<Block> ASHEN_TRAPDOOR = BLOCKS.register("ashen_trapdoor",
+          () -> new TrapDoorBlock(
+                  new BlockSetType("black"),
+                  BlockBehaviour.Properties.of()
+                          .strength(2.0f)
+                          .sound(SoundType.WOOD)
+          ));
+
   public static void register(IEventBus eventBus) {
       BLOCKS.register(eventBus);
   }

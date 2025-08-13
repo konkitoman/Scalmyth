@@ -35,6 +35,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.ASHEN_DOOR.get(),
                 block -> createDoorTable(ModBlocks.ASHEN_DOOR.get()));
         dropWhenSilkTouch(ModBlocks.ASHEN_LEAVES.get());
+        dropSelf(ModBlocks.ASHEN_TRAPDOOR.get());
     }
 
     @Override

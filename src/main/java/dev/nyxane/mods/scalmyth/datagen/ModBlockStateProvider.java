@@ -67,6 +67,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .partialState().with(AshenShortGrassBlock.TALL, true)
                 .modelForState().modelFile(blockModelFile(name(ModBlocks.ASHEN_SHORT_GRASS)+"_long")).addModel();
         blockItem(ModBlocks.ASHEN_SHORT_GRASS);
+        trapdoorBlock((TrapDoorBlock) ModBlocks.ASHEN_TRAPDOOR.get(), blockTexture(ModBlocks.ASHEN_TRAPDOOR.get()), false);
+        simpleBlockItem(ModBlocks.ASHEN_TRAPDOOR.get(), blockModelFile(name(ModBlocks.ASHEN_TRAPDOOR) + "_bottom"));
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {

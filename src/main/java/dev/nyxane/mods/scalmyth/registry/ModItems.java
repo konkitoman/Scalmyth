@@ -33,6 +33,7 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_FENCE_GATE = block(ModBlocks.ASHEN_FENCE_GATE);
     public static final DeferredItem<Item> ASHEN_PRESSURE_PLATE = block(ModBlocks.ASHEN_PRESSURE_PLATE);
     public static final DeferredItem<Item> ASHEN_BUTTON = block(ModBlocks.ASHEN_BUTTON);
+    public static final DeferredItem<Item> ASHEN_TRAPDOOR = block(ModBlocks.ASHEN_TRAPDOOR);
 
 
     private static DeferredItem<Item> block(DeferredBlock<?> block) {
