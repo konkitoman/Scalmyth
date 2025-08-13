@@ -33,6 +33,11 @@ public class ModTabs {
         output.accept(ModItems.STRIPPED_ASHEN_LOG.get());
         output.accept(ModItems.ASHEN_DOOR.get());
         output.accept(ModItems.ASHEN_LEAVES.get());
+        output.accept(ModItems.ASHEN_PLANKS.get());
+        output.accept(ModItems.ASHEN_SLAB.get());
+        output.accept(ModItems.ASHEN_STAIR.get());
+        output.accept(ModItems.ASHEN_FENCE.get());
+        output.accept(ModItems.ASHEN_FENCE_GATE.get());
     }
 
     public static void register(IEventBus eventBus) {

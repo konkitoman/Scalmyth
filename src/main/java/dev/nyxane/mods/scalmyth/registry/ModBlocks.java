@@ -7,9 +7,11 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -45,6 +47,51 @@ public class ModBlocks {
                           .sound(SoundType.WOOD)
                   // .ignitedByLava()
           ));
+
+    public static final DeferredBlock<Block> ASHEN_PLANKS = BLOCKS.register("ashen_planks",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_SLAB = BLOCKS.register("ashen_slab",
+            () -> new SlabBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_STAIR = BLOCKS.register("ashen_stair",
+            () -> new StairBlock(ModBlocks.ASHEN_PLANKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_FENCE = BLOCKS.register("ashen_fence",
+            () -> new FenceBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_FENCE_GATE = BLOCKS.register("ashen_fence_gate",
+            () -> new FenceGateBlock(new WoodType("ashen", new BlockSetType("ashen")),
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
 
   public static final DeferredBlock<Block> ASHEN_DOOR = BLOCKS.register("ashen_door",
           () -> new DoorBlock(

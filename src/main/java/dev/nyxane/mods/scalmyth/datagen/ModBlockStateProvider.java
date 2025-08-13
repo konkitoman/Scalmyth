@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.ModelProvider;
@@ -22,6 +23,15 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        simpleBlock(ModBlocks.ASHEN_PLANKS.get());
+        blockItem(ModBlocks.ASHEN_PLANKS);
+        slabBlock((SlabBlock)ModBlocks.ASHEN_SLAB.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        blockItem(ModBlocks.ASHEN_SLAB);
+        stairsBlock((StairBlock)ModBlocks.ASHEN_STAIR.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        blockItem(ModBlocks.ASHEN_STAIR);
+        fenceBlock((FenceBlock)ModBlocks.ASHEN_FENCE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        fenceGateBlock((FenceGateBlock) ModBlocks.ASHEN_FENCE_GATE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        blockItem(ModBlocks.ASHEN_FENCE_GATE);
         logBlock((RotatedPillarBlock) ModBlocks.ASHEN_LOG.get());
         blockItem(ModBlocks.ASHEN_LOG);
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_LOG.get());

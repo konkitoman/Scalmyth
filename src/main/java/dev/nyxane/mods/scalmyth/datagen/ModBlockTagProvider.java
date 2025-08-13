@@ -5,6 +5,7 @@ import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -21,5 +22,9 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_AXE)
                 .add(ModBlocks.ASHEN_LOG.get())
                 .add(ModBlocks.STRIPPED_ASHEN_LOG.get());
+        tag(BlockTags.FENCES)
+                .add(ModBlocks.ASHEN_FENCE.get());
+        tag(BlockTags.FENCE_GATES)
+                .add(ModBlocks.ASHEN_FENCE_GATE.get());
     }
 }
