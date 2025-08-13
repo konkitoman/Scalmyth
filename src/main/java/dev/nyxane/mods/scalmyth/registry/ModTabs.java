@@ -47,6 +47,7 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_STONE_BRICK.get());
         output.accept(ModItems.ASHEN_GROOVED_STONE_BRICK.get());
         output.accept(ModItems.ASHEN_BRICKS.get());
+        output.accept(ModItems.ASHEN_VINES.get());
     }
 
     public static void register(IEventBus eventBus) {

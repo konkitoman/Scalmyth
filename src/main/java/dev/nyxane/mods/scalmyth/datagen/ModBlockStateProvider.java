@@ -73,6 +73,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.ASHEN_SHORT_GRASS);
         trapdoorBlock((TrapDoorBlock) ModBlocks.ASHEN_TRAPDOOR.get(), blockTexture(ModBlocks.ASHEN_TRAPDOOR.get()), false);
         simpleBlockItem(ModBlocks.ASHEN_TRAPDOOR.get(), blockModelFile(name(ModBlocks.ASHEN_TRAPDOOR) + "_bottom"));
+        blockItem(ModBlocks.ASHEN_VINES);
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {

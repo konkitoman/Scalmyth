@@ -183,6 +183,19 @@ public class ModBlocks {
                           .pushReaction(PushReaction.DESTROY)
           ));
 
+  public static final DeferredBlock<Block> ASHEN_VINES = BLOCKS.register("ashen_vines", () ->
+      new VineBlock(
+              BlockBehaviour.Properties.of()
+                      .mapColor(MapColor.PLANT)
+                      .replaceable()
+                      .noCollission()
+                      .randomTicks()
+                      .strength(0.2F)
+                      .sound(SoundType.VINE)
+                      .ignitedByLava()
+                      .pushReaction(PushReaction.DESTROY)
+      ));
+
     public static final DeferredBlock<Block> ASHEN_TRAPDOOR = BLOCKS.register("ashen_trapdoor",
           () -> new TrapDoorBlock(
                   new BlockSetType("black"),

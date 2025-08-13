@@ -5,7 +5,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -17,12 +22,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        otherWhenSilkTouch(ModBlocks.ASHEN_GRASS.get(),
-                net.minecraft.world.level.block.Blocks.DIRT);
+        dropWhenSilkTouchOr(ModBlocks.ASHEN_GRASS.get(), Items.DIRT);
 
         dropSelf(ModBlocks.BLOOD_FLOWER.get());
         add(ModBlocks.POTTED_BLOOD_FLOWER.get(), createPotFlowerItemTable(ModBlocks.BLOOD_FLOWER.get()));
-        dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
+        dropWhenSheared(ModBlocks.ASHEN_SHORT_GRASS.get());
         dropSelf(ModBlocks.ASHEN_LOG.get());
         dropSelf(ModBlocks.ASHEN_WOOD.get());
         dropSelf(ModBlocks.ASHEN_PLANKS.get());
@@ -37,11 +41,24 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.ASHEN_BUTTON.get());
         add(ModBlocks.ASHEN_DOOR.get(),
                 block -> createDoorTable(ModBlocks.ASHEN_DOOR.get()));
-        dropWhenSilkTouch(ModBlocks.ASHEN_LEAVES.get());
+        dropWhenSheared(ModBlocks.ASHEN_LEAVES.get());
         dropSelf(ModBlocks.ASHEN_TRAPDOOR.get());
         dropSelf(ModBlocks.ASHEN_STONE_BRICK.get());
         dropSelf(ModBlocks.ASHEN_GROOVED_STONE_BRICK.get());
         dropSelf(ModBlocks.ASHEN_BRICKS.get());
+        dropWhenSheared(ModBlocks.ASHEN_VINES.get());
+    }
+
+    protected void dropWhenSheared(Block block) {
+        add(block, createShearsOnlyDrop(block.asItem()));
+    }
+
+    protected void dropWhenSilkTouchOr(Block block, Item when_not){
+        add(block, createSilkTouchOnlyTable(block.asItem())
+                        .withPool(LootPool.lootPool().when(hasSilkTouch().invert())
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(LootItem.lootTableItem(when_not))
+                        ));
     }
 
     @Override
