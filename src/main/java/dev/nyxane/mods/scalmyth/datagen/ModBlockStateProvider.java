@@ -37,20 +37,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
         buttonBlock((ButtonBlock)ModBlocks.ASHEN_BUTTON.get(), blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         logBlock((RotatedPillarBlock) ModBlocks.ASHEN_LOG.get());
         blockItem(ModBlocks.ASHEN_LOG);
-
-
         axisBlock((RotatedPillarBlock) ModBlocks.ASHEN_WOOD.get(), ScalmythAPI.rl("block/ashen_log"), ScalmythAPI.rl("block/ashen_log"));
         blockItem(ModBlocks.ASHEN_WOOD);
-
         axisBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_WOOD.get(), ScalmythAPI.rl("block/stripped_ashen_log"), ScalmythAPI.rl("block/stripped_ashen_log"));
         blockItem(ModBlocks.STRIPPED_ASHEN_WOOD);
-
-
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_LOG.get());
         blockItem(ModBlocks.STRIPPED_ASHEN_LOG);
-
         block(ModBlocks.ASHEN_GRASS);
         blockItem(ModBlocks.ASHEN_GRASS);
+        block(ModBlocks.BLOOD_FLOWER);
+        blockItem(ModBlocks.BLOOD_FLOWER);
 
         doorBlockWithRenderType((DoorBlock) ModBlocks.ASHEN_DOOR.get(),
                 blockTexture(ModBlocks.ASHEN_DOOR.get(), "_bottom"),

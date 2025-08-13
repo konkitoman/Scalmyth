@@ -1,12 +1,11 @@
 package dev.nyxane.mods.scalmyth.datagen;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
+import dev.nyxane.mods.scalmyth.registry.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
@@ -22,7 +21,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-
+        stairBuilder(ModBlocks.ASHEN_STAIR.get(), Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen",has(ModItems.ASHEN_LOG)).save(recipeOutput);
     }
 
     protected static void foodCooking(RecipeOutput recipeOutput, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult,

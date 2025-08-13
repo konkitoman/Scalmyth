@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "scalmyth:block/bloodflower",
+    "particle": "scalmyth:block/bloodflower"
+  },
+  "render_type": "cutout"
+}
