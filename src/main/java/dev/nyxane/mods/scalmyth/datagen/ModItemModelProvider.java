@@ -27,6 +27,12 @@ public class ModItemModelProvider extends ItemModelProvider {
                         "block/" + baseBlock.getId().getPath()));
     }
 
+    public void flatBlockItem(DeferredBlock<?> block, String suffix) {
+        this.withExistingParent(block.getId().getPath(), mcLoc("item/generated"))
+                .texture("layer0",  ResourceLocation.fromNamespaceAndPath(ScalmythAPI.MOD_ID,
+                        "block/" + block.getId().getPath() + suffix));
+    }
+
     @Override
     protected void registerModels() {
         basicItem(ModItems.ASH_DUST.get());
@@ -34,5 +40,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         fenceItem(ModBlocks.ASHEN_FENCE, ModBlocks.ASHEN_PLANKS);
         buttonItem(ModBlocks.ASHEN_BUTTON, ModBlocks.ASHEN_PLANKS);
         spawnEggItem(ModItems.SCALMYTH_SPAWN_EGG.get());
+
+        flatBlockItem(ModBlocks.ASHEN_SHORT_GRASS, "");
+        flatBlockItem(ModBlocks.ASHEN_TALL_GRASS, "_top");
+        flatBlockItem(ModBlocks.ASHEN_FERN, "");
+        flatBlockItem(ModBlocks.LARGE_ASHEN_FERN, "_top");
     }
 }

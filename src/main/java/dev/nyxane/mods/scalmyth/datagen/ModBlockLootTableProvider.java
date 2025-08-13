@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -17,12 +18,19 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        otherWhenSilkTouch(ModBlocks.ASHEN_GRASS.get(),
-                net.minecraft.world.level.block.Blocks.DIRT);
+        dropSelf(ModBlocks.ASHEN_GRASS.get());
 
         dropSelf(ModBlocks.BLOOD_FLOWER.get());
         add(ModBlocks.POTTED_BLOOD_FLOWER.get(), createPotFlowerItemTable(ModBlocks.BLOOD_FLOWER.get()));
-        dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
+        add(ModBlocks.ASHEN_SHORT_GRASS.get(),
+                block -> createGrassDrops(ModBlocks.ASHEN_SHORT_GRASS.get()));
+        add(ModBlocks.ASHEN_TALL_GRASS.get(),
+                block -> createDoublePlantShearsDrop(ModBlocks.ASHEN_TALL_GRASS.get()));
+        add(ModBlocks.ASHEN_FERN.get(),
+                block -> createShearsOnlyDrop(ModBlocks.ASHEN_FERN.get()));
+        add(ModBlocks.LARGE_ASHEN_FERN.get(),
+                block -> createDoublePlantShearsDrop(ModBlocks.LARGE_ASHEN_FERN.get()));
+
         dropSelf(ModBlocks.ASHEN_LOG.get());
         dropSelf(ModBlocks.ASHEN_WOOD.get());
         dropSelf(ModBlocks.ASHEN_PLANKS.get());

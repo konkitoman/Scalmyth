@@ -19,9 +19,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 public class ModBlocks {
-  public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
-  public static final DeferredBlock<Block> ASHEN_GRASS = BLOCKS.register("ashen_grass", AshenGrassBlock::new);
-  public static final DeferredBlock<Block> ASHEN_SHORT_GRASS = BLOCKS.register(
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
+    public static final DeferredBlock<Block> ASHEN_GRASS = BLOCKS.register("ashen_grass", AshenGrassBlock::new);
+    public static final DeferredBlock<Block> ASHEN_SHORT_GRASS = BLOCKS.register(
           "ashen_short_grass",
           () -> new AshenShortGrassBlock(
                   BlockBehaviour.Properties.of()
@@ -35,6 +35,51 @@ public class ModBlocks {
                           .pushReaction(PushReaction.DESTROY)
                           .noOcclusion()
           ));
+
+    public static final DeferredBlock<Block> ASHEN_TALL_GRASS = BLOCKS.register(
+            "ashen_tall_grass",
+            () -> new DoublePlantBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.PLANT)
+                            .replaceable()
+                            .noCollission()
+                            .instabreak()
+                            .sound(SoundType.GRASS)
+                            .offsetType(BlockBehaviour.OffsetType.XYZ)
+                            .ignitedByLava()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noOcclusion()
+            ));
+
+    public static final DeferredBlock<Block> LARGE_ASHEN_FERN = BLOCKS.register(
+            "large_ashen_fern",
+            () -> new DoublePlantBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.PLANT)
+                            .replaceable()
+                            .noCollission()
+                            .instabreak()
+                            .sound(SoundType.GRASS)
+                            .offsetType(BlockBehaviour.OffsetType.XYZ)
+                            .ignitedByLava()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noOcclusion()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_FERN = BLOCKS.register(
+            "ashen_fern",
+            () -> new TallGrassBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.PLANT)
+                            .replaceable()
+                            .noCollission()
+                            .instabreak()
+                            .sound(SoundType.GRASS)
+                            .offsetType(BlockBehaviour.OffsetType.XYZ)
+                            .ignitedByLava()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noOcclusion()
+            ));
 
     public static final DeferredBlock<Block> BLOOD_FLOWER = BLOCKS.register(
             "bloodflower",
@@ -61,7 +106,7 @@ public class ModBlocks {
             ));
 
 
-  public static final DeferredBlock<Block> ASHEN_LOG = BLOCKS.register("ashen_log",
+    public static final DeferredBlock<Block> ASHEN_LOG = BLOCKS.register("ashen_log",
           () -> new RotatedPillarBlock(
             BlockBehaviour.Properties.of()
                     .strength(2.0F)
@@ -77,7 +122,7 @@ public class ModBlocks {
                             .sound(SoundType.WOOD)
                     // .ignitedByLava()
             ));
-  public static final DeferredBlock<Block> STRIPPED_ASHEN_LOG = BLOCKS.register("stripped_ashen_log",
+    public static final DeferredBlock<Block> STRIPPED_ASHEN_LOG = BLOCKS.register("stripped_ashen_log",
           () -> new RotatedPillarBlock(
                   BlockBehaviour.Properties.of()
                           .strength(2.0F)
@@ -162,7 +207,7 @@ public class ModBlocks {
                     // .ignitedByLava()
             ));
 
-  public static final DeferredBlock<Block> ASHEN_DOOR = BLOCKS.register("ashen_door",
+    public static final DeferredBlock<Block> ASHEN_DOOR = BLOCKS.register("ashen_door",
           () -> new DoorBlock(
                   new BlockSetType("black"),
                   BlockBehaviour.Properties.of()
@@ -170,7 +215,7 @@ public class ModBlocks {
                           .sound(SoundType.WOOD)
                           .noOcclusion()
           ));
-  public static final DeferredBlock<Block> ASHEN_LEAVES = BLOCKS.register("ashen_leaves",
+    public static final DeferredBlock<Block> ASHEN_LEAVES = BLOCKS.register("ashen_leaves",
           () -> new LeavesBlock(
                   BlockBehaviour.Properties.of()
                           .mapColor(MapColor.PLANT)
@@ -220,5 +265,5 @@ public class ModBlocks {
 
     public static void register(IEventBus eventBus) {
       BLOCKS.register(eventBus);
-  }
+    }
 }
