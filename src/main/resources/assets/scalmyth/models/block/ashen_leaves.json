@@ -6,7 +6,7 @@
 	"textures": {
 		"1": "scalmyth:block/ashen_leaves",
 		"2": "scalmyth:block/ashen_leaf_block",
-		"particle": "scalmyth:block/black_leaves"
+		"particle": "scalmyth:block/ashen_leaves"
 	},
 	"elements": [
 		{
