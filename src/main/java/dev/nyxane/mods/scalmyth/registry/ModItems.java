@@ -21,7 +21,9 @@ public class ModItems {
     public static final DeferredItem<Item> ASH_DUST = REGISTRY.register("ash_dust", AshDustItem::new);
     public static final DeferredItem<Item> ASHEN_SHORT_GRASS = block(ModBlocks.ASHEN_SHORT_GRASS);
     public static final DeferredItem<Item> ASHEN_LOG = block(ModBlocks.ASHEN_LOG);
+    public static final DeferredItem<Item> ASHEN_WOOD = block(ModBlocks.ASHEN_WOOD);
     public static final DeferredItem<Item> STRIPPED_ASHEN_LOG = block(ModBlocks.STRIPPED_ASHEN_LOG);
+    public static final DeferredItem<Item> STRIPPED_ASHEN_WOOD = block(ModBlocks.STRIPPED_ASHEN_WOOD);
     public static final DeferredItem<Item> ASHEN_DOOR = block(ModBlocks.ASHEN_DOOR);
     public static final DeferredItem<Item> ASHEN_LEAVES = block(ModBlocks.ASHEN_LEAVES);
     public static final DeferredItem<Item> ASHEN_PLANKS = block(ModBlocks.ASHEN_PLANKS);
@@ -30,6 +32,7 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_FENCE = block(ModBlocks.ASHEN_FENCE);
     public static final DeferredItem<Item> ASHEN_FENCE_GATE = block(ModBlocks.ASHEN_FENCE_GATE);
     public static final DeferredItem<Item> ASHEN_PRESSURE_PLATE = block(ModBlocks.ASHEN_PRESSURE_PLATE);
+    public static final DeferredItem<Item> ASHEN_BUTTON = block(ModBlocks.ASHEN_BUTTON);
 
 
     private static DeferredItem<Item> block(DeferredBlock<?> block) {

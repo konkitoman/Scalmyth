@@ -30,7 +30,9 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_SHORT_GRASS.get().asItem());
         output.accept(ModItems.ASH_DUST.get());
         output.accept(ModItems.ASHEN_LOG.get());
+        output.accept(ModItems.ASHEN_WOOD.get());
         output.accept(ModItems.STRIPPED_ASHEN_LOG.get());
+        output.accept(ModItems.STRIPPED_ASHEN_WOOD.get());
         output.accept(ModItems.ASHEN_DOOR.get());
         output.accept(ModItems.ASHEN_LEAVES.get());
         output.accept(ModItems.ASHEN_PLANKS.get());
@@ -39,6 +41,7 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_FENCE.get());
         output.accept(ModItems.ASHEN_FENCE_GATE.get());
         output.accept(ModItems.ASHEN_PRESSURE_PLATE.get());
+        output.accept(ModItems.ASHEN_BUTTON.get());
     }
 
     public static void register(IEventBus eventBus) {

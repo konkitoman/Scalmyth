@@ -6,6 +6,7 @@ import dev.nyxane.mods.scalmyth.registry.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -20,11 +21,18 @@ public class ModItemModelProvider extends ItemModelProvider {
                         "block/" + baseBlock.getId().getPath()));
     }
 
+    public void buttonItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
+        this.withExistingParent(block.getId().getPath(), mcLoc("block/button_inventory"))
+                .texture("texture",  ResourceLocation.fromNamespaceAndPath(ScalmythAPI.MOD_ID,
+                        "block/" + baseBlock.getId().getPath()));
+    }
+
     @Override
     protected void registerModels() {
         basicItem(ModItems.ASH_DUST.get());
         basicItem(ModItems.ASHEN_DOOR.get());
         fenceItem(ModBlocks.ASHEN_FENCE, ModBlocks.ASHEN_PLANKS);
+        buttonItem(ModBlocks.ASHEN_BUTTON, ModBlocks.ASHEN_PLANKS);
         spawnEggItem(ModItems.SCALMYTH_SPAWN_EGG.get());
     }
 }

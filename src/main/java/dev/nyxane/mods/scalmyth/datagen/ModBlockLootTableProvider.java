@@ -21,14 +21,17 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 net.minecraft.world.level.block.Blocks.DIRT);
         dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
         dropSelf(ModBlocks.ASHEN_LOG.get());
+        dropSelf(ModBlocks.ASHEN_WOOD.get());
         dropSelf(ModBlocks.ASHEN_PLANKS.get());
         add(ModBlocks.ASHEN_SLAB.get(),
                 block -> createSlabItemTable(ModBlocks.ASHEN_SLAB.get()));
         dropSelf(ModBlocks.STRIPPED_ASHEN_LOG.get());
+        dropSelf(ModBlocks.STRIPPED_ASHEN_WOOD.get());
         dropSelf(ModBlocks.ASHEN_STAIR.get());
         dropSelf(ModBlocks.ASHEN_FENCE.get());
         dropSelf(ModBlocks.ASHEN_FENCE_GATE.get());
         dropSelf(ModBlocks.ASHEN_PRESSURE_PLATE.get());
+        dropSelf(ModBlocks.ASHEN_BUTTON.get());
         add(ModBlocks.ASHEN_DOOR.get(),
                 block -> createDoorTable(ModBlocks.ASHEN_DOOR.get()));
         dropWhenSilkTouch(ModBlocks.ASHEN_LEAVES.get());

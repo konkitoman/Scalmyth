@@ -26,11 +26,17 @@ public class AxeItemMixin {
         if (unstrippedState.getBlock() == ModBlocks.ASHEN_LOG.get()) {
             cir.setReturnValue(Optional.of(ModBlocks.STRIPPED_ASHEN_LOG.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, unstrippedState.getValue(RotatedPillarBlock.AXIS))));
         }
+        if (unstrippedState.getBlock() == ModBlocks.ASHEN_WOOD.get()) {
+            cir.setReturnValue(Optional.of(ModBlocks.STRIPPED_ASHEN_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, unstrippedState.getValue(RotatedPillarBlock.AXIS))));
+        }
     }
     @Inject(method = "getAxeStrippingState", at=@At("HEAD"), cancellable = true)
     private static void getAxeStrippingState(BlockState originalState, CallbackInfoReturnable<BlockState> cir) {
         if (originalState.getBlock() == ModBlocks.ASHEN_LOG.get()) {
             cir.setReturnValue(ModBlocks.STRIPPED_ASHEN_LOG.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, originalState.getValue(RotatedPillarBlock.AXIS)));
+        }
+        if (originalState.getBlock() == ModBlocks.ASHEN_WOOD.get()) {
+            cir.setReturnValue(ModBlocks.STRIPPED_ASHEN_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, originalState.getValue(RotatedPillarBlock.AXIS)));
         }
     }
 }

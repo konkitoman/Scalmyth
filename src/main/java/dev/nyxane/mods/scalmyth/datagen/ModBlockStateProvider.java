@@ -30,12 +30,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
         stairsBlock((StairBlock)ModBlocks.ASHEN_STAIR.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         blockItem(ModBlocks.ASHEN_STAIR);
         fenceBlock((FenceBlock)ModBlocks.ASHEN_FENCE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
-        blockItem(ModBlocks.ASHEN_FENCE);
         fenceGateBlock((FenceGateBlock) ModBlocks.ASHEN_FENCE_GATE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         blockItem(ModBlocks.ASHEN_FENCE_GATE);
         pressurePlateBlock((PressurePlateBlock)ModBlocks.ASHEN_PRESSURE_PLATE.get(),blockTexture(ModBlocks.ASHEN_PLANKS.get()));
+        blockItem(ModBlocks.ASHEN_PRESSURE_PLATE);
+        buttonBlock((ButtonBlock)ModBlocks.ASHEN_BUTTON.get(), blockTexture(ModBlocks.ASHEN_PLANKS.get()));
         logBlock((RotatedPillarBlock) ModBlocks.ASHEN_LOG.get());
         blockItem(ModBlocks.ASHEN_LOG);
+
+
+        axisBlock((RotatedPillarBlock) ModBlocks.ASHEN_WOOD.get(), ScalmythAPI.rl("block/ashen_log"), ScalmythAPI.rl("block/ashen_log"));
+        blockItem(ModBlocks.ASHEN_WOOD);
+
+        axisBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_WOOD.get(), ScalmythAPI.rl("block/stripped_ashen_log"), ScalmythAPI.rl("block/stripped_ashen_log"));
+        blockItem(ModBlocks.STRIPPED_ASHEN_WOOD);
+
+
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_LOG.get());
         blockItem(ModBlocks.STRIPPED_ASHEN_LOG);
 

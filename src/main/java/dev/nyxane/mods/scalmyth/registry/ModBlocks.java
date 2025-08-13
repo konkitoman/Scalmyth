@@ -39,6 +39,14 @@ public class ModBlocks {
                     .sound(SoundType.WOOD)
                     // .ignitedByLava()
           ));
+    public static final DeferredBlock<Block> ASHEN_WOOD = BLOCKS.register("ashen_wood",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
   public static final DeferredBlock<Block> STRIPPED_ASHEN_LOG = BLOCKS.register("stripped_ashen_log",
           () -> new RotatedPillarBlock(
                   BlockBehaviour.Properties.of()
@@ -47,6 +55,15 @@ public class ModBlocks {
                           .sound(SoundType.WOOD)
                   // .ignitedByLava()
           ));
+
+    public static final DeferredBlock<Block> STRIPPED_ASHEN_WOOD = BLOCKS.register("stripped_ashen_wood",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
 
     public static final DeferredBlock<Block> ASHEN_PLANKS = BLOCKS.register("ashen_planks",
             () -> new RotatedPillarBlock(
@@ -86,6 +103,15 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> ASHEN_PRESSURE_PLATE = BLOCKS.register("ashen_pressure_plate",
             () -> new PressurePlateBlock(new BlockSetType("ashen"),
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
+
+    public static final DeferredBlock<Block> ASHEN_BUTTON = BLOCKS.register("ashen_button",
+            () -> new ButtonBlock(new BlockSetType("ashen"), 20,
                     BlockBehaviour.Properties.of()
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
