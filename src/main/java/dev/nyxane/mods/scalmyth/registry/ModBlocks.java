@@ -54,11 +54,8 @@ public class ModBlocks {
     public static final DeferredBlock<Block> POTTED_BLOOD_FLOWER = BLOCKS.register("potted_bloodflower", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, BLOOD_FLOWER,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
-                    .noCollission()
                     .instabreak()
-                    .sound(SoundType.GRASS)
-                    .offsetType(BlockBehaviour.OffsetType.XYZ)
-                    .ignitedByLava()
+                    .sound(SoundType.STONE)
                     .pushReaction(PushReaction.DESTROY)
                     .noOcclusion()
             ));
