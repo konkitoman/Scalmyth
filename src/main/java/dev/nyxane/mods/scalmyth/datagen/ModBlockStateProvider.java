@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -67,10 +68,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         getVariantBuilder(ModBlocks.ASHEN_SHORT_GRASS.get())
                 .partialState().with(AshenShortGrassBlock.TALL, false)
-                .modelForState().modelFile(blockModelFile(name(ModBlocks.ASHEN_SHORT_GRASS))).addModel()
+                .modelForState().modelFile(crossBlock(ModBlocks.ASHEN_SHORT_GRASS, "")).addModel()
                 .partialState().with(AshenShortGrassBlock.TALL, true)
-                .modelForState().modelFile(blockModelFile(name(ModBlocks.ASHEN_SHORT_GRASS)+"_long")).addModel();
-        blockItem(ModBlocks.ASHEN_SHORT_GRASS);
+                .modelForState().modelFile(crossBlock(ModBlocks.ASHEN_SHORT_GRASS,"_long")).addModel();
+        doublePlantBlock(ModBlocks.ASHEN_TALL_GRASS);
+        doublePlantBlock(ModBlocks.LARGE_ASHEN_FERN);
+        simpleBlock(ModBlocks.ASHEN_FERN.get(), crossBlock(ModBlocks.ASHEN_FERN, ""));
+
         trapdoorBlock((TrapDoorBlock) ModBlocks.ASHEN_TRAPDOOR.get(), blockTexture(ModBlocks.ASHEN_TRAPDOOR.get()), false);
         simpleBlockItem(ModBlocks.ASHEN_TRAPDOOR.get(), blockModelFile(name(ModBlocks.ASHEN_TRAPDOOR) + "_bottom"));
         blockItem(ModBlocks.ASHEN_VINES);
@@ -79,6 +83,21 @@ public class ModBlockStateProvider extends BlockStateProvider {
     private ResourceLocation blockTexture(Block block, String suffix) {
         ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
         return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + name.getPath()+suffix);
+    }
+
+    private void doublePlantBlock(DeferredBlock<?> block) {
+        getVariantBuilder(block.get())
+                .partialState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
+                .modelForState().modelFile(crossBlock(block, "_top")).addModel()
+                .partialState().with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
+                .modelForState().modelFile(crossBlock(block,"_bottom")).addModel();
+    }
+
+    private ModelFile crossBlock(DeferredBlock<?> block, String suffix) {
+        return models().withExistingParent(block.getId().getPath()+suffix, "block/cross")
+                .texture("cross", blockTexture(block.get(), suffix))
+                .texture("particle", blockTexture(block.get(), suffix))
+                .renderType("cutout");
     }
 
     private void block(DeferredBlock<?> deferredBlock) {

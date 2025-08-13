@@ -27,6 +27,12 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.BLOOD_FLOWER.get());
         add(ModBlocks.POTTED_BLOOD_FLOWER.get(), createPotFlowerItemTable(ModBlocks.BLOOD_FLOWER.get()));
         dropWhenSheared(ModBlocks.ASHEN_SHORT_GRASS.get());
+        add(ModBlocks.ASHEN_TALL_GRASS.get(),
+                block -> createDoublePlantShearsDrop(ModBlocks.ASHEN_TALL_GRASS.get()));
+        add(ModBlocks.ASHEN_FERN.get(),
+                block -> createShearsOnlyDrop(ModBlocks.ASHEN_FERN.get()));
+        add(ModBlocks.LARGE_ASHEN_FERN.get(),
+                block -> createDoublePlantShearsDrop(ModBlocks.LARGE_ASHEN_FERN.get()));
         dropSelf(ModBlocks.ASHEN_LOG.get());
         dropSelf(ModBlocks.ASHEN_WOOD.get());
         dropSelf(ModBlocks.ASHEN_PLANKS.get());

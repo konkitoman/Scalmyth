@@ -24,6 +24,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.STRIPPED_ASHEN_LOG.get());
         tag(BlockTags.FENCES)
                 .add(ModBlocks.ASHEN_FENCE.get());
+        tag(BlockTags.WOODEN_FENCES)
+                .add(ModBlocks.ASHEN_FENCE.get());
         tag(BlockTags.FENCE_GATES)
                 .add(ModBlocks.ASHEN_FENCE_GATE.get());
         tag(BlockTags.DIRT)
