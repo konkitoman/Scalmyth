@@ -175,6 +175,7 @@ public class ModBlocks {
                   BlockBehaviour.Properties.of()
                           .mapColor(MapColor.PLANT)
                           .strength(0.2F)
+                          .sound(SoundType.CHERRY_LEAVES)
                           .randomTicks()
                           .noOcclusion()
                           .isValidSpawn(Blocks::ocelotOrParrot)
