@@ -21,9 +21,24 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
+        planksFromLog(recipeOutput, ModItems.ASHEN_PLANKS.get(), ModItems.TAG_LOGS, 4);
+        fenceBuilder(ModItems.ASHEN_FENCE, Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen",has(ModItems.ASHEN_LOG))
+                .save(recipeOutput);
+        fenceGateBuilder(ModItems.ASHEN_FENCE_GATE, Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen",has(ModItems.ASHEN_LOG))
+                .save(recipeOutput);
         stairBuilder(ModBlocks.ASHEN_STAIR.get(), Ingredient.of(ModItems.ASHEN_PLANKS))
                 .group("ashen")
                 .unlockedBy("has_ashen",has(ModItems.ASHEN_LOG)).save(recipeOutput);
+        pressurePlate(recipeOutput, ModItems.ASHEN_PRESSURE_PLATE, ModItems.ASHEN_PLANKS);
+        buttonBuilder(ModItems.ASHEN_BUTTON, Ingredient.of(ModItems.ASHEN_PLANKS))
+                .group("ashen")
+                .unlockedBy("has_ashen", has(ModItems.ASHEN_PLANKS))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModItems.ASHEN_SLAB, ModItems.ASHEN_PLANKS);
     }
 
     protected static void foodCooking(RecipeOutput recipeOutput, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult,

@@ -3,14 +3,14 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.items.AshDustItem;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
 
@@ -36,6 +36,7 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_BUTTON = block(ModBlocks.ASHEN_BUTTON);
     public static final DeferredItem<Item> ASHEN_TRAPDOOR = block(ModBlocks.ASHEN_TRAPDOOR);
 
+    public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 
     private static DeferredItem<Item> block(DeferredBlock<?> block) {
         return block(block, new Item.Properties());
