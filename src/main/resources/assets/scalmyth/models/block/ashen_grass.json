@@ -2,12 +2,12 @@
   "parent": "block/cube",
   "textures": {
     "down": "minecraft:block/dirt",
-    "up": "scalmyth:block/blackgrass_top",
-    "north": "scalmyth:block/blackgrass_side_2",
-    "east": "scalmyth:block/blackgrass_side_1",
-    "south": "scalmyth:block/blackgrass_side_2",
-    "west": "scalmyth:block/blackgrass_side_1",
-    "particle": "scalmyth:block/blackgrass_side_2"
+    "up": "scalmyth:block/ashen_grass_top",
+    "north": "scalmyth:block/ashen_grass_side_2",
+    "east": "scalmyth:block/ashen_grass_side_1",
+    "south": "scalmyth:block/ashen_grass_side_2",
+    "west": "scalmyth:block/ashen_grass_side_1",
+    "particle": "scalmyth:block/ashen_grass_side_2"
   },
   "render_type": "solid"
 }

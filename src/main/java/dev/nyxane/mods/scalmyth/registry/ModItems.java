@@ -2,10 +2,7 @@ package dev.nyxane.mods.scalmyth.registry;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
-import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.items.AshDustItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -22,10 +19,10 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_GRASS = block(ModBlocks.ASHEN_GRASS);
     public static final DeferredItem<Item> ASH_DUST = REGISTRY.register("ash_dust", AshDustItem::new);
     public static final DeferredItem<Item> ASHEN_SHORT_GRASS = block(ModBlocks.ASHEN_SHORT_GRASS);
-    public static final DeferredItem<Item> BLACK_LOG = block(ModBlocks.BLACK_LOG);
-    public static final DeferredItem<Item> STRIPPED_BLACK_LOG = block(ModBlocks.STRIPPED_BLACK_LOG);
-    public static final DeferredItem<Item> BLACK_DOOR = block(ModBlocks.BLACK_DOOR);
-    public static final DeferredItem<Item> BLACK_LEAVES = block(ModBlocks.BLACK_LEAVES);
+    public static final DeferredItem<Item> ASHEN_LOG = block(ModBlocks.ASHEN_LOG);
+    public static final DeferredItem<Item> STRIPPED_ASHEN_LOG = block(ModBlocks.STRIPPED_ASHEN_LOG);
+    public static final DeferredItem<Item> ASHEN_DOOR = block(ModBlocks.ASHEN_DOOR);
+    public static final DeferredItem<Item> ASHEN_LEAVES = block(ModBlocks.ASHEN_LEAVES);
 
     private static DeferredItem<Item> block(DeferredHolder<Block, Block> block) {
         return block(block, new Item.Properties());

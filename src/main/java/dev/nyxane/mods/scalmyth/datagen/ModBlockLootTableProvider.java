@@ -20,11 +20,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         otherWhenSilkTouch(ModBlocks.ASHEN_GRASS.get(),
                 net.minecraft.world.level.block.Blocks.DIRT);
         dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
-        dropSelf(ModBlocks.BLACK_LOG.get());
-        dropSelf(ModBlocks.STRIPPED_BLACK_LOG.get());
-        add(ModBlocks.BLACK_DOOR.get(),
-                block -> createDoorTable(ModBlocks.BLACK_DOOR.get()));
-        dropWhenSilkTouch(ModBlocks.BLACK_LEAVES.get());
+        dropSelf(ModBlocks.ASHEN_LOG.get());
+        dropSelf(ModBlocks.STRIPPED_ASHEN_LOG.get());
+        add(ModBlocks.ASHEN_DOOR.get(),
+                block -> createDoorTable(ModBlocks.ASHEN_DOOR.get()));
+        dropWhenSilkTouch(ModBlocks.ASHEN_LEAVES.get());
     }
 
     @Override

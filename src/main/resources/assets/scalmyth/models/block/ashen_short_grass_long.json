@@ -1,8 +1,8 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "scalmyth:block/blackgrass_tall_1",
-    "particle": "scalmyth:block/blackgrass_tall_1"
+    "cross": "scalmyth:block/ashen_grass_tall_1",
+    "particle": "scalmyth:block/ashen_grass_tall_1"
   },
   "render_type": "cutout"
 }

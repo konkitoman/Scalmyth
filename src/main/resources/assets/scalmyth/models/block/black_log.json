@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_column",
-  "textures": {
-    "end": "scalmyth:block/blacklog_top",
-    "side": "scalmyth:block/blacklog_side"
-  },
-  "render_type": "solid"
-}

@@ -4,13 +4,8 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
 
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.core.registries.Registries;
 
@@ -34,10 +29,10 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_GRASS.get().asItem());
         output.accept(ModItems.ASHEN_SHORT_GRASS.get().asItem());
         output.accept(ModItems.ASH_DUST.get());
-        output.accept(ModItems.BLACK_LOG.get());
-        output.accept(ModItems.STRIPPED_BLACK_LOG.get());
-        output.accept(ModItems.BLACK_DOOR.get());
-        output.accept(ModItems.BLACK_LEAVES.get());
+        output.accept(ModItems.ASHEN_LOG.get());
+        output.accept(ModItems.STRIPPED_ASHEN_LOG.get());
+        output.accept(ModItems.ASHEN_DOOR.get());
+        output.accept(ModItems.ASHEN_LEAVES.get());
     }
 
     public static void register(IEventBus eventBus) {

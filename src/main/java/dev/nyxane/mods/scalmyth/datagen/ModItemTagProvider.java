@@ -20,7 +20,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(ItemTags.LOGS_THAT_BURN)
-                .add(ModItems.BLACK_LOG.get())
-                .add(ModItems.STRIPPED_BLACK_LOG.get());
+                .add(ModItems.ASHEN_LOG.get())
+                .add(ModItems.STRIPPED_ASHEN_LOG.get());
     }
 }

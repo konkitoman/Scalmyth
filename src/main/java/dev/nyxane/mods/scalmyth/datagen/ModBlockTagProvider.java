@@ -19,7 +19,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_AXE)
-                .add(ModBlocks.BLACK_LOG.get())
-                .add(ModBlocks.STRIPPED_BLACK_LOG.get());
+                .add(ModBlocks.ASHEN_LOG.get())
+                .add(ModBlocks.STRIPPED_ASHEN_LOG.get());
     }
 }

@@ -3,7 +3,6 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
-import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -11,7 +10,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -31,7 +29,7 @@ public class ModBlocks {
                           .ignitedByLava()
                           .pushReaction(PushReaction.DESTROY)
           ));
-  public static final DeferredBlock<Block> BLACK_LOG = BLOCKS.register("black_log",
+  public static final DeferredBlock<Block> ASHEN_LOG = BLOCKS.register("ashen_log",
           () -> new RotatedPillarBlock(
             BlockBehaviour.Properties.of()
                     .strength(2.0F)
@@ -39,7 +37,7 @@ public class ModBlocks {
                     .sound(SoundType.WOOD)
                     // .ignitedByLava()
           ));
-  public static final DeferredBlock<Block> STRIPPED_BLACK_LOG = BLOCKS.register("stripped_black_log",
+  public static final DeferredBlock<Block> STRIPPED_ASHEN_LOG = BLOCKS.register("stripped_ashen_log",
           () -> new RotatedPillarBlock(
                   BlockBehaviour.Properties.of()
                           .strength(2.0F)
@@ -48,14 +46,14 @@ public class ModBlocks {
                   // .ignitedByLava()
           ));
 
-  public static final DeferredBlock<Block> BLACK_DOOR = BLOCKS.register("black_door",
+  public static final DeferredBlock<Block> ASHEN_DOOR = BLOCKS.register("ashen_door",
           () -> new DoorBlock(
                   new BlockSetType("black"),
                   BlockBehaviour.Properties.of()
                           .strength(2.0f)
                           .sound(SoundType.WOOD)
           ));
-  public static final DeferredBlock<Block> BLACK_LEAVES = BLOCKS.register("black_leaves",
+  public static final DeferredBlock<Block> ASHEN_LEAVES = BLOCKS.register("ashen_leaves",
           () -> new LeavesBlock(
                   BlockBehaviour.Properties.of()
                           .mapColor(MapColor.PLANT)
