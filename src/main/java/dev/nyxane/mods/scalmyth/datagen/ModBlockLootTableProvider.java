@@ -19,6 +19,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         otherWhenSilkTouch(ModBlocks.ASHEN_GRASS.get(),
                 net.minecraft.world.level.block.Blocks.DIRT);
+
+        dropSelf(ModBlocks.BLOOD_FLOWER.get());
+
         dropWhenSilkTouch(ModBlocks.ASHEN_SHORT_GRASS.get());
         dropSelf(ModBlocks.ASHEN_LOG.get());
         dropSelf(ModBlocks.ASHEN_WOOD.get());

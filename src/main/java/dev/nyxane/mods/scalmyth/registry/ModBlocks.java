@@ -3,6 +3,9 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
+import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -11,7 +14,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -30,7 +32,24 @@ public class ModBlocks {
                           .offsetType(BlockBehaviour.OffsetType.XYZ)
                           .ignitedByLava()
                           .pushReaction(PushReaction.DESTROY)
+                          .noOcclusion()
           ));
+
+    public static final DeferredBlock<Block> BLOOD_FLOWER = BLOCKS.register(
+            "bloodflower",
+            () -> new BloodFlowerBlock(MobEffects.DARKNESS, 1,
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.PLANT)
+                            .replaceable()
+                            .noCollission()
+                            .instabreak()
+                            .sound(SoundType.GRASS)
+                            .offsetType(BlockBehaviour.OffsetType.XYZ)
+                            .ignitedByLava()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noOcclusion()
+            ));
+
   public static final DeferredBlock<Block> ASHEN_LOG = BLOCKS.register("ashen_log",
           () -> new RotatedPillarBlock(
             BlockBehaviour.Properties.of()
@@ -98,6 +117,7 @@ public class ModBlocks {
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
                             .sound(SoundType.WOOD)
+                            .noOcclusion()
                     // .ignitedByLava()
             ));
 
@@ -107,15 +127,17 @@ public class ModBlocks {
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
                             .sound(SoundType.WOOD)
+                            .noOcclusion()
                     // .ignitedByLava()
             ));
 
     public static final DeferredBlock<Block> ASHEN_BUTTON = BLOCKS.register("ashen_button",
-            () -> new ButtonBlock(new BlockSetType("ashen"), 20,
+            () -> new ButtonBlock(new BlockSetType("ashen"), 30,
                     BlockBehaviour.Properties.of()
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
                             .sound(SoundType.WOOD)
+                            .noOcclusion()
                     // .ignitedByLava()
             ));
 
@@ -125,6 +147,7 @@ public class ModBlocks {
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
                             .sound(SoundType.WOOD)
+                            .noOcclusion()
                     // .ignitedByLava()
             ));
 
@@ -134,6 +157,7 @@ public class ModBlocks {
                   BlockBehaviour.Properties.of()
                           .strength(2.0f)
                           .sound(SoundType.WOOD)
+                          .noOcclusion()
           ));
   public static final DeferredBlock<Block> ASHEN_LEAVES = BLOCKS.register("ashen_leaves",
           () -> new LeavesBlock(

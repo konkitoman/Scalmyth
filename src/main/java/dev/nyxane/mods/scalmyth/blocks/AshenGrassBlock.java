@@ -3,6 +3,7 @@ package dev.nyxane.mods.scalmyth.blocks;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.world.level.block.Block;
 
+import net.minecraft.world.level.block.GrassBlock;
 import net.neoforged.neoforge.common.util.DeferredSoundType;
 import dev.nyxane.mods.scalmyth.block_operations.AshenGrassBonemeal;
 
@@ -21,7 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.util.Mth;
 
-public class AshenGrassBlock extends Block implements BonemealableBlock {
+public class AshenGrassBlock extends GrassBlock {
     public AshenGrassBlock() {
         super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
                 .sound(new DeferredSoundType(1.0f, 1.0f, () -> BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("scalmyth:ashen.earth.break")), () -> BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("scalmyth:ashen.earth.step")),
@@ -45,7 +46,6 @@ public class AshenGrassBlock extends Block implements BonemealableBlock {
         double goalY = pos.getY();
         double goalZ = pos.getZ();
         if (world.getBlockState(BlockPos.containing(x, y + 1, z)).canOcclude()) {
-            world.setBlock(BlockPos.containing(x, y, z), Blocks.DIRT.defaultBlockState(), 3);
         } else {
             goalX = x + Mth.nextInt(RandomSource.create(), -1, 1);
             goalY = y + Mth.nextInt(RandomSource.create(), -1, 1);

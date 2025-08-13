@@ -22,5 +22,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
         tag(ItemTags.LOGS_THAT_BURN)
                 .add(ModItems.ASHEN_LOG.get())
                 .add(ModItems.STRIPPED_ASHEN_LOG.get());
+        tag(ItemTags.DIRT).add(ModItems.ASHEN_GRASS.get());
+        tag(ItemTags.FLOWERS).add(ModItems.BLOOD_FLOWER.get());
     }
 }
