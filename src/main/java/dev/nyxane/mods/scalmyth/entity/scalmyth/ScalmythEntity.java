@@ -2,9 +2,9 @@ package dev.nyxane.mods.scalmyth.entity.scalmyth;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.registry.ModSounds;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -15,27 +15,41 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.api.SmartBrainOwner;
+import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
+import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
+import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
-public class ScalmythEntity extends Monster implements GeoEntity {
+public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwner<ScalmythEntity> {
   private static final Random RANDOM = new Random();
   //    protected static final RawAnimation STATIC_POSE = RawAnimation.begin().then("static_pose", Animation.LoopType.LOOP);
 //    protected static final RawAnimation STATIC_POSE_2;
@@ -47,9 +61,6 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   protected static final RawAnimation WALKING = RawAnimation.begin().then("walking",Animation.LoopType.LOOP);
   private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
   private Level tempWorld; //reusable value for world, declared here to save ram access costs
-
-  private int stage = 0;
-  private int stage_tick = 0;
 
   public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
     super(entityType, level);
@@ -63,21 +74,20 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   @Override
   protected void customServerAiStep() {
     super.customServerAiStep();
+    tickBrain(this);
     ServerLevel serverlevel = (ServerLevel) this.level();
 
     if ((this.tickCount + this.getId()) % 120 == 0) {
       applyDarknessAround(serverlevel, this.position(), this, 50);
     }
   }
-
-  @Override
+    @Override
   public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
     controllers.add(new AnimationController<>(this, "walkController", 1, this::walkController));
     controllers.add(new AnimationController<>(this, "idleController", 1, this::idleController));
-
   }
 
-  protected <E extends ScalmythEntity>PlayState walkController(final AnimationState<E> event) {
+    protected <E extends ScalmythEntity>PlayState walkController(final AnimationState<E> event) {
     if(event.isMoving())
       return event.setAndContinue(WALKING);
     return PlayState.STOP;
@@ -120,104 +130,6 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   }
 
   @Override
-  protected void registerGoals() {
-    super.registerGoals();
-
-    AvoidEntityGoal avoid_player = new AvoidEntityGoal(this, Player.class, 50F, 3D, 1.0D){
-      @Override
-      public boolean canUse() {
-        if (stage != 1) return false;
-
-        return super.canUse();
-      }
-
-      @Override
-      public boolean canContinueToUse() {
-        if (stage != 1) return false;
-
-        if (!this.pathNav.isDone()) return true;
-
-        if (toAvoid != null && distanceTo(toAvoid) > 40){
-          stage = 2;
-          this.stop();
-        }
-
-        return false;
-      }
-    };
-
-    this.goalSelector.addGoal(1, new BreathAirGoal(this) {
-      @Override
-      public boolean canUse() {
-        tempWorld = ScalmythEntity.this.level(); //is run actively, unlike addGoal, so this is needed to be set constantly
-        return super.canUse() && ScalmythEntity.this.isInWater();
-      }
-      @Override
-      public boolean canContinueToUse() {
-        tempWorld = ScalmythEntity.this.level(); //is run actively, unlike addGoal, so this is needed to be set constantly
-        return super.canContinueToUse() && ScalmythEntity.this.isInWater();
-      }
-    });
-    this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true) {
-      @Override
-      public boolean canUse() {
-        if (stage == 0 || stage == 2){
-          return super.canUse();
-        }
-        return false;
-      }
-
-      @Override
-      public boolean canContinueToUse() {
-        if (stage == 0 || stage == 2){
-          return super.canContinueToUse();
-        }
-        return false;
-      }
-
-      @Override
-      protected boolean canPerformAttack(LivingEntity entity) {
-        switch (stage){
-          case 0:
-            ScalmythAPI.LOGGER.info("Distance: {}", this.mob.distanceToSqr(entity));
-            if (this.mob.distanceTo(entity) < 11 ){
-              if (stage_tick > 50){
-                ScalmythAPI.LOGGER.info("RUN");
-                stage = 1;
-                this.stop();
-              }
-
-              stage_tick += 1;
-            }
-            break;
-          case 1: return false;
-          case 2:
-            boolean res = this.isTimeToAttack() && this.mob.distanceTo(entity) < 11 && this.mob.getSensing().hasLineOfSight(entity);
-
-/*            if (res){
-              stage = 0;
-              stage_tick = 0;
-            }*/
-
-            return res;
-        }
-
-        return false;
-      }
-    });
-    targetSelector.addGoal(1, avoid_player);
-    this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, false, false));
-    this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, ServerPlayer.class, false, false));
-    this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
-    this.targetSelector.addGoal(6, new NearestAttackableTargetGoal(this, Villager.class, false, false));
-    this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
-    this.goalSelector.addGoal(8, new RemoveBlockGoal(Blocks.GLASS, this, 1, (int) 3));
-    this.goalSelector.addGoal(9, new RandomStrollGoal(this, 1));
-    this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
-    this.goalSelector.addGoal(11, new FloatGoal(this));
-  }
-
-  @Override
   public boolean hurt(DamageSource damagesource, float amount) { //commented out for now, to make it impossible to damage- in most cases
       if (damagesource.is(DamageTypes.GENERIC_KILL) || damagesource.is(DamageTypes.IN_WALL)){
         return super.hurt(damagesource, amount);
@@ -244,4 +156,45 @@ public class ScalmythEntity extends Monster implements GeoEntity {
   protected void playStepSound(BlockPos pos, BlockState state) {
     this.playSound(ModSounds.SCALMYTH_FOOTSTEPS.get());
   }
+
+    @Override
+    protected Brain.Provider<?> brainProvider() {
+        return new SmartBrainProvider<>(this);
+    }
+
+    @Override
+    public BrainActivityGroup<? extends ScalmythEntity> getCoreTasks() {
+        return BrainActivityGroup.coreTasks(
+                new LookAtTarget(),
+                new MoveToWalkTarget<>());
+    }
+
+
+
+    @Override
+    public BrainActivityGroup<? extends ScalmythEntity> getIdleTasks() {
+        return BrainActivityGroup.idleTasks(
+                new FirstApplicableBehaviour<ScalmythEntity>(
+                        new TargetOrRetaliate<>().attackablePredicate(entity -> entity instanceof Player),
+                        new SetPlayerLookTarget<>(),
+                        new SetRandomLookTarget<>()
+                )
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends ScalmythEntity> getFightTasks() {
+        return BrainActivityGroup.fightTasks(
+                new InvalidateAttackTarget(),
+                new SetWalkTargetToAttackTarget<>()
+        );
+    }
+
+    @Override
+    public List<? extends ExtendedSensor<? extends ScalmythEntity>> getSensors() {
+        return ObjectArrayList.of(
+                new NearbyLivingEntitySensor<>(),
+                new HurtBySensor<>()
+        );
+    }
 }

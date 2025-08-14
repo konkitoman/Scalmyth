@@ -17,7 +17,13 @@ public class ModEntities {
   public static final DeferredHolder<EntityType<?>, EntityType<ScalmythEntity>>
           SCALMYTH = ENTITY_TYPES.register("scalmyth",()->
               EntityType.Builder.of(ScalmythEntity::new,
-                      MobCategory.MONSTER).sized(8.0f,4.0f).build(ScalmythAPI.rl("scalmyth").toString()));
+                      MobCategory.MONSTER)
+                      .sized(8.0f,3.0f)
+                      .spawnDimensionsScale(8f)
+                      .setTrackingRange(10)
+                      .clientTrackingRange(10)
+                      .eyeHeight(2)
+                      .build(ScalmythAPI.rl("scalmyth").toString()));
 
   public static void register(IEventBus eventBus) {
     ENTITY_TYPES.register(eventBus);
