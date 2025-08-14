@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "scalmyth:block/ashen_branch",
+      "y": 90
+    },
+    "axis=y": {
+      "model": "scalmyth:block/ashen_branch"
+    },
+    "axis=z": {
+      "model": "scalmyth:block/ashen_branch"
+    }
+  }
+}

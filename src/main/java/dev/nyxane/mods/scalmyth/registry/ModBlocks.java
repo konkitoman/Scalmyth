@@ -139,6 +139,14 @@ public class ModBlocks {
                             .sound(SoundType.WOOD)
                     // .ignitedByLava()
             ));
+    public static final DeferredBlock<Block> ASHEN_BRANCH = BLOCKS.register("ashen_branch",
+            () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .sound(SoundType.WOOD)
+                    // .ignitedByLava()
+            ));
 
     public static final DeferredBlock<Block> ASHEN_PLANKS = BLOCKS.register("ashen_planks",
             () -> new RotatedPillarBlock(

@@ -25,6 +25,7 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_WOOD = block(ModBlocks.ASHEN_WOOD);
     public static final DeferredItem<Item> STRIPPED_ASHEN_LOG = block(ModBlocks.STRIPPED_ASHEN_LOG);
     public static final DeferredItem<Item> STRIPPED_ASHEN_WOOD = block(ModBlocks.STRIPPED_ASHEN_WOOD);
+    public static final DeferredItem<Item> ASHEN_BRANCH = block(ModBlocks.ASHEN_BRANCH);
     public static final DeferredItem<Item> ASHEN_DOOR = block(ModBlocks.ASHEN_DOOR);
     public static final DeferredItem<Item> ASHEN_LEAVES = block(ModBlocks.ASHEN_LEAVES);
     public static final DeferredItem<Item> ASHEN_VINES = block(ModBlocks.ASHEN_VINES);

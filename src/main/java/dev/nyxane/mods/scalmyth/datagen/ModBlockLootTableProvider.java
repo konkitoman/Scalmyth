@@ -40,6 +40,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 block -> createSlabItemTable(ModBlocks.ASHEN_SLAB.get()));
         dropSelf(ModBlocks.STRIPPED_ASHEN_LOG.get());
         dropSelf(ModBlocks.STRIPPED_ASHEN_WOOD.get());
+        dropSelf(ModBlocks.ASHEN_BRANCH.get());
         dropSelf(ModBlocks.ASHEN_STAIR.get());
         dropSelf(ModBlocks.ASHEN_FENCE.get());
         dropSelf(ModBlocks.ASHEN_FENCE_GATE.get());

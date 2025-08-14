@@ -44,6 +44,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.STRIPPED_ASHEN_WOOD);
         logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_ASHEN_LOG.get());
         blockItem(ModBlocks.STRIPPED_ASHEN_LOG);
+
+
+        blockItem(ModBlocks.ASHEN_BRANCH);
+
         block(ModBlocks.ASHEN_GRASS);
         blockItem(ModBlocks.ASHEN_GRASS);
         block(ModBlocks.BLOOD_FLOWER);

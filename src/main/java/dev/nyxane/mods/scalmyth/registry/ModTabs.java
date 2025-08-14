@@ -34,6 +34,7 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_WOOD.get());
         output.accept(ModItems.STRIPPED_ASHEN_LOG.get());
         output.accept(ModItems.STRIPPED_ASHEN_WOOD.get());
+        output.accept(ModItems.ASHEN_BRANCH.get());
         output.accept(ModItems.ASHEN_DOOR.get());
         output.accept(ModItems.ASHEN_LEAVES.get());
         output.accept(ModItems.ASHEN_PLANKS.get());
