@@ -41,3 +41,10 @@ file="META-INF/accesstransformer.cfg"
     versionRange="[1.21.1]"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.scalmyth]]
+modId="smartbrainlib"
+type="required"
+versionRange="[1.16,)"
+ordering="NONE"
+side="SERVER"
