@@ -4,7 +4,7 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
-import dev.nyxane.mods.scalmyth.worldgen.ModTreeGrowers;
+import dev.nyxane.mods.scalmyth.worldgen.tree.ModTreeGrowers;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.block.*;

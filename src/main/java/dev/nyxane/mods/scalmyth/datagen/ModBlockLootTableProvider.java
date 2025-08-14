@@ -54,7 +54,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.ASHEN_GROOVED_STONE_BRICK.get());
         dropSelf(ModBlocks.ASHEN_BRICKS.get());
         add(ModBlocks.ASHEN_VINES.get(), block ->
-            createLeavesDrops(block, ModBlocks.ASHEN_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
+            createLeavesDrops(block, ModBlocks.ASHEN_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES)); // TODO higher droprate
         dropSelf(ModBlocks.ASHEN_SAPLING.get());
     }
 

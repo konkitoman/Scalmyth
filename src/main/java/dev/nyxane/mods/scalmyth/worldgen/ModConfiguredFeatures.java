@@ -15,15 +15,27 @@ import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSi
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.GiantTrunkPlacer;
 
 public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ASHEN_TREE = registerKey("ashen_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ASHEN_TREE_BIG = registerKey("ashen_tree_big");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        // temporary tree solution
+        // temporary trunk placers. will use custom later
         register(context, ASHEN_TREE, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.ASHEN_LOG.get()),
                 new ForkingTrunkPlacer(4, 4, 3),
+
+                BlockStateProvider.simple(ModBlocks.ASHEN_LEAVES.get()),
+                new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(3), 3),
+
+                new TwoLayersFeatureSize(1, 0, 2)
+        ).build());
+
+        register(context, ASHEN_TREE_BIG, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(ModBlocks.ASHEN_LOG.get()),
+                new GiantTrunkPlacer(4, 4, 3),
 
                 BlockStateProvider.simple(ModBlocks.ASHEN_LEAVES.get()),
                 new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(3), 3),
