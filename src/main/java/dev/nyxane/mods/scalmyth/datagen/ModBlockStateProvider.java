@@ -81,6 +81,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         trapdoorBlock((TrapDoorBlock) ModBlocks.ASHEN_TRAPDOOR.get(), blockTexture(ModBlocks.ASHEN_TRAPDOOR.get()), false);
         simpleBlockItem(ModBlocks.ASHEN_TRAPDOOR.get(), blockModelFile(name(ModBlocks.ASHEN_TRAPDOOR) + "_bottom"));
         blockItem(ModBlocks.ASHEN_VINES);
+
+        saplingBlock(ModBlocks.ASHEN_SAPLING);
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {
@@ -124,5 +126,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private ResourceLocation extend(ResourceLocation rl, String suffix) {
         return ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), rl.getPath() + suffix);
+    }
+
+    private void saplingBlock(DeferredBlock<Block> deferredBlock) {
+        simpleBlock(deferredBlock.get(),
+                models().cross(BuiltInRegistries.BLOCK.getKey(deferredBlock.get()).getPath(),
+                        blockTexture(deferredBlock.get())).renderType("cutout"));
     }
 }

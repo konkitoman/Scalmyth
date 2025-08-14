@@ -51,6 +51,7 @@ public class ModTabs {
         output.accept(ModItems.ASHEN_VINES.get());
         output.accept(ModItems.LARGE_ASHEN_FERN.get());
         output.accept(ModItems.ASHEN_FERN.get());
+        output.accept(ModItems.ASHEN_SAPLING.get());
     }
 
     public static void register(IEventBus eventBus) {

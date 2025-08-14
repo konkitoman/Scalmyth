@@ -45,5 +45,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         flatBlockItem(ModBlocks.ASHEN_TALL_GRASS, "_top");
         flatBlockItem(ModBlocks.ASHEN_FERN, "");
         flatBlockItem(ModBlocks.LARGE_ASHEN_FERN, "_top");
+        flatBlockItem(ModBlocks.ASHEN_SAPLING, "");
     }
 }

@@ -3,13 +3,8 @@ package dev.nyxane.mods.scalmyth;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
-import dev.nyxane.mods.scalmyth.registry.ModEntities;
-import dev.nyxane.mods.scalmyth.registry.ModSounds;
-import dev.nyxane.mods.scalmyth.registry.ModItems;
-import dev.nyxane.mods.scalmyth.registry.ModBlocks;
-import dev.nyxane.mods.scalmyth.registry.ModTabs;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import dev.nyxane.mods.scalmyth.registry.*;
+import dev.nyxane.mods.scalmyth.worldgen.ModTreeGrowers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -21,8 +16,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(ScalmythAPI.MOD_ID)
 public class Scalmyth

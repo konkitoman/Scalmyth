@@ -4,7 +4,7 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
-import net.minecraft.world.effect.MobEffect;
+import dev.nyxane.mods.scalmyth.worldgen.ModTreeGrowers;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -224,6 +223,7 @@ public class ModBlocks {
                           .sound(SoundType.WOOD)
                           .noOcclusion()
           ));
+
     public static final DeferredBlock<Block> ASHEN_LEAVES = BLOCKS.register("ashen_leaves",
           () -> new LeavesBlock(
                   BlockBehaviour.Properties.of()
@@ -283,6 +283,8 @@ public class ModBlocks {
                     // .ignitedByLava()
             ));
 
+    public static final DeferredBlock<Block> ASHEN_SAPLING = BLOCKS.register("ashen_sapling",
+            () -> new SaplingBlock(ModTreeGrowers.ASHEN_TREE, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)));
 
 
     public static void register(IEventBus eventBus) {
