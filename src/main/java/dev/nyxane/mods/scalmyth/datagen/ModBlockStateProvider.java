@@ -63,7 +63,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 "cutout"
         );
 
-        block(ModBlocks.ASHEN_LEAVES);
         blockItem(ModBlocks.ASHEN_LEAVES);
 
         getVariantBuilder(ModBlocks.ASHEN_SHORT_GRASS.get())
