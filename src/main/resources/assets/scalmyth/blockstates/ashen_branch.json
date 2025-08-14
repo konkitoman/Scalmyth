@@ -8,7 +8,8 @@
       "model": "scalmyth:block/ashen_branch"
     },
     "axis=z": {
-      "model": "scalmyth:block/ashen_branch"
+      "model": "scalmyth:block/ashen_branch",
+      "y": -90
     }
   }
 }

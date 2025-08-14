@@ -145,6 +145,7 @@ public class ModBlocks {
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
                             .sound(SoundType.WOOD)
+                            .noOcclusion()
                     // .ignitedByLava()
             ));
 
