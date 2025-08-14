@@ -1,0 +1,36 @@
+{
+  "vertex": "minecraft:volumetric_fog",
+  "fragment": "minecraft:volumetric_fog",
+  "samplers": [
+    { "name": "DiffuseSampler", "source": "minecraft:main" },
+    { "name": "DepthSampler", "source": "minecraft:finalDepth" },
+    { "name": "ShadowMap", "source": "minecraft:shadowMap" }
+  ],
+  "uniforms": [
+    { "name": "invProjection", "type": "mat4", "count": 1, "values": [1.0, 0.0, 0.0, 0.0,  0.0, 1.0, 0.0, 0.0,  0.0, 0.0, 1.0, 0.0,  0.0, 0.0, 0.0, 1.0] },
+    { "name": "invView", "type": "mat4", "count": 1, "values": [1.0, 0.0, 0.0, 0.0,  0.0, 1.0, 0.0, 0.0,  0.0, 0.0, 1.0, 0.0,  0.0, 0.0, 0.0, 1.0] },
+    { "name": "view", "type": "mat4", "count": 1, "values": [1.0, 0.0, 0.0, 0.0,  0.0, 1.0, 0.0, 0.0,  0.0, 0.0, 1.0, 0.0,  0.0, 0.0, 0.0, 1.0] },
+
+    { "name": "cameraPos", "type": "vec3", "count": 1, "values": [0.0, 0.0, 0.0] },
+    { "name": "GameTime", "type": "float", "count": 1, "values": [0.0] },
+    { "name": "zNear", "type": "float", "count": 1, "values": [0.05] },
+    { "name": "zFar", "type": "float", "count": 1, "values": [256.0] },
+
+    { "name": "lightDir", "type": "vec3", "count": 1, "values": [0.0, -1.0, 0.0] },
+    { "name": "lightColor", "type": "vec3", "count": 1, "values": [1.0, 1.0, 1.0] },
+    { "name": "lightIntensity", "type": "float", "count": 1, "values": [1.0] },
+
+    { "name": "fogAlbedo", "type": "vec3", "count": 1, "values": [0.7, 0.75, 0.85] },
+    { "name": "density", "type": "float", "count": 1, "values": [0.04] },
+    { "name": "anisotropy", "type": "float", "count": 1, "values": [0.6] },
+
+    { "name": "fogBaseHeight", "type": "float", "count": 1, "values": [64.0] },
+    { "name": "heightFalloff", "type": "float", "count": 1, "values": [0.5] },
+
+    { "name": "noiseScale", "type": "float", "count": 1, "values": [0.02] },
+    { "name": "noiseSpeed", "type": "float", "count": 1, "values": [0.5] },
+    { "name": "noiseAmplitude", "type": "float", "count": 1, "values": [0.5] },
+
+    { "name": "maxFogDistance", "type": "float", "count": 1, "values": [200.0] }
+  ]
+}

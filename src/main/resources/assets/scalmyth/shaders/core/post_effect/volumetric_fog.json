@@ -1,0 +1,8 @@
+{
+  "program": "scalmyth:shaders/core/program/volumetric_fog",
+  "samplers": [
+    { "name": "DiffuseSampler", "source": "minecraft:main" },
+    { "name": "DepthSampler", "source": "minecraft:finalDepth" }
+  ],
+  "targets": []
+}
