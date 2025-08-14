@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AxeItemMixin",
-    "NoiseGeneratorSettingsMixin"
+    "NoiseGeneratorSettingsMixin",
+    "PathNavigationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
