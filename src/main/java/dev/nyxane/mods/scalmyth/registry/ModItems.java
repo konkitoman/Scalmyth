@@ -3,8 +3,10 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.items.AshDustItem;
+import dev.nyxane.mods.scalmyth.items.BloodCompassItem;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.CompassItem;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -44,6 +46,8 @@ public class ModItems {
     public static final DeferredItem<Item> LARGE_ASHEN_FERN = block(ModBlocks.LARGE_ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_FERN = block(ModBlocks.ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_SAPLING = block(ModBlocks.ASHEN_SAPLING);
+    public static final DeferredItem<Item> BLOOD_COMPASS = REGISTRY.register("blood_compass", () ->
+            new BloodCompassItem()); // for some reason Java doesn't like when I use BloodCompassItem::new
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 

@@ -25,6 +25,7 @@ public class Scalmyth
         ModSounds.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModDataComponents.register(modEventBus);
     }
 
 

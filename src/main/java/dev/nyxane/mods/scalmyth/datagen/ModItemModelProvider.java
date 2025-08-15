@@ -47,5 +47,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         flatBlockItem(ModBlocks.LARGE_ASHEN_FERN, "_top");
         flatBlockItem(ModBlocks.ASHEN_SAPLING, "");
         flatBlockItem(ModBlocks.BLOOD_FLOWER, "");
+
+        // TODO blood compass item model (should basically be the same as normal mc compass)
     }
 }

@@ -39,5 +39,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.STRIPPED_ASHEN_LOG.get())
                 .add(ModItems.ASHEN_WOOD.get())
                 .add(ModItems.STRIPPED_ASHEN_WOOD.get());
+        tag(ItemTags.COMPASSES)
+                .add(ModItems.BLOOD_COMPASS.get());
+        tag(ItemTags.SAPLINGS)
+                .add(ModItems.ASHEN_SAPLING.get());
     }
 }

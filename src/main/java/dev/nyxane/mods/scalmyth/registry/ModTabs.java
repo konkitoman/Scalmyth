@@ -26,6 +26,7 @@ public class ModTabs {
     private static void acceptItems(CreativeModeTab.ItemDisplayParameters itemDisplayParameters,
                                     CreativeModeTab.Output output) {
         output.accept(ModItems.SCALMYTH_SPAWN_EGG.get().asItem());
+        output.accept(ModItems.BLOOD_COMPASS.get());
         output.accept(ModItems.ASHEN_GRASS.get().asItem());
         output.accept(ModItems.BLOOD_FLOWER.get().asItem());
         output.accept(ModItems.ASHEN_SHORT_GRASS.get().asItem());
