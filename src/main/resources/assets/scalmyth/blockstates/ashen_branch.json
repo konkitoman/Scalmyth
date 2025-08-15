@@ -1,15 +1,37 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "scalmyth:block/ashen_branch",
-      "y": 90
+    "facing=east,in_wall=false,open=false": [
+      {"model": "scalmyth:block/ashen_branch", "y": 180,"weight": 100}
+    ],
+    "facing=east,in_wall=false,open=true": {
+      "y": 0,
+      "model": "scalmyth:block/ashen_branch1"
     },
-    "axis=y": {
-      "model": "scalmyth:block/ashen_branch"
+
+
+    "facing=north,in_wall=false,open=false": [
+      {"model": "scalmyth:block/ashen_branch", "y": 90,"weight": 100}
+    ],
+    "facing=north,in_wall=false,open=true": {
+      "y": 270,
+      "model": "scalmyth:block/ashen_branch1"
     },
-    "axis=z": {
-      "model": "scalmyth:block/ashen_branch",
-      "y": -90
+
+
+    "facing=south,in_wall=false,open=false": [
+      {"model": "scalmyth:block/ashen_branch", "y": 270}
+    ],
+    "facing=south,in_wall=false,open=true": {
+      "model": "scalmyth:block/ashen_branch1", "y": 90
+    },
+
+
+    "facing=west,in_wall=false,open=false": [
+      {"model": "scalmyth:block/ashen_branch", "y": 0,"weight": 100}
+    ],
+    "facing=west,in_wall=false,open=true": {
+      "y": 180,
+      "model": "scalmyth:block/ashen_branch1"
     }
   }
 }

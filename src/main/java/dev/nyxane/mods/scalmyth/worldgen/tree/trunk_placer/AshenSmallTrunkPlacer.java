@@ -30,7 +30,8 @@ public class AshenSmallTrunkPlacer extends TrunkPlacer {
             RandomSource rand,
             int i,
             BlockPos pos,
-            TreeConfiguration config) {
+            TreeConfiguration config
+    ) {
         return List.of();
     }
 }

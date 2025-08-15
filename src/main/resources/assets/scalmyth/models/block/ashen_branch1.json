@@ -1,0 +1,22 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "scalmyth:block/ashen_log",
+		"particle": "scalmyth:block/ashen_log"
+	},
+	"elements": [
+		{
+			"from": [23.94085, -4.34811, 5.5336],
+			"to": [28.94085, 21.96062, 10.4664],
+			"rotation": {"angle": -15, "axis": "z", "origin": [18.94085, 55.96062, 7.4664]},
+			"faces": {
+				"north": {"uv": [5, 0, 0, 16], "texture": "#0"},
+				"east": {"uv": [4.93279, 0, 0, 16], "texture": "#0"},
+				"south": {"uv": [5, 0, 0, 16], "texture": "#0"},
+				"west": {"uv": [4.93279, 0, 0, 16], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [0, 5, 4.93279, 0], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}
