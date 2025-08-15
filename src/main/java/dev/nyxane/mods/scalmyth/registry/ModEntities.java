@@ -22,7 +22,7 @@ public class ModEntities {
   public static void register(IEventBus eventBus) {
     ENTITY_TYPES.register(eventBus);
   }
-  @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+  @EventBusSubscriber(modid = ScalmythAPI.MOD_ID)
   public static class ModEvents {
     @SubscribeEvent
     public static void entityAttributeEvent(final EntityAttributeCreationEvent event) {
