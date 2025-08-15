@@ -2,13 +2,20 @@ package dev.nyxane.mods.scalmyth.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.nyxane.mods.scalmyth.block_operations.BloodFlowerBonemeal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +25,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 
-public class BloodFlowerBlock extends BushBlock implements SuspiciousEffectHolder {
+public class BloodFlowerBlock extends BushBlock implements SuspiciousEffectHolder, BonemealableBlock {
+    @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
         if (state.getBlock() instanceof AshenGrassBlock){
             return true;
@@ -48,11 +56,13 @@ public class BloodFlowerBlock extends BushBlock implements SuspiciousEffectHolde
         return new SuspiciousStewEffects(List.of(new SuspiciousStewEffects.Entry(effect, Mth.floor(seconds * 20.0F))));
     }
 
+    @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Vec3 vec3 = state.getOffset(level, pos);
         return SHAPE.move(vec3.x, vec3.y, vec3.z);
     }
 
+    @Override
     public SuspiciousStewEffects getSuspiciousEffects() {
         return this.suspiciousStewEffects;
     }
@@ -61,5 +71,37 @@ public class BloodFlowerBlock extends BushBlock implements SuspiciousEffectHolde
         EFFECTS_FIELD = SuspiciousStewEffects.CODEC.fieldOf("suspicious_stew_effects");
         CODEC = RecordCodecBuilder.mapCodec((p_308824_) -> p_308824_.group(EFFECTS_FIELD.forGetter(FlowerBlock::getSuspiciousEffects), propertiesCodec()).apply(p_308824_, FlowerBlock::new));
         SHAPE = Block.box((double)5.0F, (double)0.0F, (double)5.0F, (double)11.0F, (double)10.0F, (double)11.0F);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+
+        if(entity instanceof LivingEntity living) {
+            if(!level.isClientSide) {
+                List<SuspiciousStewEffects.Entry> effects = suspiciousStewEffects.effects();
+                for(SuspiciousStewEffects.Entry effectEntry : effects) {
+                    Holder<MobEffect> effect = effectEntry.effect();
+                    int duration = effectEntry.duration();
+
+                    living.addEffect(new MobEffectInstance(effect, duration));
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return true;
+    }
+
+    @Override
+    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+        return true;
+    }
+
+    @Override
+    public void performBonemeal(ServerLevel level, RandomSource rand, BlockPos pos, BlockState state) {
+        BloodFlowerBonemeal.useOn(level, rand, pos, state);
     }
 }

@@ -4,7 +4,6 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.*;
-import dev.nyxane.mods.scalmyth.worldgen.ModTreeGrowers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;

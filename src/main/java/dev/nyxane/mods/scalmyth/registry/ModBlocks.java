@@ -4,8 +4,9 @@ import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
-import dev.nyxane.mods.scalmyth.worldgen.ModTreeGrowers;
+import dev.nyxane.mods.scalmyth.worldgen.tree.ModTreeGrowers;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
+
+import java.util.List;
 
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
@@ -82,7 +85,11 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> BLOOD_FLOWER = BLOCKS.register(
             "bloodflower",
-            () -> new BloodFlowerBlock(MobEffects.DARKNESS, 1,
+            () -> new BloodFlowerBlock(
+                    new SuspiciousStewEffects(List.of(
+                            new SuspiciousStewEffects.Entry(MobEffects.DARKNESS, 5 * 20),
+                            new SuspiciousStewEffects.Entry(MobEffects.MOVEMENT_SLOWDOWN, 5 * 20)
+                    )),
                     BlockBehaviour.Properties.of()
                             .mapColor(MapColor.PLANT)
                             .replaceable()

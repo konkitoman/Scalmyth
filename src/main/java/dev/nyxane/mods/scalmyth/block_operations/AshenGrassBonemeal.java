@@ -17,6 +17,7 @@ public class AshenGrassBonemeal{
         double goalZ = checkPos.getZ();
 
         //ScalmythAPI.LOGGER.info("bonemeal used on ashen grass type at x"+x+" y"+y+" z"+z);
+        // TODO add some blood flowers to this ever once in a while (im too lazy to do it rn)
         for (int i = 0; i < 10; i++) {
             goalX = x + Mth.nextInt(RandomSource.create(), -1, 1);
             goalY = y + Mth.nextInt(RandomSource.create(), -2, 1);
