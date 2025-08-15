@@ -48,13 +48,13 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.ASHEN_BUTTON.get());
         add(ModBlocks.ASHEN_DOOR.get(),
                 block -> createDoorTable(ModBlocks.ASHEN_DOOR.get()));
-        dropWhenSheared(ModBlocks.ASHEN_LEAVES.get());
+        add(ModBlocks.ASHEN_LEAVES.get(), block ->
+                createLeavesDrops(block, ModBlocks.ASHEN_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES)); // TODO higher droprate
         dropSelf(ModBlocks.ASHEN_TRAPDOOR.get());
         dropSelf(ModBlocks.ASHEN_STONE_BRICK.get());
         dropSelf(ModBlocks.ASHEN_GROOVED_STONE_BRICK.get());
         dropSelf(ModBlocks.ASHEN_BRICKS.get());
-        add(ModBlocks.ASHEN_VINES.get(), block ->
-            createLeavesDrops(block, ModBlocks.ASHEN_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES)); // TODO higher droprate
+        dropWhenSheared(ModBlocks.ASHEN_VINES.get());
         dropSelf(ModBlocks.ASHEN_SAPLING.get());
     }
 

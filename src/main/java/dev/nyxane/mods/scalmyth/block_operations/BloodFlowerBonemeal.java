@@ -1,6 +1,4 @@
 package dev.nyxane.mods.scalmyth.block_operations;
-
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
