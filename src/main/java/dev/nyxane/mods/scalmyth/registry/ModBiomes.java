@@ -31,6 +31,8 @@ import com.google.common.base.Suppliers;
 
 @EventBusSubscriber
 public class ModBiomes {
+    public static final ResourceKey<Biome> ASHEN_BIOME = ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome"));
+
     // THE MONOLITH GAVE ME LIME DISEASE
     @SubscribeEvent
     public static void onServerAboutToStart(ServerAboutToStartEvent event) {
@@ -71,7 +73,7 @@ public class ModBiomes {
 
     private static SurfaceRules.RuleSource injectOverworldSurfaceRules(SurfaceRules.RuleSource currentRuleSource) {
         List<SurfaceRules.RuleSource> customSurfaceRules = new ArrayList<>();
-        customSurfaceRules.add(preliminarySurfaceRule(ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("scalmyth", "ashen_biome")), ModBlocks.ASHEN_GRASS.get().defaultBlockState(), Blocks.DIRT.defaultBlockState(),
+        customSurfaceRules.add(preliminarySurfaceRule(ASHEN_BIOME, ModBlocks.ASHEN_GRASS.get().defaultBlockState(), Blocks.DIRT.defaultBlockState(),
                 Blocks.GRAVEL.defaultBlockState()));
 
           if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource(List<SurfaceRules.RuleSource> sequence)) {
