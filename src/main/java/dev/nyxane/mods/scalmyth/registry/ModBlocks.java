@@ -2,6 +2,7 @@ package dev.nyxane.mods.scalmyth.registry;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
+import dev.nyxane.mods.scalmyth.blocks.AshenSaplingBlock;
 import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
 import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
 import dev.nyxane.mods.scalmyth.worldgen.tree.ModTreeGrowers;
@@ -290,8 +291,7 @@ public class ModBlocks {
                     // .ignitedByLava()
             ));
 
-    public static final DeferredBlock<Block> ASHEN_SAPLING = BLOCKS.register("ashen_sapling",
-            () -> new SaplingBlock(ModTreeGrowers.ASHEN_TREE, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)));
+    public static final DeferredBlock<Block> ASHEN_SAPLING = BLOCKS.register("ashen_sapling", AshenSaplingBlock::new);
 
 
     public static void register(IEventBus eventBus) {
