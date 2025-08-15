@@ -70,6 +70,6 @@ public class AshenGrassBlock extends GrassBlock {
 
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState blockstate) {
-        AshenGrassBonemeal.useOn(world,pos);
+        AshenGrassBonemeal.useOn(world,pos, random);
     }
 }
