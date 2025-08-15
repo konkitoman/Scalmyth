@@ -1,5 +1,6 @@
 package dev.nyxane.mods.scalmyth.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -41,6 +42,11 @@ public class PathNavigationMixin {
     @Shadow
     private boolean shouldTargetNextNodeInDirection(Vec3 vec) {
         throw new RuntimeException("A shadow method was called");
+    }
+
+    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/pathfinder/Path;getNextEntityPos(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/Vec3;"))
+    private Vec3 tick(Vec3 original) {
+        return original.subtract(mob.getBbWidth() / 2, 0, mob.getBbWidth() / 2);
     }
 
     @Inject(method = "followThePath", at = @At("HEAD"), cancellable = true)
