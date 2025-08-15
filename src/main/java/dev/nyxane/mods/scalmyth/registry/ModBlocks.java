@@ -140,7 +140,7 @@ public class ModBlocks {
                     // .ignitedByLava()
             ));
     public static final DeferredBlock<Block> ASHEN_BRANCH = BLOCKS.register("ashen_branch",
-            () -> new RotatedPillarBlock(
+            () -> new FenceGateBlock(new WoodType("ashen", new BlockSetType("ashen")),
                     BlockBehaviour.Properties.of()
                             .strength(2.0F)
                             .instrument(NoteBlockInstrument.BASS)
