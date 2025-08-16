@@ -187,6 +187,7 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
         return BrainActivityGroup.fightTasks(
                 new InvalidateAttackTarget(),
                 new SetWalkTargetToAttackTarget<>()
+                            .closeEnoughDist((e, d) -> 12)
         );
     }
 
