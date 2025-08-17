@@ -5,9 +5,10 @@
   "mixins": [
     "AxeItemMixin",
     "NoiseGeneratorSettingsMixin",
-    "PathNavigationMixin",
-    "PathMixin",
-    "WalkNodeEvaluatorMixin"
+    "ai_fix.PathNavigationMixin",
+    "ai_fix.PathMixin",
+    "ai_fix.WalkNodeEvaluatorMixin",
+    "PathNavigationMixin"
   ],
   "injectors": {
     "defaultRequire": 1

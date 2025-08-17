@@ -1,4 +1,4 @@
-package dev.nyxane.mods.scalmyth.mixin;
+package dev.nyxane.mods.scalmyth.mixin.ai_fix;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
@@ -7,8 +7,6 @@ import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -20,12 +18,12 @@ public abstract class WalkNodeEvaluatorMixin extends NodeEvaluator {
     public Set<PathType> getPathTypeWithinMobBB(PathfindingContext context, int x, int y, int z) {
         EnumSet<PathType> enumset = EnumSet.noneOf(PathType.class);
 
-        for(int i = 0; i < entityWidth; ++i) {
-            for(int j = 0; j < entityHeight; ++j) {
-                for(int k = 0; k < entityDepth; ++k) {
-                    int l = (i + x) - ((entityWidth > 4) ? (entityWidth/2) : 0);
+        for (int i = 0; i < entityWidth; ++i) {
+            for (int j = 0; j < entityHeight; ++j) {
+                for (int k = 0; k < entityDepth; ++k) {
+                    int l = (i + x) - (entityWidth > 2 ? entityWidth / 2 : 0);
                     int i1 = j + y;
-                    int j1 = (k + z) - ((entityWidth > 4) ? (entityWidth/2) : 0);
+                    int j1 = (k + z) - (entityWidth > 2 ? entityWidth / 2 : 0);
                     PathType pathtype = this.getPathType(context, l, i1, j1);
                     BlockPos blockpos = this.mob.blockPosition();
                     boolean flag = this.canPassDoors();
