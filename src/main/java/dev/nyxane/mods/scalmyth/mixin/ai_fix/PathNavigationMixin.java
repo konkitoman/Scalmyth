@@ -7,10 +7,8 @@ import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PathNavigation.class)
 public abstract class PathNavigationMixin {
@@ -45,8 +43,8 @@ public abstract class PathNavigationMixin {
     @Shadow
     protected abstract boolean shouldTargetNextNodeInDirection(Vec3 vec);
 
-    @Inject(method = "followThePath", at = @At("HEAD"), cancellable = true)
-    private void followThePath(CallbackInfo ci) {
+    @Overwrite
+    public void followThePath() {
         Vec3 vec3 = getTempMobPos();
         maxDistanceToWaypoint = mob.getBbWidth() / 2.0F;
         Vec3 nPos = path.getNextEntityPos(mob);
@@ -59,6 +57,5 @@ public abstract class PathNavigationMixin {
         }
 
         doStuckDetection(vec3);
-        ci.cancel();
     }
 }

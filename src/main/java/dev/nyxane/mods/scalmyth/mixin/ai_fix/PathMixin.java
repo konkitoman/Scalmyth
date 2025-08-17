@@ -20,9 +20,9 @@ public class PathMixin {
     @Overwrite
     public Vec3 getEntityPosAtNode(Entity entity, int index) {
         Node node = (Node) this.nodes.get(index);
-        double d0 = (double) node.x + ((Math.floor(entity.getBbWidth() + 1) / 2) % 2);
+        double d0 = (double) node.x + ((entity.getBbWidth() / 2) % 1);
         double d1 = (double) node.y;
-        double d2 = (double) node.z + ((Math.floor(entity.getBbWidth() + 1) / 2) % 2);
+        double d2 = (double) node.z + ((entity.getBbWidth() / 2) % 1);
         return new Vec3(d0, d1, d2);
     }
 }
