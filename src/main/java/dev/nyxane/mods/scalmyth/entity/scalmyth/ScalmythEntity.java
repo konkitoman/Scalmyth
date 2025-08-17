@@ -114,6 +114,9 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
   }
 
   @Override
+  public void checkDespawn() {}
+
+  @Override
   public AnimatableInstanceCache getAnimatableInstanceCache() {
     return this.geoCache;
   }

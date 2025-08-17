@@ -5,12 +5,15 @@
   "mixins": [
     "AxeItemMixin",
     "NoiseGeneratorSettingsMixin",
-    "PathNavigationMixin"
+    "PathNavigationMixin",
+    "PathMixin",
+    "WalkNodeEvaluatorMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "BlockElement$DeserializerMixin"
+    "BlockElement$DeserializerMixin",
+    "DebugRendererMixin"
   ]
 }
