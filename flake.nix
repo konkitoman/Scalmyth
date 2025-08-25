@@ -31,6 +31,7 @@
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
               jetbrains.idea-community
+              jdt-language-server
             ];
             buildInputs = libs;
             LD_LIBRARY_PATH = lib.makeLibraryPath libs;
