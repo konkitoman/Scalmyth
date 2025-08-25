@@ -1,6 +1,7 @@
 package dev.nyxane.mods.scalmyth.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.nyxane.mods.scalmyth.KDebug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.debug.DebugRenderer;
@@ -24,5 +25,6 @@ public class DebugRendererMixin {
       if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()){
           pathfindingRenderer.render(poseStack, bufferSource, camX, camY, camZ);
       }
+      KDebug.render(poseStack, bufferSource, camX, camY, camZ);
   }
 }
