@@ -29,6 +29,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Stream;
 
@@ -36,6 +38,7 @@ public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
     private static final StampedLock SHAPES_LOCK = new StampedLock();
     private static Instant LAST_TIME = Instant.now();
+    private static final AtomicInteger NEXT = new AtomicInteger(0);
 
     public static void render(PoseStack poseStack, MultiBufferSource bufferSource, double camX, double camY,
             double camZ) {
@@ -44,30 +47,41 @@ public class KDebug {
 
         Duration elapsed = Duration.between(LAST_TIME, Instant.now());
         LAST_TIME = Instant.now();
-        double delta = ((double)elapsed.getNano()/Math.pow(10.0, 9)) + (double)elapsed.getSeconds();
+        float delta = (float) (((double) elapsed.getNano() / Math.pow(10.0, 9)) + (double) elapsed.getSeconds());
 
         long stamp = SHAPES_LOCK.writeLock();
         SHAPES.removeIf(shape -> {
+            Random RANDOM = new Random(shape.id);
             if (shape instanceof Shape.Lines lines) {
                 VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
 
-                int len = lines.points.size();
-                int color = 0xffff0000;
+                Vec3 first = lines.points.get(lines.points.size() - 1);
+                buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
+                        (float) (first.z - camZ));
+                buffer.setColor(0);
 
-                for (int i = 0; i < len; i++) {
+                for (int i = 0; i < lines.points.size(); i++) {
                     Vec3 point = lines.points.get(i);
+                    int color = lines.colors.get(i);
+                    if (color == 0) {
+                        color = RANDOM.nextInt();
+                    }
                     buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
                             (float) (point.z - camZ));
-                    if (lines.colors.size() > i) {
-                        Integer tmp = lines.colors.get(i);
-                        if (tmp != null) {
-                            color = tmp;
-                        }
-                    }
                     buffer.setColor(color);
                 }
-            } else if (shape instanceof Shape.Box block) {
-                drawBox(matrix, bufferSource, block.origin, block.size, block.color, new Vec3(camX, camY, camZ));
+
+                Vec3 last = lines.points.get(lines.points.size() - 1);
+
+                buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
+                        (float) (last.z - camZ));
+                buffer.setColor(0);
+            } else if (shape instanceof Shape.Box box) {
+                int color = box.color;
+                if (color == 0) {
+                    color = RANDOM.nextInt() | 0xff000000;
+                }
+                drawBox(matrix, bufferSource, box.origin, box.size, color, new Vec3(camX, camY, camZ));
             }
 
             shape.time -= delta;
@@ -136,6 +150,19 @@ public class KDebug {
         }
 
         long stamp = SHAPES_LOCK.writeLock();
+
+        for (int i = 0; i < SHAPES.size(); i++) {
+            if (SHAPES.get(i).id == shape.id) {
+                SHAPES.set(i, shape);
+                SHAPES_LOCK.unlockWrite(stamp);
+                return;
+            }
+        }
+
+        if (shape.id == 0) {
+            shape.id = NEXT.getAndAdd(1);
+        }
+
         SHAPES.add(shape);
         SHAPES_LOCK.unlockWrite(stamp);
     }
@@ -145,24 +172,27 @@ public class KDebug {
             @Override
             public <T> DataResult<Shape> decode(DynamicOps<T> ops, MapLike<T> input) {
                 float time = Codec.FLOAT.decode(ops, input.get("time")).getOrThrow().getFirst();
+                int id = Codec.INT.decode(ops, input.get("id")).getOrThrow().getFirst();
                 byte variant = Codec.BYTE.decode(ops, input.get("variant")).getOrThrow().getFirst();
+
+                Shape self = null;
 
                 switch (variant) {
                     case 0:
-                        Shape.Lines lines = Shape.Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
+                        self = Shape.Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
                                 .getOrThrow();
-                        lines.time = time;
-                        return DataResult.success(lines);
-
+                        break;
                     case 1:
-                        Shape.Box box = Shape.Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
+                        self = Shape.Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
                                 .getOrThrow();
-                        box.time = time;
-                        return DataResult.success(box);
-
+                        break;
                     default:
                         throw new RuntimeException("unknown variant");
                 }
+
+                self.time = time;
+                self.id = id;
+                return DataResult.success(self);
             }
 
             @Override
@@ -170,6 +200,7 @@ public class KDebug {
                 RecordBuilder<T> builder = ops.mapBuilder();
 
                 builder.add("time", ops.createFloat(input.time));
+                builder.add("id", ops.createInt(input.id));
 
                 if (input instanceof Shape.Lines lines) {
                     builder.add("variant", ops.createByte((byte) 0));
@@ -192,9 +223,15 @@ public class KDebug {
         };
 
         float time = 1;
+        int id = 0;
 
         public Shape setTime(float pTimme) {
             time = pTimme;
+            return this;
+        }
+
+        public Shape setId(Object pId) {
+            id = pId.hashCode();
             return this;
         }
 
@@ -236,6 +273,8 @@ public class KDebug {
                 points.add(start);
                 points.add(end);
                 colors = new ArrayList<>();
+                colors.add(0);
+                colors.add(0);
             }
 
             public Lines(Vec3 start, Vec3 end, int color) {
@@ -245,6 +284,34 @@ public class KDebug {
                 colors = new ArrayList<>();
                 colors.add(color);
                 colors.add(color);
+            }
+
+            public Lines(Vec3 start, int start_color, Vec3 end, int end_color) {
+                points = new ArrayList<>();
+                points.add(start);
+                points.add(end);
+                colors = new ArrayList<>();
+                colors.add(start_color);
+                colors.add(end_color);
+            }
+
+            public Lines addPoint(Vec3 point) {
+                points.add(point);
+                colors.add(0);
+                return this;
+            }
+
+            public Lines addPoint(Vec3 point, int color) {
+                points.add(point);
+                colors.add(color);
+                return this;
+            }
+
+            public Lines setColor(int color) {
+                assert !points.isEmpty();
+                colors.add(points.size() - 1, color);
+
+                return this;
             }
         }
 
@@ -284,7 +351,7 @@ public class KDebug {
             public Box(Vec3 pOrigin, Vec3 pSize) {
                 origin = pOrigin;
                 size = pSize;
-                color = 0xff0000ff;
+                color = 0;
             }
 
             public Box(Vec3 pOrigin, Vec3 pSize, int pColor) {
@@ -293,25 +360,24 @@ public class KDebug {
                 color = pColor;
             }
 
-
             public Box(Vec3i pPosition) {
                 origin = Vec3.atCenterOf(pPosition);
                 size = new Vec3(1, 1, 1);
-                color = 0xff0000ff;
+                color = 0;
             }
 
             public Box(Vec3i pPosition, Vec3 pSize) {
                 origin = Vec3.atCenterOf(pPosition);
                 size = pSize;
-                color = 0xff0000ff;
+                color = 0;
             }
 
-            public Box setSize(Vec3 pSize){
+            public Box setSize(Vec3 pSize) {
                 size = pSize;
                 return this;
             }
 
-            public Box setColor(int pColor){
+            public Box setColor(int pColor) {
                 color = pColor;
                 return this;
             }
@@ -327,7 +393,6 @@ public class KDebug {
         public KDebugPayload(FriendlyByteBuf buffer) {
             try {
                 Tag tag = NbtIo.readAnyTag(new ByteBufInputStream(buffer), NbtAccounter.unlimitedHeap());
-                ScalmythAPI.LOGGER.info("TAG: {}", tag.toString());
                 shape = Shape.CODEC.compressedDecode(NbtOps.INSTANCE, tag).getOrThrow();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -345,7 +410,6 @@ public class KDebug {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
         }
 
         @Override
