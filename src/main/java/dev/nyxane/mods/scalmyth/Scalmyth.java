@@ -16,6 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -53,6 +54,11 @@ public class Scalmyth
             registrar.playToClient(KDebug.KDebugPayload.TYPE, KDebug.KDebugPayload.STREAM_CODEC, (a, b) -> {
                 KDebug.addShape(b.player().level(), a.shape);
             });
+        }
+
+        @SubscribeEvent
+        public static void onRegisterCommands(RegisterCommandsEvent event){
+            KDebug.registerCommands(event.getDispatcher());
         }
     }
 }

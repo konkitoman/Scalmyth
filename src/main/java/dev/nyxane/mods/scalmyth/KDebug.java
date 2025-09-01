@@ -2,6 +2,10 @@ package dev.nyxane.mods.scalmyth;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -14,6 +18,11 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,7 +30,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
@@ -38,10 +50,11 @@ public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
     private static final StampedLock SHAPES_LOCK = new StampedLock();
     private static Instant LAST_TIME = Instant.now();
-    private static final AtomicInteger NEXT = new AtomicInteger(0);
+    private static final AtomicInteger NEXT = new AtomicInteger((int) Math.pow(2, 16));
+    private static boolean ENABLED = false;
 
     public static void render(PoseStack poseStack, MultiBufferSource bufferSource, double camX, double camY,
-            double camZ) {
+                              double camZ) {
         poseStack.pushPose();
         Matrix4f matrix = poseStack.last().pose();
 
@@ -51,13 +64,15 @@ public class KDebug {
 
         long stamp = SHAPES_LOCK.writeLock();
         SHAPES.removeIf(shape -> {
+            if (!ENABLED) return true;
+
             Random RANDOM = new Random(shape.id);
             if (shape instanceof Shape.Lines lines) {
                 VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
 
                 Vec3 first = lines.points.get(lines.points.size() - 1);
                 buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
-                        (float) (first.z - camZ));
+                    (float) (first.z - camZ));
                 buffer.setColor(0);
 
                 for (int i = 0; i < lines.points.size(); i++) {
@@ -67,14 +82,14 @@ public class KDebug {
                         color = RANDOM.nextInt();
                     }
                     buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
-                            (float) (point.z - camZ));
+                        (float) (point.z - camZ));
                     buffer.setColor(color);
                 }
 
                 Vec3 last = lines.points.get(lines.points.size() - 1);
 
                 buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
-                        (float) (last.z - camZ));
+                    (float) (last.z - camZ));
                 buffer.setColor(0);
             } else if (shape instanceof Shape.Box box) {
                 int color = box.color;
@@ -93,7 +108,7 @@ public class KDebug {
     }
 
     private static void drawBox(Matrix4f matrix, MultiBufferSource bufferSource, Vec3 origin, Vec3 size, int color,
-            Vec3 cam) {
+                                Vec3 cam) {
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugFilledBox());
 
         double sx = size.x / 2;
@@ -142,6 +157,7 @@ public class KDebug {
     }
 
     public static void addShape(Level level, Shape shape) {
+        if (!ENABLED) return;
         if (level instanceof ServerLevel serverLevel) {
             for (ServerPlayer player : serverLevel.players()) {
                 player.connection.send(new KDebugPayload(shape));
@@ -180,11 +196,11 @@ public class KDebug {
                 switch (variant) {
                     case 0:
                         self = Shape.Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                                .getOrThrow();
+                            .getOrThrow();
                         break;
                     case 1:
                         self = Shape.Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                                .getOrThrow();
+                            .getOrThrow();
                         break;
                     default:
                         throw new RuntimeException("unknown variant");
@@ -208,7 +224,7 @@ public class KDebug {
                 } else if (input instanceof Shape.Box box) {
                     builder.add("variant", ops.createByte((byte) 1));
                     builder.add("inner", Shape.Box.CODEC.encode(box, ops,
-                            builder).build(ops.empty()));
+                        builder).build(ops.empty()));
 
                 }
 
@@ -386,7 +402,7 @@ public class KDebug {
 
     public static class KDebugPayload implements CustomPacketPayload {
         public static final StreamCodec<FriendlyByteBuf, KDebugPayload> STREAM_CODEC = CustomPacketPayload
-                .codec(KDebugPayload::write, KDebugPayload::new);
+            .codec(KDebugPayload::write, KDebugPayload::new);
         public static final Type<KDebugPayload> TYPE = new Type<>(ScalmythAPI.rl("kdebug"));
         public Shape shape;
 
@@ -416,5 +432,37 @@ public class KDebug {
         public Type<? extends CustomPacketPayload> type() {
             return TYPE;
         }
+    }
+
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("kdebug")
+            .requires(p -> p.hasPermission(2))
+            .then(Commands.literal("enable").executes(s -> {
+                ENABLED = true;
+                return 0;
+            }))
+            .then(Commands.literal("disable").executes(s -> {
+                ENABLED = false;
+                return 0;
+            }))
+            .then(Commands.literal("navigate").then(Commands.argument("target", EntityArgument.entities())
+                .then(Commands.argument("to", BlockPosArgument.blockPos())
+                    .executes(context -> commandNavigate(context, 1))
+                    .then(Commands.argument("speed", DoubleArgumentType.doubleArg())
+                        .executes((context) -> commandNavigate(context, DoubleArgumentType.getDouble(context, "speed"))))
+                ))
+            )
+        );
+    }
+
+    public static int commandNavigate(CommandContext<CommandSourceStack> context, double speed) throws CommandSyntaxException {
+        BlockPos pos = BlockPosArgument.getBlockPos(context, "to");
+        for (Entity entity : EntityArgument.getEntities(context, "target")) {
+            if (entity instanceof Mob e) {
+                Path path = e.getNavigation().createPath(pos, 1);
+                e.getNavigation().moveTo(path, speed);
+            }
+        }
+        return 0;
     }
 }
