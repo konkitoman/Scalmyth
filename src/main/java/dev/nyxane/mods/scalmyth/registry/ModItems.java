@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import dev.nyxane.mods.scalmyth.items.FlashLightItem;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
@@ -44,6 +45,8 @@ public class ModItems {
     public static final DeferredItem<Item> LARGE_ASHEN_FERN = block(ModBlocks.LARGE_ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_FERN = block(ModBlocks.ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_SAPLING = block(ModBlocks.ASHEN_SAPLING);
+    public static final DeferredItem<Item> FLASHLIGHT =
+        REGISTRY.register("flashlight", FlashLightItem::new);
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 

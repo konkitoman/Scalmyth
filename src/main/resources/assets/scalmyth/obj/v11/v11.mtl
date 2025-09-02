@@ -1,0 +1,42 @@
+# Blender 4.3.2 MTL File: 'v11.blend'
+# www.blender.org
+
+newmtl Material_3.002
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl moontex
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd C:/Users/amyle/Downloads/legs.png
+map_d C:/Users/amyle/Downloads/legs.png
+
+newmtl suntex
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd C:/Users/amyle/Downloads/legs.png
+map_Ke C:/Users/amyle/Downloads/Solar/Solar/solarglow.png
+map_d C:/Users/amyle/Downloads/legs.png
+
+newmtl suntex.002
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd C:/Users/amyle/Downloads/clothes.png
+map_Ke C:/Users/amyle/Downloads/clothes.png
+map_d C:/Users/amyle/Downloads/clothes.png
