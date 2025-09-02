@@ -27,6 +27,14 @@
             }
         ]
     },
+  "titlescreen": {
+    "sounds": [
+      {
+        "name": "scalmyth:music/titlescreen",
+        "stream": true
+      }
+    ]
+  },
   "ashen.earth.break": {
     "subtitle": "subtitles.block.generic.break",
     "sounds": [

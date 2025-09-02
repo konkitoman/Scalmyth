@@ -43,6 +43,7 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -51,16 +52,14 @@ import java.util.Random;
 
 public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwner<ScalmythEntity> {
   private static final Random RANDOM = new Random();
-  //    protected static final RawAnimation STATIC_POSE = RawAnimation.begin().then("static_pose", Animation.LoopType.LOOP);
-//    protected static final RawAnimation STATIC_POSE_2;
-//    protected static final RawAnimation SNEAKER;
-  protected static final RawAnimation IDLE_1 = RawAnimation.begin().then("idle_1",Animation.LoopType.LOOP);
-  protected static final RawAnimation IDLE_2 = RawAnimation.begin().then("idle_2",Animation.LoopType.LOOP);
-  protected static final RawAnimation IDLE_3 = RawAnimation.begin().then("idle_3",Animation.LoopType.LOOP);
-  protected static final RawAnimation WALK = RawAnimation.begin().then("walk",Animation.LoopType.LOOP);
-  protected static final RawAnimation WALKING = RawAnimation.begin().then("walking",Animation.LoopType.LOOP);
+  // Animations
+  protected static final RawAnimation IDLE_1 = RawAnimation.begin().then("idle_1", Animation.LoopType.LOOP);
+  protected static final RawAnimation IDLE_2 = RawAnimation.begin().then("idle_2", Animation.LoopType.LOOP);
+  protected static final RawAnimation IDLE_3 = RawAnimation.begin().then("idle_3", Animation.LoopType.LOOP);
+  protected static final RawAnimation WALK = RawAnimation.begin().then("walk", Animation.LoopType.LOOP);
+  protected static final RawAnimation WALKING = RawAnimation.begin().then("walking", Animation.LoopType.LOOP);
   private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-  private Level tempWorld; //reusable value for world, declared here to save ram access costs
+  private Level tempWorld; // reusable value for world, declared here to save RAM access costs
 
   public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
     super(entityType, level);
@@ -76,7 +75,6 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     super.customServerAiStep();
     tickBrain(this);
     ServerLevel serverlevel = (ServerLevel) this.level();
-
     if ((this.tickCount + this.getId()) % 120 == 0) {
       applyDarknessAround(serverlevel, this.position(), this, 50);
     }
@@ -87,20 +85,16 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     controllers.add(new AnimationController<>(this, "idleController", 1, this::idleController));
   }
 
-    protected <E extends ScalmythEntity>PlayState walkController(final AnimationState<E> event) {
-    if(event.isMoving())
-      return event.setAndContinue(WALKING);
+  protected <E extends ScalmythEntity> PlayState walkController(final AnimationState<E> event) {
+    if (event.isMoving()) return event.setAndContinue(WALKING);
     return PlayState.STOP;
   }
 
-  protected <E extends ScalmythEntity>PlayState idleController(final AnimationState<E> event) {
+  protected <E extends ScalmythEntity> PlayState idleController(final AnimationState<E> event) {
     if (event.isMoving()) {
       return PlayState.STOP;
     }
-    if(
-      event.getController().getAnimationState() == AnimationController.State.STOPPED
-    ) {
-
+    if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
       float r = RANDOM.nextFloat();
       if (r < 0.1f) {
         return event.setAndContinue(IDLE_1);
@@ -134,8 +128,8 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
 
   @Override
   public boolean hurt(DamageSource damagesource, float amount) { //commented out for now, to make it impossible to damage- in most cases
-      if (damagesource.is(DamageTypes.GENERIC_KILL) || damagesource.is(DamageTypes.IN_WALL)){
-        return super.hurt(damagesource, amount);
+      if (damagesource.is(DamageTypes.GENERIC_KILL) || damagesource.is(DamageTypes.IN_WALL)) {
+          return super.hurt(damagesource, amount);
       }
       return false;
   }

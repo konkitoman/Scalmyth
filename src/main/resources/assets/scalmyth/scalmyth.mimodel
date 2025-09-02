@@ -1,0 +1,4165 @@
+{
+	"name": "scalmyth",
+	"floor_box_uvs": true,
+	"texture": "monster2.png",
+	"texture_size": [256, 256],
+	"parts": [
+		{
+			"name": "root",
+			"position": [0, 120, 10],
+			"shapes": [
+				{
+					"type": "block",
+					"from": [-1, -155, -72],
+					"to": [11, -114, 72],
+					"uv": [144, 144],
+					"position": [0, 185, -38]
+				},
+				{
+					"type": "block",
+					"from": [-8, -16, -8],
+					"to": [8, 16, 8],
+					"uv": [16, 16],
+					"position": [116, -104, 64]
+				}
+			],
+			"parts": [
+				{
+					"name": "body_root",
+					"position": [0, 40, -38],
+					"shapes": [
+						{
+							"type": "block",
+							"from": [-19, -11, -35],
+							"to": [19, 21, 8],
+							"uv": [43, 43],
+							"position": [0, 0, 0]
+						}
+					],
+					"parts": [
+						{
+							"name": "bone",
+							"position": [0, 0, 0]
+						},
+						{
+							"name": "body_hair",
+							"position": [0, 0, 0],
+							"shapes": [
+								{
+									"type": "block",
+									"from": [0, -17.5, -26],
+									"to": [0, 17.5, 26],
+									"uv": [52, 52],
+									"invert": true,
+									"position": [0, 33.5, -12],
+									"rotation": [0, 40, 0]
+								},
+								{
+									"type": "block",
+									"from": [0, -17.5, -26],
+									"to": [0, 17.5, 26],
+									"uv": [52, 52],
+									"invert": true,
+									"position": [0, 33.5, -12],
+									"rotation": [0, -40, 0]
+								},
+								{
+									"type": "block",
+									"from": [0, 0.5, -19],
+									"to": [0, 30.5, 19],
+									"uv": [38, 38],
+									"invert": true,
+									"position": [0, 20.5, 7],
+									"rotation": [-90, -67.5, 90]
+								}
+							]
+						},
+						{
+							"name": "shoulders",
+							"position": [0, -54, 28],
+							"parts": [
+								{
+									"name": "left_arm_root",
+									"position": [16, 52, -43],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [3, -2, -10],
+											"to": [8, 18, 10],
+											"uv": [20, 20],
+											"position": [0, 0, 0]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_arm_1",
+											"position": [14, 11.5, 0],
+											"parts": [
+												{
+													"name": "left_arm_hair_1",
+													"position": [3, -11.5, 0],
+													"parts": [
+														{
+															"name": "l_a_h_1",
+															"position": [3, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [5, 0, 0],
+																	"rotation": [-10, 0, 0]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [5, 0, 0],
+																	"rotation": [10, 0, 0]
+																}
+															]
+														},
+														{
+															"name": "l_a_h_2",
+															"position": [-9, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-6, 0, 0],
+																	"rotation": [170, 0, 180]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-6, 0, 0],
+																	"rotation": [-170, 0, -180]
+																}
+															]
+														},
+														{
+															"name": "l_a_h_3",
+															"position": [-3, -11.5, 7],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 5],
+																	"rotation": [0, -90, -10]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 5],
+																	"rotation": [0, -90, 10]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "left_arm_joint_1",
+													"position": [0, -51, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-5.5, -4, -5],
+															"to": [4.5, 4, 5],
+															"uv": [10, 10],
+															"position": [0.5, 0, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "left_arm_2",
+															"position": [0, -6.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -29, -6],
+																	"to": [6, 16, 6],
+																	"uv": [12, 12],
+																	"position": [0, -13.5, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "left_arm_hair_2",
+																	"position": [3, -8, 0],
+																	"parts": [
+																		{
+																			"name": "l_a_h_4",
+																			"position": [3, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [5, 0, 0],
+																					"rotation": [-10, 0, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [5, 0, 0],
+																					"rotation": [10, 0, 0]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_a_h_5",
+																			"position": [-9, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-6, 0, 0],
+																					"rotation": [170, 0, 180]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-6, 0, 0],
+																					"rotation": [-170, 0, -180]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_a_h_6",
+																			"position": [-3, -11.5, 7],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 5],
+																					"rotation": [0, -90, -10]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 5],
+																					"rotation": [0, -90, 10]
+																				}
+																			]
+																		}
+																	]
+																},
+																{
+																	"name": "left_arm_joint_2",
+																	"position": [0, -46.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-4, 8, -4],
+																			"to": [4, 16, 4],
+																			"uv": [8, 8],
+																			"position": [0, -12, 0]
+																		}
+																	],
+																	"parts": [
+																		{
+																			"name": "left_arm_3",
+																			"position": [0, -7, 0],
+																			"parts": [
+																				{
+																					"name": "left_shortarm_joint_4",
+																					"position": [-1, -39, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-3, -2, -3],
+																							"to": [3, 2, 3],
+																							"uv": [6, 6],
+																							"position": [0, 0, 0]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_shorthand_root3",
+																							"position": [-0.25, -2, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, -3, -2],
+																									"to": [6, 16, 2],
+																									"uv": [4, 4],
+																									"position": [2.25, -16, 0]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-10, 3, -3],
+																									"to": [-4, 16, 2],
+																									"uv": [5, 5],
+																									"position": [0.75, -19, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_thumb_root3",
+																									"position": [-10.25, -7.5, -1],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.25, 3, -1.25],
+																											"to": [-7.75, 16, 2.25],
+																											"uv": [3.5, 3.5],
+																											"position": [9, -14.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_thumb_middle3",
+																											"position": [0, -12, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10, 3, -1],
+																													"to": [-8, 16, 2],
+																													"uv": [3, 3],
+																													"position": [9, -15.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "left_finger_thumb_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [-10, 6, -1],
+																															"to": [-8, 16, 2],
+																															"uv": [3, 3],
+																															"position": [9, -15, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "left_finger_index_root3",
+																									"position": [-6.25, -17.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.25, 3, -1],
+																											"to": [-7.75, 16, 2],
+																											"uv": [3, 3],
+																											"position": [9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_index_middle3",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10, 3, -1],
+																													"to": [-8, 16, 2],
+																													"uv": [3, 3],
+																													"position": [9, -15.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "left_finger_index_nail3",
+																													"position": [0, -13, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [-9.75, 3, -1],
+																															"to": [-8.25, 16, 2],
+																															"uv": [3, 3],
+																															"position": [9, -15.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "left_finger_middle_root3",
+																									"position": [-1.25, -17.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.25, 2, -1],
+																											"to": [-7.75, 17, 2],
+																											"uv": [3, 3],
+																											"position": [9, -16.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_middle_middle3",
+																											"position": [0, -15, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10, 2, -1],
+																													"to": [-8, 17, 2],
+																													"uv": [3, 3],
+																													"position": [9, -16.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "left_finger_middle_nail3",
+																													"position": [0, -15, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [-9.75, 2, -1],
+																															"to": [-8.25, 15, 2],
+																															"uv": [3, 3],
+																															"position": [9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "left_finger_ring_root3",
+																									"position": [3.75, -18, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.25, 2, -1],
+																											"to": [-7.75, 16, 2],
+																											"uv": [3, 3],
+																											"position": [9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_ring_middle3",
+																											"position": [0, -14, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10, 2, -1],
+																													"to": [-8, 16, 2],
+																													"uv": [3, 3],
+																													"position": [9, -15, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "left_finger_ring_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [-9.75, 2, -1],
+																															"to": [-8.25, 15, 2],
+																															"uv": [3, 3],
+																															"position": [9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "left_finger_pinky_root3",
+																									"position": [7.75, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.25, 2, -1],
+																											"to": [-7.75, 16, 2],
+																											"uv": [3, 3],
+																											"position": [9, -14, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_pinky_middle3",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10, 2, -1],
+																													"to": [-8, 16, 2],
+																													"uv": [3, 3],
+																													"position": [9, -15, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "left_finger_pinky_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [-9.75, 2, -1],
+																															"to": [-8.25, 15, 2],
+																															"uv": [3, 3],
+																															"position": [9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "left_arm_hair_3",
+																					"position": [3, -5.5, 0],
+																					"parts": [
+																						{
+																							"name": "l_a_h_7",
+																							"position": [0, -11.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [5, 0, 0],
+																									"rotation": [-10, 0, 0]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [5, 0, 0],
+																									"rotation": [10, 0, 0]
+																								}
+																							]
+																						},
+																						{
+																							"name": "l_a_h_8",
+																							"position": [-6, -11.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [-6, 0, 0],
+																									"rotation": [170, 0, 180]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [-6, 0, 0],
+																									"rotation": [-170, 0, -180]
+																								}
+																							]
+																						},
+																						{
+																							"name": "l_a_h_9",
+																							"position": [-3, -11.5, 4],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [0, 0, 5],
+																									"rotation": [0, -90, -10]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [0, 0, 5],
+																									"rotation": [0, -90, 10]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-5, -37, -5],
+																					"to": [5, 3, 5],
+																					"uv": [10, 10],
+																					"position": [0, 0, 0]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-7, -37, -7],
+													"to": [5, 14, 7],
+													"uv": [14, 14],
+													"position": [1, -11.5, 0]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "left_shortarm_root",
+									"position": [20.5, 60, -30],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [3, 0, -8],
+											"to": [8, 16, 8],
+											"uv": [16, 16],
+											"position": [-5.5, -8, 0]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_shortarm_1",
+											"position": [3.5, 0.5, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-7, -35, -5],
+													"to": [1, 12, 5],
+													"uv": [10, 10],
+													"position": [6, -8.5, 0]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_shortarm_hair_1",
+													"position": [6, -8.5, 0],
+													"parts": [
+														{
+															"name": "l_h_1_1",
+															"position": [-3, -11.5, 5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 6],
+																	"rotation": [0, -90, -10]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 6],
+																	"rotation": [0, -90, 10]
+																}
+															]
+														},
+														{
+															"name": "l_h_1_2",
+															"position": [1, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [5, 0, 0],
+																	"rotation": [10, 0, 0]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [5, 0, 0],
+																	"rotation": [-10, 0, 0]
+																}
+															]
+														},
+														{
+															"name": "l_h_1_3",
+															"position": [-7, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-6, 0, 0],
+																	"rotation": [-170, 0, -180]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-6, 0, 0],
+																	"rotation": [170, 0, 180]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "left_shortarm_joint_1",
+													"position": [5, -45, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-5.5, -2, -3],
+															"to": [0.5, 2, 3],
+															"uv": [6, 6],
+															"position": [0.5, 0, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "left_shortarm_2",
+															"position": [0, -2.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -27, -4],
+																	"to": [2, 14, 4],
+																	"uv": [8, 8],
+																	"position": [0, -13.5, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "left_shortarm_hair_2",
+																	"position": [1, -6, 0],
+																	"parts": [
+																		{
+																			"name": "l_h_2_1",
+																			"position": [-3, -11.5, 3],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 6],
+																					"rotation": [0, -90, -10]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 6],
+																					"rotation": [0, -90, 10]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_h_2_2",
+																			"position": [0, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [5, 0, 0],
+																					"rotation": [10, 0, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [5, 0, 0],
+																					"rotation": [-10, 0, 0]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_h_2_3",
+																			"position": [-6, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-6, 0, 0],
+																					"rotation": [-170, 0, -180]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-6, 0, 0],
+																					"rotation": [170, 0, 180]
+																				}
+																			]
+																		}
+																	]
+																},
+																{
+																	"name": "left_shortarm_joint_2",
+																	"position": [-2, -42.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-3, -2, -3],
+																			"to": [3, 2, 3],
+																			"uv": [6, 6],
+																			"position": [0, 0, 0]
+																		}
+																	],
+																	"parts": [
+																		{
+																			"name": "left_shorthand_root",
+																			"position": [-0.25, -2, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-10, -3, -2],
+																					"to": [6, 16, 2],
+																					"uv": [4, 4],
+																					"position": [2.25, -16, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-10, 3, -3],
+																					"to": [-4, 16, 2],
+																					"uv": [5, 5],
+																					"position": [0.75, -19, -0.5]
+																				}
+																			],
+																			"parts": [
+																				{
+																					"name": "left_finger_thumb_root",
+																					"position": [-10.25, -7.5, -1],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.25, 3, -1.25],
+																							"to": [-7.75, 16, 2.25],
+																							"uv": [3.5, 3.5],
+																							"position": [9, -14.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_thumb_middle",
+																							"position": [0, -12, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, 3, -1],
+																									"to": [-8, 16, 2],
+																									"uv": [3, 3],
+																									"position": [9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_thumb_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10, 6, -1],
+																											"to": [-8, 16, 2],
+																											"uv": [3, 3],
+																											"position": [9, -15, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "left_finger_index_root",
+																					"position": [-6.25, -17.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.25, 3, -1],
+																							"to": [-7.75, 16, 2],
+																							"uv": [3, 3],
+																							"position": [9, -15.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_index_middle",
+																							"position": [0, -13, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, 3, -1],
+																									"to": [-8, 16, 2],
+																									"uv": [3, 3],
+																									"position": [9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_index_nail",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-9.75, 3, -1],
+																											"to": [-8.25, 16, 2],
+																											"uv": [3, 3],
+																											"position": [9, -15.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "left_finger_middle_root",
+																					"position": [-1.25, -17.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.25, 2, -1],
+																							"to": [-7.75, 17, 2],
+																							"uv": [3, 3],
+																							"position": [9, -16.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_middle_middle",
+																							"position": [0, -15, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, 2, -1],
+																									"to": [-8, 17, 2],
+																									"uv": [3, 3],
+																									"position": [9, -16.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_middle_nail",
+																									"position": [0, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-9.75, 2, -1],
+																											"to": [-8.25, 15, 2],
+																											"uv": [3, 3],
+																											"position": [9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "left_finger_ring_root",
+																					"position": [3.75, -18, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.25, 2, -1],
+																							"to": [-7.75, 16, 2],
+																							"uv": [3, 3],
+																							"position": [9, -15, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_ring_middle",
+																							"position": [0, -14, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, 2, -1],
+																									"to": [-8, 16, 2],
+																									"uv": [3, 3],
+																									"position": [9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_ring_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-9.75, 2, -1],
+																											"to": [-8.25, 15, 2],
+																											"uv": [3, 3],
+																											"position": [9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "left_finger_pinky_root",
+																					"position": [7.75, -15, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.25, 2, -1],
+																							"to": [-7.75, 16, 2],
+																							"uv": [3, 3],
+																							"position": [9, -14, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_pinky_middle",
+																							"position": [0, -13, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10, 2, -1],
+																									"to": [-8, 16, 2],
+																									"uv": [3, 3],
+																									"position": [9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_pinky_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-9.75, 2, -1],
+																											"to": [-8.25, 15, 2],
+																											"uv": [3, 3],
+																											"position": [9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "right_arm_root",
+									"position": [-16, 52, -43],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-8, -2, -10],
+											"to": [-3, 18, 10],
+											"uv": [20, 20],
+											"position": [0, 0, 0]
+										}
+									],
+									"parts": [
+										{
+											"name": "right_arm_1",
+											"position": [-14, 11.5, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-5, -37, -7],
+													"to": [7, 14, 7],
+													"uv": [14, 14],
+													"position": [-1, -11.5, 0]
+												}
+											],
+											"parts": [
+												{
+													"name": "right_arm_joint_1",
+													"position": [0, -51, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-4.5, -4, -5],
+															"to": [5.5, 4, 5],
+															"uv": [10, 10],
+															"position": [-0.5, 0, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "right_arm_2",
+															"position": [0, -6.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -29, -6],
+																	"to": [6, 16, 6],
+																	"uv": [12, 12],
+																	"position": [0, -13.5, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "right_arm_joint_2",
+																	"position": [0, -46.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-4, 8, -4],
+																			"to": [4, 16, 4],
+																			"uv": [8, 8],
+																			"position": [0, -12, 0]
+																		}
+																	],
+																	"parts": [
+																		{
+																			"name": "right_arm_3",
+																			"position": [0, -7, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-5, -37, -5],
+																					"to": [5, 3, 5],
+																					"uv": [10, 10],
+																					"position": [0, 0, 0]
+																				}
+																			],
+																			"parts": [
+																				{
+																					"name": "right_arm_hair_3",
+																					"position": [-3, -5.5, 0],
+																					"parts": [
+																						{
+																							"name": "l_a_h_16",
+																							"position": [0, -11.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [-5, 0, 0],
+																									"rotation": [10, 0, 0]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [-5, 0, 0],
+																									"rotation": [-10, 0, 0]
+																								}
+																							]
+																						},
+																						{
+																							"name": "l_a_h_17",
+																							"position": [6, -11.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [6, 0, 0],
+																									"rotation": [170, 0, -180]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [6, 0, 0],
+																									"rotation": [-170, 0, 180]
+																								}
+																							]
+																						},
+																						{
+																							"name": "l_a_h_18",
+																							"position": [3, -11.5, 4],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [0, 0, 5],
+																									"rotation": [0, 90, 10]
+																								},
+																								{
+																									"type": "block",
+																									"from": [-6, -22.5, 0],
+																									"to": [6, 22.5, 0],
+																									"uv": [0, 0],
+																									"invert": true,
+																									"position": [0, 0, 5],
+																									"rotation": [0, 90, -10]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "right_shortarm_joint_4",
+																					"position": [1, -39, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-3, -2, -3],
+																							"to": [3, 2, 3],
+																							"uv": [6, 6],
+																							"position": [0, 0, 0]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_shorthand_root3",
+																							"position": [0.25, -2, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-6, -3, -2],
+																									"to": [10, 16, 2],
+																									"uv": [4, 4],
+																									"position": [-2.25, -16, 0]
+																								},
+																								{
+																									"type": "block",
+																									"from": [4, 3, -3],
+																									"to": [10, 16, 2],
+																									"uv": [5, 5],
+																									"position": [-0.75, -19, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_thumb_root3",
+																									"position": [10.25, -7.5, -1],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.75, 3, -1.25],
+																											"to": [10.25, 16, 2.25],
+																											"uv": [3.5, 3.5],
+																											"position": [-9, -14.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_thumb_middle3",
+																											"position": [0, -12, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [8, 3, -1],
+																													"to": [10, 16, 2],
+																													"uv": [3, 3],
+																													"position": [-9, -15.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "right_finger_thumb_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [8, 6, -1],
+																															"to": [10, 16, 2],
+																															"uv": [3, 3],
+																															"position": [-9, -15, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "right_finger_index_root3",
+																									"position": [6.25, -17.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.75, 3, -1],
+																											"to": [10.25, 16, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_index_middle3",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [8, 3, -1],
+																													"to": [10, 16, 2],
+																													"uv": [3, 3],
+																													"position": [-9, -15.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "right_finger_index_nail3",
+																													"position": [0, -13, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [8.25, 3, -1],
+																															"to": [9.75, 16, 2],
+																															"uv": [3, 3],
+																															"position": [-9, -15.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "right_finger_middle_root3",
+																									"position": [1.25, -17.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.75, 2, -1],
+																											"to": [10.25, 17, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -16.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_middle_middle3",
+																											"position": [0, -15, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [8, 2, -1],
+																													"to": [10, 17, 2],
+																													"uv": [3, 3],
+																													"position": [-9, -16.5, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "right_finger_middle_nail3",
+																													"position": [0, -15, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [8.25, 2, -1],
+																															"to": [9.75, 15, 2],
+																															"uv": [3, 3],
+																															"position": [-9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "right_finger_ring_root3",
+																									"position": [-3.75, -18, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.75, 2, -1],
+																											"to": [10.25, 16, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_ring_middle3",
+																											"position": [0, -14, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [8, 2, -1],
+																													"to": [10, 16, 2],
+																													"uv": [3, 3],
+																													"position": [-9, -15, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "right_finger_ring_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [8.25, 2, -1],
+																															"to": [9.75, 15, 2],
+																															"uv": [3, 3],
+																															"position": [-9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								},
+																								{
+																									"name": "right_finger_pinky_root3",
+																									"position": [-7.75, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.75, 2, -1],
+																											"to": [10.25, 16, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -14, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_pinky_middle3",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [8, 2, -1],
+																													"to": [10, 16, 2],
+																													"uv": [3, 3],
+																													"position": [-9, -15, -0.5]
+																												}
+																											],
+																											"parts": [
+																												{
+																													"name": "right_finger_pinky_nail3",
+																													"position": [0, -13.5, 0],
+																													"shapes": [
+																														{
+																															"type": "block",
+																															"from": [8.25, 2, -1],
+																															"to": [9.75, 15, 2],
+																															"uv": [3, 3],
+																															"position": [-9, -14.5, -0.5]
+																														}
+																													]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																},
+																{
+																	"name": "right_arm_hair_2",
+																	"position": [-3, -8, 0],
+																	"parts": [
+																		{
+																			"name": "l_a_h_13",
+																			"position": [-3, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-5, 0, 0],
+																					"rotation": [-10, 0, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-5, 0, 0],
+																					"rotation": [10, 0, 0]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_a_h_14",
+																			"position": [9, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [6, 0, 0],
+																					"rotation": [170, 0, -180]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [6, 0, 0],
+																					"rotation": [-170, 0, 180]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_a_h_15",
+																			"position": [3, -11.5, 7],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 5],
+																					"rotation": [0, 90, 10]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 5],
+																					"rotation": [0, 90, -10]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "right_arm_hair_1",
+													"position": [-3, -11.5, 0],
+													"parts": [
+														{
+															"name": "l_a_h_10",
+															"position": [-3, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-5, 0, 0],
+																	"rotation": [-10, 0, 0]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-5, 0, 0],
+																	"rotation": [10, 0, 0]
+																}
+															]
+														},
+														{
+															"name": "l_a_h_11",
+															"position": [9, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [6, 0, 0],
+																	"rotation": [170, 0, -180]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [6, 0, 0],
+																	"rotation": [-170, 0, 180]
+																}
+															]
+														},
+														{
+															"name": "l_a_h_12",
+															"position": [3, -11.5, 7],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 5],
+																	"rotation": [0, 90, 10]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 5],
+																	"rotation": [0, 90, -10]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "right_shortarm_root",
+									"position": [-20.5, 60, -30],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-8, 0, -8],
+											"to": [-3, 16, 8],
+											"uv": [16, 16],
+											"position": [5.5, -8, 0]
+										}
+									],
+									"parts": [
+										{
+											"name": "right_shortarm_1",
+											"position": [-3.5, 0.5, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-1, -35, -5],
+													"to": [7, 12, 5],
+													"uv": [10, 10],
+													"position": [-6, -8.5, 0]
+												}
+											],
+											"parts": [
+												{
+													"name": "right_shortarm_joint_1",
+													"position": [-5, -45, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-0.5, -2, -3],
+															"to": [5.5, 2, 3],
+															"uv": [6, 6],
+															"position": [-0.5, 0, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "right_shortarm_2",
+															"position": [0, -2.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-2, -27, -4],
+																	"to": [6, 14, 4],
+																	"uv": [8, 8],
+																	"position": [0, -13.5, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "right_shortarm_hair_2",
+																	"position": [-1, -6, 0],
+																	"parts": [
+																		{
+																			"name": "l_h_2_4",
+																			"position": [3, -11.5, 3],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 6],
+																					"rotation": [0, 90, 10]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [0, 0, 6],
+																					"rotation": [0, 90, -10]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_h_2_5",
+																			"position": [0, -11.5, 0],
+																			"rotation": [-5, 0, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-5, 0, 0],
+																					"rotation": [10, 0, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [-5, 0, 0],
+																					"rotation": [-10, 0, 0]
+																				}
+																			]
+																		},
+																		{
+																			"name": "l_h_2_6",
+																			"position": [6, -11.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [6, 0, 0],
+																					"rotation": [-170, 0, 180]
+																				},
+																				{
+																					"type": "block",
+																					"from": [-6, -22.5, 0],
+																					"to": [6, 22.5, 0],
+																					"uv": [0, 0],
+																					"invert": true,
+																					"position": [6, 0, 0],
+																					"rotation": [170, 0, -180]
+																				}
+																			]
+																		}
+																	]
+																},
+																{
+																	"name": "right_shortarm_joint_2",
+																	"position": [2, -42.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-3, -2, -3],
+																			"to": [3, 2, 3],
+																			"uv": [6, 6],
+																			"position": [0, 0, 0]
+																		}
+																	],
+																	"parts": [
+																		{
+																			"name": "right_shorthand_root",
+																			"position": [0.25, -2, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-6, -3, -2],
+																					"to": [10, 16, 2],
+																					"uv": [4, 4],
+																					"position": [-2.25, -16, 0]
+																				},
+																				{
+																					"type": "block",
+																					"from": [4, 3, -3],
+																					"to": [10, 16, 2],
+																					"uv": [5, 5],
+																					"position": [-0.75, -19, -0.5]
+																				}
+																			],
+																			"parts": [
+																				{
+																					"name": "right_finger_thumb_root",
+																					"position": [10.25, -7.5, -1],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [7.75, 3, -1.25],
+																							"to": [10.25, 16, 2.25],
+																							"uv": [3.5, 3.5],
+																							"position": [-9, -14.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_thumb_middle",
+																							"position": [0, -12, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [8, 3, -1],
+																									"to": [10, 16, 2],
+																									"uv": [3, 3],
+																									"position": [-9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_thumb_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [8, 6, -1],
+																											"to": [10, 16, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -15, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "right_finger_index_root",
+																					"position": [6.25, -17.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [7.75, 3, -1],
+																							"to": [10.25, 16, 2],
+																							"uv": [3, 3],
+																							"position": [-9, -15.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_index_middle",
+																							"position": [0, -13, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [8, 3, -1],
+																									"to": [10, 16, 2],
+																									"uv": [3, 3],
+																									"position": [-9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_index_nail",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [8.25, 3, -1],
+																											"to": [9.75, 16, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -15.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "right_finger_middle_root",
+																					"position": [1.25, -17.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [7.75, 2, -1],
+																							"to": [10.25, 17, 2],
+																							"uv": [3, 3],
+																							"position": [-9, -16.5, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_middle_middle",
+																							"position": [0, -15, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [8, 2, -1],
+																									"to": [10, 17, 2],
+																									"uv": [3, 3],
+																									"position": [-9, -16.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_middle_nail",
+																									"position": [0, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [8.25, 2, -1],
+																											"to": [9.75, 15, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "right_finger_ring_root",
+																					"position": [-3.75, -18, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [7.75, 2, -1],
+																							"to": [10.25, 16, 2],
+																							"uv": [3, 3],
+																							"position": [-9, -15, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_ring_middle",
+																							"position": [0, -14, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [8, 2, -1],
+																									"to": [10, 16, 2],
+																									"uv": [3, 3],
+																									"position": [-9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_ring_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [8.25, 2, -1],
+																											"to": [9.75, 15, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				},
+																				{
+																					"name": "right_finger_pinky_root",
+																					"position": [-7.75, -15, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [7.75, 2, -1],
+																							"to": [10.25, 16, 2],
+																							"uv": [3, 3],
+																							"position": [-9, -14, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_pinky_middle",
+																							"position": [0, -13, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [8, 2, -1],
+																									"to": [10, 16, 2],
+																									"uv": [3, 3],
+																									"position": [-9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_pinky_nail",
+																									"position": [0, -13.5, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [8.25, 2, -1],
+																											"to": [9.75, 15, 2],
+																											"uv": [3, 3],
+																											"position": [-9, -14.5, -0.5]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "right_shortarm_hair_1",
+													"position": [-6, -8.5, 0],
+													"parts": [
+														{
+															"name": "l_h_1_4",
+															"position": [3, -11.5, 5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 6],
+																	"rotation": [0, 90, 10]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [0, 0, 6],
+																	"rotation": [0, 90, -10]
+																}
+															]
+														},
+														{
+															"name": "l_h_1_5",
+															"position": [-1, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-5, 0, 0],
+																	"rotation": [10, 0, 0]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [-5, 0, 0],
+																	"rotation": [-10, 0, 0]
+																}
+															]
+														},
+														{
+															"name": "l_h_1_6",
+															"position": [7, -11.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [6, 0, 0],
+																	"rotation": [-170, 0, 180]
+																},
+																{
+																	"type": "block",
+																	"from": [-6, -22.5, 0],
+																	"to": [6, 22.5, 0],
+																	"uv": [0, 0],
+																	"invert": true,
+																	"position": [6, 0, 0],
+																	"rotation": [170, 0, -180]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "body_sub",
+							"position": [0, 0, -36],
+							"shapes": [
+								{
+									"type": "block",
+									"from": [-14, -6, -28],
+									"to": [14, 16, 8],
+									"uv": [36, 36],
+									"position": [0, 0, 0]
+								}
+							],
+							"parts": [
+								{
+									"name": "body_tail",
+									"position": [0, 5, -25.5],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-16, -8, -10],
+											"to": [16, 18, 13],
+											"uv": [23, 23],
+											"position": [0, -5, -10.5]
+										},
+										{
+											"type": "block",
+											"from": [-22, -14, -19],
+											"to": [22, 24, 13],
+											"uv": [32, 32],
+											"position": [0, -5, -24.5]
+										}
+									],
+									"parts": [
+										{
+											"name": "body_tail_root",
+											"position": [0, -5, -10.5],
+											"parts": [
+												{
+													"name": "body_tail_hair_1",
+													"position": [-18, 5.5, -7.5],
+													"parts": [
+														{
+															"name": "body_tail_hair_1_1",
+															"position": [18, 10, -4.5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -17.5, -26],
+																	"to": [0, 17.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														},
+														{
+															"name": "body_tail_hair_1_2",
+															"position": [18, 10, -4.5],
+															"rotation": [0, -72.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -17.5, -26],
+																	"to": [0, 17.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "body_tail_hair_2",
+													"position": [-18, 10.5, -15.5],
+													"rotation": [-90, 0, 0],
+													"parts": [
+														{
+															"name": "body_tail_hair_1_3",
+															"position": [18, 10, -4.5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -17.5, -26],
+																	"to": [0, 17.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														},
+														{
+															"name": "body_tail_hair_1_4",
+															"position": [18, 10, -4.5],
+															"rotation": [0, -72.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -17.5, -26],
+																	"to": [0, 17.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "body_tail_hair_3",
+													"position": [4, 10.5, -32.5],
+													"rotation": [0, -90, -90],
+													"parts": [
+														{
+															"name": "body_tail_hair_1_5",
+															"position": [18, 10, -4.5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -11.5, -26],
+																	"to": [0, 10.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														},
+														{
+															"name": "body_tail_hair_1_6",
+															"position": [18, 10, -4.5],
+															"rotation": [0, -72.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -10.5, -26],
+																	"to": [0, 10.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, 40, 0]
+																}
+															]
+														}
+													]
+												},
+												{
+													"name": "body_tail_hair_4",
+													"position": [-4, 10.5, -32.5],
+													"rotation": [0, 90, 90],
+													"parts": [
+														{
+															"name": "body_tail_hair_1_7",
+															"position": [-18, 10, -4.5],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -11.5, -26],
+																	"to": [0, 10.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, -40, 0]
+																}
+															]
+														},
+														{
+															"name": "body_tail_hair_1_8",
+															"position": [-18, 10, -4.5],
+															"rotation": [0, 72.5, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [0, -10.5, -26],
+																	"to": [0, 10.5, 26],
+																	"uv": [52, 52],
+																	"invert": true,
+																	"position": [0, 12, 0],
+																	"rotation": [0, -40, 0]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "tail_heads",
+											"position": [0, -5, -10.5],
+											"parts": [
+												{
+													"name": "head_1",
+													"position": [0, 3, -32.5],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 11],
+															"uv": [19, 19],
+															"position": [0, -8, 4.5],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_2",
+													"position": [-11, 21.5, -17.5],
+													"rotation": [-90, -60, 180],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_3",
+													"position": [-2, 21.5, -4.5],
+													"rotation": [122.5, -27.5, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_4",
+													"position": [8, 24.5, -21.5],
+													"rotation": [90, 25, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -4],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_5",
+													"position": [18, 19.5, -3.5],
+													"rotation": [107.5, 0, -45],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -4],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_6",
+													"position": [-18, 19.5, -3.5],
+													"rotation": [107.5, 0, 45],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -4],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												},
+												{
+													"name": "head_7",
+													"position": [18, 19.5, -25.5],
+													"rotation": [-95.05514, -45.09773, 123.9507],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -5],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_8",
+													"position": [12, 19.5, -29.5],
+													"rotation": [13.80518, -23.04432, 25.67504],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -6],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_9",
+													"position": [18, -2.5, -23.5],
+													"rotation": [-66.38782, -74.77814, 59.83489],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_10",
+													"position": [16, 6.5, -29.5],
+													"rotation": [5.43365, -19.20864, -2.36814],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -4],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_11",
+													"position": [17, 7.5, -14.5],
+													"rotation": [99.91793, -81.51032, -84.31213],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, -180]
+														}
+													]
+												},
+												{
+													"name": "head_12",
+													"position": [-18, 19.5, -25.5],
+													"rotation": [-95.05514, 45.09773, -123.9507],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -5],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												},
+												{
+													"name": "head_13",
+													"position": [-18, -2.5, -23.5],
+													"rotation": [-66.38782, 74.77814, -59.83489],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												},
+												{
+													"name": "head_14",
+													"position": [-16, 6.5, -29.5],
+													"rotation": [5.43365, 19.20864, 2.36814],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -4],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												},
+												{
+													"name": "head_15",
+													"position": [-12, 19.5, -29.5],
+													"rotation": [13.80518, 23.04432, -25.67504],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -6],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												},
+												{
+													"name": "head_16",
+													"position": [-17, 7.5, -14.5],
+													"rotation": [99.91793, 81.51032, 84.31213],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, 1, -8],
+															"to": [7, 15, 2],
+															"uv": [10, 10],
+															"position": [0, -8, -7],
+															"rotation": [-180, 0, 180]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "left_leg_root",
+											"position": [18, -1, -7.5],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [2, 0, -8],
+													"to": [8, 16, 8],
+													"uv": [16, 16],
+													"position": [-5, -8, 0]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_arm_4",
+													"position": [9, 3.5, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-7, -37, -7],
+															"to": [5, 14, 7],
+															"uv": [14, 14],
+															"position": [1, -11.5, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "left_leg_hair_1",
+															"position": [3, -10.5, 0],
+															"parts": [
+																{
+																	"name": "l_l_h_1",
+																	"position": [3, -11.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [5, 0, 0],
+																			"rotation": [-10, 0, 0]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [5, 0, 0],
+																			"rotation": [10, 0, 0]
+																		}
+																	]
+																},
+																{
+																	"name": "l_l_h_2",
+																	"position": [-9, -11.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [-6, 0, 0],
+																			"rotation": [170, 0, 180]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [-6, 0, 0],
+																			"rotation": [-170, 0, -180]
+																		}
+																	]
+																},
+																{
+																	"name": "l_l_h_3",
+																	"position": [-3, -11.5, 7],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [0, 0, 5],
+																			"rotation": [0, -90, -10]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [0, 0, 5],
+																			"rotation": [0, -90, 10]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"name": "left_arm_joint_3",
+															"position": [0, -51, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-5.5, -4, -5],
+																	"to": [4.5, 4, 5],
+																	"uv": [10, 10],
+																	"position": [0.5, 0, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "left_arm_5",
+																	"position": [0, -6.5, 0],
+																	"parts": [
+																		{
+																			"name": "left_shortarm_joint_3",
+																			"position": [0, -53.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-3.5, -2, -3.5],
+																					"to": [3.5, 2, 3.5],
+																					"uv": [7, 7],
+																					"position": [0, 0, 0]
+																				}
+																			],
+																			"parts": [
+																				{
+																					"name": "left_shorthand_root2",
+																					"position": [-0.25, -2, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-10.5, -3, -2.5],
+																							"to": [6.5, 16, 2.5],
+																							"uv": [5, 5],
+																							"position": [2.25, -16, 0]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-10.5, 3, -3.5],
+																							"to": [-3.5, 16, 2.5],
+																							"uv": [6, 6],
+																							"position": [0.75, -19, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "left_finger_thumb_root2",
+																							"position": [-10.25, -7.5, -1],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10.75, 3, -1.75],
+																									"to": [-7.25, 16, 2.75],
+																									"uv": [4.5, 4.5],
+																									"position": [9, -14.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_thumb_middle2",
+																									"position": [0, -12, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.5, 3, -1.5],
+																											"to": [-7.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_thumb_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10.5, 6, -1.5],
+																													"to": [-7.5, 16, 2.5],
+																													"uv": [4, 4],
+																													"position": [9, -15, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "left_finger_index_root2",
+																							"position": [-6.25, -17.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10.75, 3, -1.5],
+																									"to": [-7.25, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_index_middle2",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.5, 3, -1.5],
+																											"to": [-7.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_index_nail2",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10.25, 3, -1.5],
+																													"to": [-7.75, 16, 2.5],
+																													"uv": [4, 4],
+																													"position": [9, -15.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "left_finger_middle_root2",
+																							"position": [-1.25, -17.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10.75, 2, -1.5],
+																									"to": [-7.25, 17, 2.5],
+																									"uv": [4, 4],
+																									"position": [9, -16.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_middle_middle2",
+																									"position": [0, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.5, 2, -1.5],
+																											"to": [-7.5, 17, 2.5],
+																											"uv": [4, 4],
+																											"position": [9, -16.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_middle_nail2",
+																											"position": [0, -15, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10.25, 2, -1.5],
+																													"to": [-7.75, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "left_finger_ring_root2",
+																							"position": [3.75, -18, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10.75, 2, -1.5],
+																									"to": [-7.25, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_ring_middle2",
+																									"position": [0, -14, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.5, 2, -1.5],
+																											"to": [-7.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_ring_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10.25, 2, -1.5],
+																													"to": [-7.75, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "left_finger_pinky_root2",
+																							"position": [7.75, -15, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [-10.75, 2, -1.5],
+																									"to": [-7.25, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [9, -14, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "left_finger_pinky_middle2",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [-10.5, 2, -1.5],
+																											"to": [-7.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "left_finger_pinky_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [-10.25, 2, -1.5],
+																													"to": [-7.75, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		},
+																		{
+																			"name": "left_leg_hair_2",
+																			"position": [3, -10, 0],
+																			"parts": [
+																				{
+																					"name": "l_l_h_4",
+																					"position": [3, -11.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [5, 0, 0],
+																							"rotation": [-10, 0, 0]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [5, 0, 0],
+																							"rotation": [10, 0, 0]
+																						}
+																					]
+																				},
+																				{
+																					"name": "l_l_h_5",
+																					"position": [-9, -11.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [-6, 0, 0],
+																							"rotation": [170, 0, 180]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [-6, 0, 0],
+																							"rotation": [-170, 0, -180]
+																						}
+																					]
+																				},
+																				{
+																					"name": "l_l_h_6",
+																					"position": [-3, -11.5, 7],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [0, 0, 5],
+																							"rotation": [0, -90, -10]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [0, 0, 5],
+																							"rotation": [0, -90, 10]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -38, -6],
+																			"to": [6, 16, 6],
+																			"uv": [12, 12],
+																			"position": [0, -13.5, 0]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "right_leg_root",
+											"position": [-18, -1, -7.5],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-8, 0, -8],
+													"to": [-2, 16, 8],
+													"uv": [16, 16],
+													"position": [5, -8, 0]
+												}
+											],
+											"parts": [
+												{
+													"name": "right_arm_4",
+													"position": [-9, 3.5, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-5, -37, -7],
+															"to": [7, 14, 7],
+															"uv": [14, 14],
+															"position": [-1, -11.5, 0]
+														}
+													],
+													"parts": [
+														{
+															"name": "right_arm_joint_3",
+															"position": [0, -51, 0],
+															"shapes": [
+																{
+																	"type": "block",
+																	"from": [-4.5, -4, -5],
+																	"to": [5.5, 4, 5],
+																	"uv": [10, 10],
+																	"position": [-0.5, 0, 0]
+																}
+															],
+															"parts": [
+																{
+																	"name": "right_arm_5",
+																	"position": [0, -6.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -38, -6],
+																			"to": [6, 16, 6],
+																			"uv": [12, 12],
+																			"position": [0, -13.5, 0]
+																		}
+																	],
+																	"parts": [
+																		{
+																			"name": "right_shortarm_joint_3",
+																			"position": [0, -53.5, 0],
+																			"shapes": [
+																				{
+																					"type": "block",
+																					"from": [-3.5, -2, -3.5],
+																					"to": [3.5, 2, 3.5],
+																					"uv": [7, 7],
+																					"position": [0, 0, 0]
+																				}
+																			],
+																			"parts": [
+																				{
+																					"name": "right_shorthand_root2",
+																					"position": [0.25, -2, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6.5, -3, -2.5],
+																							"to": [10.5, 16, 2.5],
+																							"uv": [5, 5],
+																							"position": [-2.25, -16, 0]
+																						},
+																						{
+																							"type": "block",
+																							"from": [3.5, 3, -3.5],
+																							"to": [10.5, 16, 2.5],
+																							"uv": [6, 6],
+																							"position": [-0.75, -19, -0.5]
+																						}
+																					],
+																					"parts": [
+																						{
+																							"name": "right_finger_thumb_root2",
+																							"position": [10.25, -7.5, -1],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [7.25, 3, -1.75],
+																									"to": [10.75, 16, 2.75],
+																									"uv": [4.5, 4.5],
+																									"position": [-9, -14.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_thumb_middle2",
+																									"position": [0, -12, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.5, 3, -1.5],
+																											"to": [10.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [-9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_thumb_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [7.5, 6, -1.5],
+																													"to": [10.5, 16, 2.5],
+																													"uv": [4, 4],
+																													"position": [-9, -15, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "right_finger_index_root2",
+																							"position": [6.25, -17.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [7.25, 3, -1.5],
+																									"to": [10.75, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [-9, -15.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_index_middle2",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.5, 3, -1.5],
+																											"to": [10.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [-9, -15.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_index_nail2",
+																											"position": [0, -13, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [7.75, 3, -1.5],
+																													"to": [10.25, 16, 2.5],
+																													"uv": [4, 4],
+																													"position": [-9, -15.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "right_finger_middle_root2",
+																							"position": [1.25, -17.5, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [7.25, 2, -1.5],
+																									"to": [10.75, 17, 2.5],
+																									"uv": [4, 4],
+																									"position": [-9, -16.5, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_middle_middle2",
+																									"position": [0, -15, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.5, 2, -1.5],
+																											"to": [10.5, 17, 2.5],
+																											"uv": [4, 4],
+																											"position": [-9, -16.5, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_middle_nail2",
+																											"position": [0, -15, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [7.75, 2, -1.5],
+																													"to": [10.25, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [-9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "right_finger_ring_root2",
+																							"position": [-3.75, -18, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [7.25, 2, -1.5],
+																									"to": [10.75, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [-9, -15, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_ring_middle2",
+																									"position": [0, -14, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.5, 2, -1.5],
+																											"to": [10.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [-9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_ring_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [7.75, 2, -1.5],
+																													"to": [10.25, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [-9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						},
+																						{
+																							"name": "right_finger_pinky_root2",
+																							"position": [-7.75, -15, 0],
+																							"shapes": [
+																								{
+																									"type": "block",
+																									"from": [7.25, 2, -1.5],
+																									"to": [10.75, 16, 2.5],
+																									"uv": [4, 4],
+																									"position": [-9, -14, -0.5]
+																								}
+																							],
+																							"parts": [
+																								{
+																									"name": "right_finger_pinky_middle2",
+																									"position": [0, -13, 0],
+																									"shapes": [
+																										{
+																											"type": "block",
+																											"from": [7.5, 2, -1.5],
+																											"to": [10.5, 16, 2.5],
+																											"uv": [4, 4],
+																											"position": [-9, -15, -0.5]
+																										}
+																									],
+																									"parts": [
+																										{
+																											"name": "right_finger_pinky_nail2",
+																											"position": [0, -13.5, 0],
+																											"shapes": [
+																												{
+																													"type": "block",
+																													"from": [7.75, 2, -1.5],
+																													"to": [10.25, 15, 2.5],
+																													"uv": [4, 4],
+																													"position": [-9, -14.5, -0.5]
+																												}
+																											]
+																										}
+																									]
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		},
+																		{
+																			"name": "right_leg_hair_2",
+																			"position": [-3, -10, 0],
+																			"parts": [
+																				{
+																					"name": "l_l_h_7",
+																					"position": [-3, -11.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [-5, 0, 0],
+																							"rotation": [-10, 0, 0]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [-5, 0, 0],
+																							"rotation": [10, 0, 0]
+																						}
+																					]
+																				},
+																				{
+																					"name": "l_l_h_8",
+																					"position": [9, -11.5, 0],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [6, 0, 0],
+																							"rotation": [170, 0, -180]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [6, 0, 0],
+																							"rotation": [-170, 0, 180]
+																						}
+																					]
+																				},
+																				{
+																					"name": "l_l_h_9",
+																					"position": [3, -11.5, 7],
+																					"shapes": [
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [0, 0, 5],
+																							"rotation": [0, 90, 10]
+																						},
+																						{
+																							"type": "block",
+																							"from": [-6, -22.5, 0],
+																							"to": [6, 22.5, 0],
+																							"uv": [0, 0],
+																							"invert": true,
+																							"position": [0, 0, 5],
+																							"rotation": [0, 90, -10]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"name": "right_leg_hair_1",
+															"position": [-3, -10.5, 0],
+															"parts": [
+																{
+																	"name": "l_l_h_10",
+																	"position": [-3, -11.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [-5, 0, 0],
+																			"rotation": [-10, 0, 0]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [-5, 0, 0],
+																			"rotation": [10, 0, 0]
+																		}
+																	]
+																},
+																{
+																	"name": "l_l_h_11",
+																	"position": [9, -11.5, 0],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [6, 0, 0],
+																			"rotation": [170, 0, -180]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [6, 0, 0],
+																			"rotation": [-170, 0, 180]
+																		}
+																	]
+																},
+																{
+																	"name": "l_l_h_12",
+																	"position": [3, -11.5, 7],
+																	"shapes": [
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [0, 0, 5],
+																			"rotation": [0, 90, 10]
+																		},
+																		{
+																			"type": "block",
+																			"from": [-6, -22.5, 0],
+																			"to": [6, 22.5, 0],
+																			"uv": [0, 0],
+																			"invert": true,
+																			"position": [0, 0, 5],
+																			"rotation": [0, 90, -10]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "neck_root",
+							"position": [0, 0, 7],
+							"shapes": [
+								{
+									"type": "block",
+									"from": [-10, -2, 1],
+									"to": [10, 18, 15],
+									"uv": [14, 14],
+									"position": [0, 0, 0]
+								}
+							],
+							"parts": [
+								{
+									"name": "neck_hair",
+									"position": [0, 0, 0],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [0, -10, 0],
+											"to": [16, 10, 0],
+											"uv": [0, 0],
+											"invert": true,
+											"position": [10, 8, 8],
+											"rotation": [-32.5, 0, 0]
+										},
+										{
+											"type": "block",
+											"from": [0, -10, 0],
+											"to": [16, 10, 0],
+											"uv": [0, 0],
+											"invert": true,
+											"position": [10, 8, 8.2],
+											"rotation": [35, 0, 0]
+										}
+									]
+								},
+								{
+									"name": "neck_hair2",
+									"position": [0, 26, 8.1],
+									"rotation": [0, 0, 90],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [0, -10, 0],
+											"to": [16, 10, 0],
+											"uv": [0, 0],
+											"invert": true,
+											"position": [-8, 0, -0.1],
+											"rotation": [-35, 0, 0]
+										},
+										{
+											"type": "block",
+											"from": [0, -10, 0],
+											"to": [16, 10, 0],
+											"uv": [0, 0],
+											"invert": true,
+											"position": [-8, 0, 0.1],
+											"rotation": [35, 0, 0]
+										}
+									]
+								},
+								{
+									"name": "neck_sub",
+									"position": [0, 0, 14],
+									"parts": [
+										{
+											"name": "head_hair_root",
+											"position": [0, 8, -3.5],
+											"parts": [
+												{
+													"name": "head_hair",
+													"position": [0, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 9.5, 19.5],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair5",
+													"position": [0, 10.39043, 8.80314],
+													"rotation": [-7.5, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, -0.89043, 1.69686],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair6",
+													"position": [-11, 5.39043, 8.80314],
+													"rotation": [-57.5, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, -0.89043, 1.69686],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair7",
+													"position": [10, 5.39043, 8.80314],
+													"rotation": [-10, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, -0.89043, 1.69686],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair2",
+													"position": [0, 0, 0],
+													"rotation": [0, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 9.5, 19.5],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair3",
+													"position": [0, 0, 0],
+													"rotation": [0, 0, 180],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 9.5, 19.5],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair4",
+													"position": [0, 0, 0],
+													"rotation": [0, 0, 90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 9.5, 19.5],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Head",
+											"position": [0, 8, 16.5],
+											"rotation": [5, 0, 0],
+											"parts": [
+												{
+													"name": "bone3",
+													"position": [0, -12, 8.5],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-11, 1, -10],
+															"to": [11, 23, 13],
+															"uv": [23, 23],
+															"position": [0, 0, 0]
+														}
+													]
+												},
+												{
+													"name": "bone2",
+													"position": [0, -15, 6.5],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-6, -2, -3],
+															"to": [6, 4, 15],
+															"uv": [18, 18],
+															"position": [0, 0, 0]
+														}
+													]
+												},
+												{
+													"name": "head_hair11",
+													"position": [-10, 3.6959, 24.83833],
+													"rotation": [170, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [6.33927, -13.09462, -11],
+															"to": [6.33927, 16.90538, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 0.8041, 2.66167],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair14",
+													"position": [0, -1.69453, 16.03519],
+													"rotation": [-180, 0, 90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 11.19453, 20.46481],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair10",
+													"position": [9, 3.6959, 24.83833],
+													"rotation": [122.5, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-5.74025, -13.35819, -11],
+															"to": [-5.74025, 16.64181, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 0.8041, 2.66167],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair13",
+													"position": [0, -1.69453, 16.03519],
+													"rotation": [180, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 11.19453, 17.46481],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair8",
+													"position": [0, -1.69453, 16.03519],
+													"rotation": [-180, 0, -180],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 11.19453, 20.46481],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair9",
+													"position": [0, 8.6959, 24.83833],
+													"rotation": [172.5, 0, 180],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [6.92623, -12.80516, -11],
+															"to": [6.92623, 17.19484, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 0.8041, 2.66167],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												},
+												{
+													"name": "head_hair12",
+													"position": [0, -1.69453, 16.03519],
+													"rotation": [-180, 0, -90],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [0, 0.5, -11],
+															"to": [0, 30.5, 11],
+															"uv": [22, 22],
+															"invert": true,
+															"position": [0, 11.19453, 20.46481],
+															"rotation": [-90, -35, 90]
+														}
+													]
+												}
+											],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-13, -5, -3],
+													"to": [13, 21, 10],
+													"uv": [13, 13],
+													"position": [0, -8, 4.5]
+												}
+											]
+										}
+									],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-8, 0, 1],
+											"to": [8, 16, 15],
+											"uv": [14, 14],
+											"position": [0, 0, 0]
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "RightArm",
+					"position": [5.5, -86.5, -9.5],
+					"rotation": [0, 142.5, 0],
+					"parts": [
+						{
+							"name": "left_shorthand_root4",
+							"position": [-8.5, -19.75, 0.5],
+							"rotation": [0, 177.5, 0],
+							"shapes": [
+								{
+									"type": "block",
+									"from": [-3.75, -29.25, -0.75],
+									"to": [2.25, -22.125, 0.75],
+									"uv": [1.5, 1.5],
+									"position": [1.96875, 25.6875, 0.1875]
+								},
+								{
+									"type": "block",
+									"from": [-3.75, -27, -1.125],
+									"to": [-1.5, -22.125, 0.75],
+									"uv": [1.875, 1.875],
+									"position": [1.40625, 24.5625, 0]
+								}
+							],
+							"parts": [
+								{
+									"name": "left_finger_thumb_root4",
+									"position": [-2.71875, -1.125, -0.1875],
+									"rotation": [12.5, 0, -20],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-3.84375, -27, -0.46875],
+											"to": [-2.90625, -22.125, 0.84375],
+											"uv": [1.3125, 1.3125],
+											"position": [3.375, 24.5625, -0.1875]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_finger_thumb_middle4",
+											"position": [0, -4.01142, -1.4975],
+											"rotation": [42.5, 0, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-3.75, -27, -0.375],
+													"to": [-3, -22.125, 0.75],
+													"uv": [1.125, 1.125],
+													"position": [3.375, 24.5625, -0.1875]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_finger_thumb_nail4",
+													"position": [0, -3.70804, -0.94882],
+													"rotation": [32.5, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-3.75, -25.875, -0.375],
+															"to": [-3, -22.125, 0.75],
+															"uv": [1.125, 1.125],
+															"position": [3.375, 24, -0.1875]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "left_finger_index_root4",
+									"position": [-1.76208, -5.11805, 0.24903],
+									"rotation": [24.24769, 6.27967, -13.64973],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-3.84375, -27, -0.375],
+											"to": [-2.90625, -22.125, 0.75],
+											"uv": [1.125, 1.125],
+											"position": [3.375, 24.5625, -0.1875]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_finger_index_middle4",
+											"position": [0, -4.21875, -1.13666],
+											"rotation": [30, 0, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-3.75, -27, -0.375],
+													"to": [-3, -22.125, 0.75],
+													"uv": [1.125, 1.125],
+													"position": [3.375, 24.5625, -0.1875]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_finger_index_nail4",
+													"position": [0, 25.5, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-3.65625, -27, -0.375],
+															"to": [-3.09375, -22.125, 0.75],
+															"uv": [1.125, 1.125],
+															"position": [3.375, -5.8125, -0.1875]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "left_finger_middle_root4",
+									"position": [0.65625, -5.625, 0.1875],
+									"rotation": [-10, 0, 0],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-3.84375, -27.375, -0.375],
+											"to": [-2.90625, -21.75, 0.75],
+											"uv": [1.125, 1.125],
+											"position": [3.375, 24.5625, -0.1875]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_finger_middle_middle4",
+											"position": [0, -4.875, -1.29904],
+											"rotation": [30, 0, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-3.75, -27.375, -0.375],
+													"to": [-3, -21.75, 0.75],
+													"uv": [1.125, 1.125],
+													"position": [3.375, 24.5625, -0.1875]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_finger_middle_nail4",
+													"position": [0, -4.89123, -0.86614],
+													"rotation": [22.5, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-3.65625, -27.375, -0.375],
+															"to": [-3.09375, -22.5, 0.75],
+															"uv": [1.125, 1.125],
+															"position": [3.375, 24.9375, -0.1875]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "left_finger_ring_root4",
+									"position": [2.53125, -5.4375, 0.1875],
+									"rotation": [0, -7.5, 17.5],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-3.84375, -27.375, -0.375],
+											"to": [-2.90625, -22.125, 0.75],
+											"uv": [1.125, 1.125],
+											"position": [3.375, 24.75, -0.1875]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_finger_ring_middle4",
+											"position": [0.18679, -4.87614, -0.85988],
+											"rotation": [22.42287, -1.91134, 4.62111],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-3.75, -27.375, -0.375],
+													"to": [-3, -22.125, 0.75],
+													"uv": [1.125, 1.125],
+													"position": [3.375, 24.75, -0.1875]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_finger_ring_nail4",
+													"position": [0, -3.97779, -1.2927],
+													"rotation": [40, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-3.65625, -27.375, -0.375],
+															"to": [-3.09375, -22.5, 0.75],
+															"uv": [1.125, 1.125],
+															"position": [3.375, 24.9375, -0.1875]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "left_finger_pinky_root4",
+									"position": [3.87704, -3.69544, 0.88041],
+									"rotation": [-23.47603, -16.1299, 39.38003],
+									"shapes": [
+										{
+											"type": "block",
+											"from": [-3.84375, -27.375, -0.375],
+											"to": [-2.90625, -22.125, 0.75],
+											"uv": [1.125, 1.125],
+											"position": [3.375, 24.75, -0.1875]
+										}
+									],
+									"parts": [
+										{
+											"name": "left_finger_pinky_middle4",
+											"position": [0, -4.77455, -1.0196],
+											"rotation": [25, 0, 0],
+											"shapes": [
+												{
+													"type": "block",
+													"from": [-3.75, -27.375, -0.375],
+													"to": [-3, -22.125, 0.75],
+													"uv": [1.125, 1.125],
+													"position": [3.375, 24.75, -0.1875]
+												}
+											],
+											"parts": [
+												{
+													"name": "left_finger_pinky_nail4",
+													"position": [0, -4.70373, -0.86613],
+													"rotation": [22.5, 0, 0],
+													"shapes": [
+														{
+															"type": "block",
+															"from": [-3.65625, -27.375, -0.375],
+															"to": [-3.09375, -22.5, 0.75],
+															"uv": [1.125, 1.125],
+															"position": [3.375, 24.9375, -0.1875]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "LeftArm2",
+			"position": [5, 22, 0]
+		}
+	]
+}

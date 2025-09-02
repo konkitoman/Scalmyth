@@ -3,6 +3,8 @@ package dev.nyxane.mods.scalmyth.registry;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.items.AshDustItem;
+import dev.nyxane.mods.scalmyth.items.BatteryItem;
+import dev.nyxane.mods.scalmyth.items.FlashlightItem;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.neoforged.bus.api.IEventBus;
@@ -10,7 +12,6 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
-import dev.nyxane.mods.scalmyth.items.FlashLightItem;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
@@ -46,7 +47,9 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_FERN = block(ModBlocks.ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_SAPLING = block(ModBlocks.ASHEN_SAPLING);
     public static final DeferredItem<Item> FLASHLIGHT =
-        REGISTRY.register("flashlight", () -> new FlashLightItem(new Item.Properties().stacksTo(1)));
+        REGISTRY.register("flashlightitem", () -> new FlashlightItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> BATTERY =
+        REGISTRY.register("batteryitem", () -> new BatteryItem(new Item.Properties().stacksTo(1)));
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 

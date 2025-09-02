@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import dev.nyxane.mods.scalmyth.extrastuff.ObjImporter;
 import dev.nyxane.mods.scalmyth.extrastuff.ObjImporterNetworking;
+import dev.nyxane.mods.scalmyth.registry.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,8 +22,6 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-import java.io.IOException;
-
 @Mod(ScalmythAPI.MOD_ID)
 public class Scalmyth {
     public Scalmyth(IEventBus modEventBus, ModContainer modContainer) {
@@ -32,6 +31,7 @@ public class Scalmyth {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         modEventBus.addListener(ObjImporterNetworking::register);
+        ModComponents.DATA_COMPONENTS.register(modEventBus);
     }
 
     @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, value = Dist.CLIENT)
@@ -47,12 +47,6 @@ public class Scalmyth {
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModBlocks.BLOOD_FLOWER.getId(), ModBlocks.POTTED_BLOOD_FLOWER);
             });
 
-            try {
-                ObjImporter.loadModel("blacktree");
-                ObjImporter.loadModel("v11");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         @SubscribeEvent

@@ -33,6 +33,28 @@ public class FlashlightRenderer extends AreaLight {
         areaLight2.setAngle(0.25f);
         areaLight2.setColor(1.0f, 0.9f, 0.641f);
     }
+    public void setflashBrightness(float brightness) {
+        this.setBrightness(brightness);
+        areaLight2.setBrightness(brightness * 1.2f);
+    }
+
+    public void toggleOff() {
+        if (isOn) {
+            isOn = false;
+            VeilRenderSystem.renderer().getLightRenderer().removeLight(this);
+            VeilRenderSystem.renderer().getLightRenderer().removeLight(areaLight2);
+            playOffToggleSound();
+        }
+    }
+    public void toggleOn() {
+        if (!isOn) {
+            isOn = true;
+            this.setAngle((float) Math.toRadians(35));
+            VeilRenderSystem.renderer().getLightRenderer().addLight(this);
+            VeilRenderSystem.renderer().getLightRenderer().addLight(areaLight2);
+            playOnToggleSound();
+        }
+    }
 
     public void toggle() {
         isOn = !isOn;
@@ -47,6 +69,12 @@ public class FlashlightRenderer extends AreaLight {
             VeilRenderSystem.renderer().getLightRenderer().removeLight(areaLight2);
             playOffToggleSound();
         }
+    }
+
+
+    public void setflashColor(float r, float g, float b) {
+        this.setColor(r, g, b);
+        areaLight2.setColor(r, g, b);
     }
 
     private void playOnToggleSound() {
@@ -115,6 +143,7 @@ public class FlashlightRenderer extends AreaLight {
         areaLight2.setPosition(lightPos.x, lightPos.y, lightPos.z);
         areaLight2.setOrientation(orientation);
     }
+
 
 
 

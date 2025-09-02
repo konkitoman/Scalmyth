@@ -52,6 +52,8 @@ public class ModTabs {
         output.accept(ModItems.LARGE_ASHEN_FERN.get());
         output.accept(ModItems.ASHEN_FERN.get());
         output.accept(ModItems.ASHEN_SAPLING.get());
+        output.accept(ModItems.FLASHLIGHT.get());
+        output.accept(ModItems.BATTERY.get());
     }
 
     public static void register(IEventBus eventBus) {

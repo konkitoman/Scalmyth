@@ -10,9 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockElement.Deserializer.class)
 public class BlockElement$DeserializerMixin {
-
-  @Inject(at = @At("HEAD"), method = "getAngle", cancellable = true)
-  private void getAngle(JsonObject json, CallbackInfoReturnable<Float> cir){
-    cir.setReturnValue(GsonHelper.getAsFloat(json, "angle"));
-  }
+    @Inject(at = @At("HEAD"), method = "getAngle", cancellable = true)
+    private void getAngle(JsonObject json, CallbackInfoReturnable<Float> cir){
+        cir.setReturnValue(GsonHelper.getAsFloat(json, "angle"));
+    }
 }
