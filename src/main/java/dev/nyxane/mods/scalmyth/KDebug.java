@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -461,6 +462,8 @@ public class KDebug {
             if (entity instanceof Mob e) {
                 Path path = e.getNavigation().createPath(pos, 1);
                 e.getNavigation().moveTo(path, speed);
+            } else {
+                context.getSource().sendFailure(Component.literal(String.format("Failed for %s %s", entity.getType(), entity.getUUID())));
             }
         }
         return 0;
