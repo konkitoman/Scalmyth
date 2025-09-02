@@ -46,7 +46,7 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_FERN = block(ModBlocks.ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_SAPLING = block(ModBlocks.ASHEN_SAPLING);
     public static final DeferredItem<Item> FLASHLIGHT =
-        REGISTRY.register("flashlight", FlashLightItem::new);
+        REGISTRY.register("flashlight", () -> new FlashLightItem(new Item.Properties().stacksTo(1)));
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 

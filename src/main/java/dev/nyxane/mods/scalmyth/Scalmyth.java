@@ -24,9 +24,8 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import java.io.IOException;
 
 @Mod(ScalmythAPI.MOD_ID)
-public class Scalmyth
-{
-    public Scalmyth(IEventBus modEventBus, ModContainer modContainer)  {
+public class Scalmyth {
+    public Scalmyth(IEventBus modEventBus, ModContainer modContainer) {
         ModEntities.register(modEventBus);
         ModTabs.register(modEventBus);
         ModSounds.register(modEventBus);
@@ -34,7 +33,6 @@ public class Scalmyth
         ModBlocks.register(modEventBus);
         modEventBus.addListener(ObjImporterNetworking::register);
     }
-
 
     @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
@@ -44,7 +42,7 @@ public class Scalmyth
         }
 
         @SubscribeEvent
-        public static void onCommonSetup(FMLCommonSetupEvent event){
+        public static void onCommonSetup(FMLCommonSetupEvent event) {
             event.enqueueWork(() -> {
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModBlocks.BLOOD_FLOWER.getId(), ModBlocks.POTTED_BLOOD_FLOWER);
             });
@@ -58,7 +56,7 @@ public class Scalmyth
         }
 
         @SubscribeEvent
-        public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event){
+        public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
             PayloadRegistrar registrar = event.registrar("1");
             registrar.playToClient(KDebug.KDebugPayload.TYPE, KDebug.KDebugPayload.STREAM_CODEC, (a, b) -> {
                 KDebug.addShape(b.player().level(), a.shape);
@@ -66,7 +64,7 @@ public class Scalmyth
         }
 
         @SubscribeEvent
-        public static void onRegisterCommands(RegisterCommandsEvent event){
+        public static void onRegisterCommands(RegisterCommandsEvent event) {
             KDebug.registerCommands(event.getDispatcher());
             ObjImporter.registerCommand(event);
         }

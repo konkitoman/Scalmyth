@@ -17,6 +17,6 @@
   "client": [
     "BlockElement$DeserializerMixin",
     "DebugRendererMixin",
-    "PanoramaMixin"
+    "TitlescreenMixin"
   ]
 }
