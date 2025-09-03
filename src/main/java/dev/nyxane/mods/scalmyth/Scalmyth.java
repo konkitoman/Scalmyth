@@ -17,6 +17,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -58,7 +60,17 @@ public class Scalmyth
 
         @SubscribeEvent
         public static void onRegisterCommands(RegisterCommandsEvent event){
-            KDebug.registerCommands(event.getDispatcher());
+            KDebug.registerCommands(event.getDispatcher(), event.getBuildContext());
+        }
+
+        @SubscribeEvent
+        public static void onServerTick(ServerTickEvent.Post event) {
+            KDebug.serverTick();
+        }
+
+        @SubscribeEvent
+        public static void onServerStopping(ServerStoppingEvent event) {
+            KDebug.clean();
         }
     }
 }
