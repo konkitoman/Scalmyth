@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -18,12 +20,18 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -32,10 +40,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.time.Duration;
@@ -50,7 +60,8 @@ import java.util.stream.Stream;
 public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
     private static final StampedLock SHAPES_LOCK = new StampedLock();
-    private static Instant LAST_TIME = Instant.now();
+    private static Instant RENDER_LAST_TIME = Instant.now();
+    private static Instant TICK_LAST_TIME = Instant.now();
     private static final AtomicInteger NEXT = new AtomicInteger((int) Math.pow(2, 16));
     private static boolean ENABLED = false;
 
@@ -59,49 +70,61 @@ public class KDebug {
         poseStack.pushPose();
         Matrix4f matrix = poseStack.last().pose();
 
-        Duration elapsed = Duration.between(LAST_TIME, Instant.now());
-        LAST_TIME = Instant.now();
+        Duration elapsed = Duration.between(RENDER_LAST_TIME, Instant.now());
+        RENDER_LAST_TIME = Instant.now();
         float delta = (float) (((double) elapsed.getNano() / Math.pow(10.0, 9)) + (double) elapsed.getSeconds());
 
         long stamp = SHAPES_LOCK.writeLock();
         SHAPES.removeIf(shape -> {
-            if (!ENABLED) return true;
+            if (!shape.isClient()) return false;
+
+            if (!ENABLED) {
+                shape.clean();
+                return true;
+            }
 
             Random RANDOM = new Random(shape.id);
-            if (shape instanceof Shape.Lines lines) {
-                VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
+            switch (shape) {
+                case Shape.Lines lines -> {
+                    VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
 
-                Vec3 first = lines.points.get(lines.points.size() - 1);
-                buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
-                    (float) (first.z - camZ));
-                buffer.setColor(0);
+                    Vec3 first = lines.points.getLast();
+                    buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
+                        (float) (first.z - camZ));
+                    buffer.setColor(0);
 
-                for (int i = 0; i < lines.points.size(); i++) {
-                    Vec3 point = lines.points.get(i);
-                    int color = lines.colors.get(i);
-                    if (color == 0) {
-                        color = RANDOM.nextInt();
+                    for (int i = 0; i < lines.points.size(); i++) {
+                        Vec3 point = lines.points.get(i);
+                        int color = lines.colors.get(i);
+                        if (color == 0) {
+                            color = RANDOM.nextInt();
+                        }
+                        buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
+                            (float) (point.z - camZ));
+                        buffer.setColor(color);
                     }
-                    buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
-                        (float) (point.z - camZ));
-                    buffer.setColor(color);
-                }
 
-                Vec3 last = lines.points.get(lines.points.size() - 1);
+                    Vec3 last = lines.points.getLast();
 
-                buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
-                    (float) (last.z - camZ));
-                buffer.setColor(0);
-            } else if (shape instanceof Shape.Box box) {
-                int color = box.color;
-                if (color == 0) {
-                    color = RANDOM.nextInt() | 0xff000000;
+                    buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
+                        (float) (last.z - camZ));
+                    buffer.setColor(0);
                 }
-                drawBox(matrix, bufferSource, box.origin, box.size, color, new Vec3(camX, camY, camZ));
+                case Shape.Box box -> {
+                    int color = box.color;
+                    if (color == 0) {
+                        color = RANDOM.nextInt() | 0xff000000;
+                    }
+                    drawBox(matrix, bufferSource, box.origin, box.size, color, new Vec3(camX, camY, camZ));
+                }
+                default -> {
+                }
             }
 
             shape.time -= delta;
-            return shape.time < 0;
+            boolean res = shape.time < 0;
+            if (res) shape.clean();
+            return res;
         });
         SHAPES_LOCK.unlockWrite(stamp);
 
@@ -160,19 +183,46 @@ public class KDebug {
     public static void addShape(Level level, Shape shape) {
         if (!ENABLED) return;
         if (level instanceof ServerLevel serverLevel) {
+            if (!shape.isClient()) {
+                if (addShapeOrReplace(shape)) {
+                    if (shape instanceof Shape.Entity entity) {
+                        level.addFreshEntity(entity.getEntity(level));
+                    }
+                }
+
+                return;
+            }
+
             for (ServerPlayer player : serverLevel.players()) {
                 player.connection.send(new KDebugPayload(shape));
             }
             return;
         }
 
+        addShapeOrReplace(shape);
+    }
+
+    private static boolean addShapeOrReplace(Shape shape) {
         long stamp = SHAPES_LOCK.writeLock();
 
         for (int i = 0; i < SHAPES.size(); i++) {
-            if (SHAPES.get(i).id == shape.id) {
+            Shape old = SHAPES.get(i);
+            if (old.id == shape.id) {
+                if (old instanceof Shape.Entity oldEntity) {
+                    if (shape instanceof Shape.Entity newEntity && oldEntity.data.getString("id").equals(newEntity.data.getString("id"))) {
+                        newEntity.entity = oldEntity.entity;
+                        newEntity.entity.load(newEntity.data);
+                    } else {
+                        old.clean();
+                        SHAPES.set(i, shape);
+                        SHAPES_LOCK.unlockWrite(stamp);
+                        return true;
+                    }
+                }
+
                 SHAPES.set(i, shape);
                 SHAPES_LOCK.unlockWrite(stamp);
-                return;
+                return false;
             }
         }
 
@@ -182,30 +232,26 @@ public class KDebug {
 
         SHAPES.add(shape);
         SHAPES_LOCK.unlockWrite(stamp);
+        return true;
     }
 
-    public static class Shape {
-        public static final MapCodec<Shape> CODEC = new MapCodec<Shape>() {
+    public static abstract class Shape {
+        public static final MapCodec<Shape> CODEC = new MapCodec<>() {
             @Override
             public <T> DataResult<Shape> decode(DynamicOps<T> ops, MapLike<T> input) {
                 float time = Codec.FLOAT.decode(ops, input.get("time")).getOrThrow().getFirst();
                 int id = Codec.INT.decode(ops, input.get("id")).getOrThrow().getFirst();
                 byte variant = Codec.BYTE.decode(ops, input.get("variant")).getOrThrow().getFirst();
 
-                Shape self = null;
-
-                switch (variant) {
-                    case 0:
-                        self = Shape.Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                            .getOrThrow();
-                        break;
-                    case 1:
-                        self = Shape.Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                            .getOrThrow();
-                        break;
-                    default:
-                        throw new RuntimeException("unknown variant");
-                }
+                Shape self = switch (variant) {
+                    case 0 -> Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
+                        .getOrThrow();
+                    case 1 -> Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
+                        .getOrThrow();
+                    case 2 -> Entity.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
+                        .getOrThrow();
+                    default -> throw new RuntimeException("unknown variant");
+                };
 
                 self.time = time;
                 self.id = id;
@@ -219,14 +265,23 @@ public class KDebug {
                 builder.add("time", ops.createFloat(input.time));
                 builder.add("id", ops.createInt(input.id));
 
-                if (input instanceof Shape.Lines lines) {
-                    builder.add("variant", ops.createByte((byte) 0));
-                    builder.add("inner", Shape.Lines.CODEC.encode(lines, ops, builder).build(ops.empty()));
-                } else if (input instanceof Shape.Box box) {
-                    builder.add("variant", ops.createByte((byte) 1));
-                    builder.add("inner", Shape.Box.CODEC.encode(box, ops,
-                        builder).build(ops.empty()));
-
+                switch (input) {
+                    case Lines lines -> {
+                        builder.add("variant", ops.createByte((byte) 0));
+                        builder.add("inner", Lines.CODEC.encode(lines, ops, builder).build(ops.empty()));
+                    }
+                    case Box box -> {
+                        builder.add("variant", ops.createByte((byte) 1));
+                        builder.add("inner", Box.CODEC.encode(box, ops,
+                            builder).build(ops.empty()));
+                    }
+                    case Entity entity -> {
+                        builder.add("variant", ops.createByte((byte) 2));
+                        builder.add("inner", Entity.CODEC.encode(entity, ops,
+                            builder).build(ops.empty()));
+                    }
+                    default -> {
+                    }
                 }
 
                 return builder;
@@ -252,8 +307,15 @@ public class KDebug {
             return this;
         }
 
+        public boolean isClient() {
+            return true;
+        }
+
+        public void clean() {
+        }
+
         public static class Lines extends Shape {
-            public static final MapCodec<Shape.Lines> CODEC = new MapCodec<Shape.Lines>() {
+            public static final MapCodec<Shape.Lines> CODEC = new MapCodec<>() {
                 @Override
                 public <T> DataResult<Lines> decode(DynamicOps<T> ops, MapLike<T> input) {
                     List<Vec3> points = Vec3.CODEC.listOf().decode(ops, input.get("points")).getOrThrow().getFirst();
@@ -333,7 +395,7 @@ public class KDebug {
         }
 
         public static class Box extends Shape {
-            public static final MapCodec<Box> CODEC = new MapCodec<Box>() {
+            public static final MapCodec<Box> CODEC = new MapCodec<>() {
 
                 @Override
                 public <T> DataResult<Box> decode(DynamicOps<T> ops, MapLike<T> input) {
@@ -399,6 +461,65 @@ public class KDebug {
                 return this;
             }
         }
+
+        public static class Entity extends Shape {
+            public static final MapCodec<Entity> CODEC = new MapCodec<>() {
+
+                @Override
+                public <T> DataResult<Entity> decode(DynamicOps<T> ops, MapLike<T> input) {
+                    CompoundTag data = CompoundTag.CODEC.decode(ops, input.get("data")).getOrThrow().getFirst();
+
+                    return DataResult.success(new Entity(data));
+                }
+
+                @Override
+                public <T> RecordBuilder<T> encode(Entity input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
+                    RecordBuilder<T> builder = ops.mapBuilder();
+
+                    builder.add("data", CompoundTag.CODEC.encode(input.data, ops, ops.empty()));
+
+                    return builder;
+                }
+
+                @Override
+                public <T> Stream<T> keys(DynamicOps<T> ops) {
+                    return Stream.of(ops.createString("type"), ops.createString("data"));
+                }
+            };
+
+            CompoundTag data;
+            net.minecraft.world.entity.Entity entity;
+
+            public Entity(CompoundTag pData) {
+                data = pData;
+            }
+
+            public Entity(net.minecraft.world.entity.Entity pEntity) {
+                entity = pEntity;
+                data = new CompoundTag();
+                pEntity.save(data);
+            }
+
+            public net.minecraft.world.entity.Entity getEntity(Level level) {
+                if (entity != null) {
+                    return entity;
+                }
+                entity = EntityType.loadEntityRecursive(data, level, e -> e);
+                return entity;
+            }
+
+            @Override
+            public void clean() {
+                if (entity != null) {
+                    entity.discard();
+                }
+            }
+
+            @Override
+            public boolean isClient() {
+                return false;
+            }
+        }
     }
 
     public static class KDebugPayload implements CustomPacketPayload {
@@ -430,12 +551,12 @@ public class KDebug {
         }
 
         @Override
-        public Type<? extends CustomPacketPayload> type() {
+        public @NotNull Type<? extends CustomPacketPayload> type() {
             return TYPE;
         }
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext pContext) {
         dispatcher.register(Commands.literal("kdebug")
             .requires(p -> p.hasPermission(2))
             .then(Commands.literal("enable").executes(s -> {
@@ -453,7 +574,74 @@ public class KDebug {
                         .executes((context) -> commandNavigate(context, DoubleArgumentType.getDouble(context, "speed"))))
                 ))
             )
+            .then(Commands.literal("summon")
+                .then(Commands.argument("entity", ResourceArgument.resource(pContext, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                    .then(Commands.argument("pos", Vec3Argument.vec3())
+                        .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
+                            .then(Commands.argument("time", FloatArgumentType.floatArg(0))
+                                .then(Commands.argument("id", IntegerArgumentType.integer())
+                                    .executes(context -> {
+                                        if (!ENABLED) {
+                                            context.getSource().sendFailure(Component.literal("kdebug is not enabled!"));
+                                            return 0;
+                                        }
+
+                                        EntityType<?> entityType = ResourceArgument.getEntityType(context, "entity").value();
+                                        Vec3 pos = Vec3Argument.getVec3(context, "pos");
+                                        CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
+                                        data.putString("id", EntityType.getKey(entityType).toString());
+                                        float time = FloatArgumentType.getFloat(context, "time");
+                                        int id = IntegerArgumentType.getInteger(context, "id");
+                                        Level level = context.getSource().getLevel();
+                                        Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
+                                            e.moveTo(pos);
+                                            return e;
+                                        });
+
+                                        if (entity == null) {
+                                            context.getSource().sendFailure(Component.literal("Cannot summon entity!"));
+                                            return 0;
+                                        }
+
+                                        addShape(level, new Shape.Entity(entity).setTime(time).setId(id));
+
+                                        return 0;
+                                    }))))))
+            )
         );
+    }
+
+    public static void serverTick() {
+        Duration elapsed = Duration.between(TICK_LAST_TIME, Instant.now());
+        TICK_LAST_TIME = Instant.now();
+        float delta = (float) (((double) elapsed.getNano() / Math.pow(10.0, 9)) + (double) elapsed.getSeconds());
+
+        long stamp = SHAPES_LOCK.writeLock();
+        SHAPES.removeIf(shape -> {
+            if (shape.isClient()) return false;
+
+            if (!ENABLED) {
+                shape.clean();
+                return true;
+            }
+
+            shape.time -= delta;
+            boolean res = shape.time < 0;
+            if (res) {
+                shape.clean();
+            }
+            return res;
+        });
+        SHAPES_LOCK.unlockWrite(stamp);
+    }
+
+    public static void clean() {
+        long stamp = SHAPES_LOCK.writeLock();
+        SHAPES.removeIf(shape -> {
+            shape.clean();
+            return true;
+        });
+        SHAPES_LOCK.unlockWrite(stamp);
     }
 
     public static int commandNavigate(CommandContext<CommandSourceStack> context, double speed) throws CommandSyntaxException {
