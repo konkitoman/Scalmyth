@@ -17,6 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -53,7 +54,7 @@ public class Scalmyth {
         @SubscribeEvent
         public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
             PayloadRegistrar registrar = event.registrar("1");
-            registrar.playToClient(KDebug.KDebugPayload.TYPE, KDebug.KDebugPayload.STREAM_CODEC, (a, b) -> {
+            registrar.playBidirectional(KDebug.KDebugPayload.TYPE, KDebug.KDebugPayload.STREAM_CODEC, (a, b) -> {
                 KDebug.addShape(b.player().level(), a.shape);
             });
         }
@@ -62,6 +63,37 @@ public class Scalmyth {
         public static void onRegisterCommands(RegisterCommandsEvent event) {
             KDebug.registerCommands(event.getDispatcher(), event.getBuildContext());
             ObjImporter.registerCommand(event);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+            KDebug.registerClientCommands(event.getDispatcher(), event.getBuildContext());
+        }
+
+        @SubscribeEvent
+        public static void onServerTick(ServerTickEvent.Post event) {
+            KDebug.serverTick();
+        }
+
+        @SubscribeEvent
+        public static void onServerStopping(ServerStoppingEvent event) {
+            KDebug.clean();
+        }
+    }
+
+    @EventBusSubscriber(modid = ScalmythAPI.MOD_ID, value = Dist.DEDICATED_SERVER)
+    public static class ServerModEvents {
+        @SubscribeEvent
+        public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
+            PayloadRegistrar registrar = event.registrar("1");
+            registrar.playBidirectional(KDebug.KDebugPayload.TYPE, KDebug.KDebugPayload.STREAM_CODEC, (a, b) -> {
+                KDebug.addShape(b.player().level(), a.shape);
+            });
+        }
+
+        @SubscribeEvent
+        public static void onRegisterCommands(RegisterCommandsEvent event) {
+            KDebug.registerCommands(event.getDispatcher(), event.getBuildContext());
         }
 
         @SubscribeEvent
