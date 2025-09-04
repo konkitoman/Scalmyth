@@ -10,13 +10,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.MapLike;
-import com.mojang.serialization.RecordBuilder;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -40,6 +36,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -54,11 +51,11 @@ import org.joml.Matrix4f;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
-import java.util.stream.Stream;
 
 public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
@@ -242,63 +239,44 @@ public class KDebug {
     }
 
     public static abstract class Shape {
-        public static final MapCodec<Shape> CODEC = new MapCodec<>() {
-            @Override
-            public <T> DataResult<Shape> decode(DynamicOps<T> ops, MapLike<T> input) {
-                float time = Codec.FLOAT.decode(ops, input.get("time")).getOrThrow().getFirst();
-                int id = Codec.INT.decode(ops, input.get("id")).getOrThrow().getFirst();
-                byte variant = Codec.BYTE.decode(ops, input.get("variant")).getOrThrow().getFirst();
+        private static final LinkedHashMap<String, MapCodec<Shape>> CODECS = new LinkedHashMap<>();
 
-                Shape self = switch (variant) {
-                    case 0 -> Lines.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                        .getOrThrow();
-                    case 1 -> Box.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                        .getOrThrow();
-                    case 2 -> Entity.CODEC.decode(ops, ops.getMap(input.get("inner")).getOrThrow())
-                        .getOrThrow();
-                    default -> throw new RuntimeException("unknown variant");
-                };
+        public static <S extends Shape> MapCodec<Shape> register(String variant, MapCodec<S> codec) {
+            if (CODECS.get(variant) != null)
+                throw new RuntimeException(String.format("KDebug The variant `%s` is already registered", variant));
 
-                self.time = time;
-                self.id = id;
-                return DataResult.success(self);
-            }
+            CODECS.put(variant, (MapCodec<Shape>) codec);
+            return CODEC;
+        }
 
-            @Override
-            public <T> RecordBuilder<T> encode(Shape input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-                RecordBuilder<T> builder = ops.mapBuilder();
-
-                builder.add("time", ops.createFloat(input.time));
-                builder.add("id", ops.createInt(input.id));
-
-                switch (input) {
-                    case Lines lines -> {
-                        builder.add("variant", ops.createByte((byte) 0));
-                        builder.add("inner", Lines.CODEC.encode(lines, ops, builder).build(ops.empty()));
+        public static final MapCodec<Shape> CODEC = RecordCodecBuilder.mapCodec(
+            (i) -> i.group(
+                Codec.FLOAT.fieldOf("time").forGetter(s -> s.time),
+                Codec.INT.fieldOf("id").forGetter(s -> s.id),
+                Codec.STRING.fieldOf("variant").forGetter(Shape::variant),
+                CompoundTag.CODEC.fieldOf("inner").forGetter(s -> {
+                    Tag tag = CODECS.get(s.variant()).encoder().encodeStart(NbtOps.INSTANCE, s).getOrThrow();
+                    if (tag instanceof CompoundTag compoundTag) {
+                        return compoundTag;
+                    } else {
+                        throw new RuntimeException("in not CompoundTag");
                     }
-                    case Box box -> {
-                        builder.add("variant", ops.createByte((byte) 1));
-                        builder.add("inner", Box.CODEC.encode(box, ops,
-                            builder).build(ops.empty()));
-                    }
-                    case Entity entity -> {
-                        builder.add("variant", ops.createByte((byte) 2));
-                        builder.add("inner", Entity.CODEC.encode(entity, ops,
-                            builder).build(ops.empty()));
-                    }
-                    default -> {
-                    }
-                }
+                })).apply(i, Shape::decode));
 
-                return builder;
-            }
+        private static Shape decode(float time, int id, String variant, CompoundTag inner) {
+            MapCodec<Shape> codec = CODECS.get(variant);
+            if (codec == null)
+                throw new RuntimeException(String.format("KDebug: a codec could not be found for variant: `%s`", variant));
 
-            @Override
-            public <T> Stream<T> keys(DynamicOps<T> ops) {
-                return Stream.of(ops.createString("variant"), ops.createString("time"), ops.createString("inner"));
-            }
+            Shape shape = codec.compressedDecode(NbtOps.INSTANCE, inner).getOrThrow();
 
-        };
+            shape.time = time;
+            shape.id = id;
+
+            return shape;
+        }
+
+        protected abstract String variant();
 
         float time = 1;
         int id = 0;
@@ -321,30 +299,19 @@ public class KDebug {
         }
 
         public static class Lines extends Shape {
-            public static final MapCodec<Shape.Lines> CODEC = new MapCodec<>() {
-                @Override
-                public <T> DataResult<Lines> decode(DynamicOps<T> ops, MapLike<T> input) {
-                    List<Vec3> points = Vec3.CODEC.listOf().decode(ops, input.get("points")).getOrThrow().getFirst();
-                    List<Integer> colors = Codec.INT.listOf().decode(ops, input.get("colors")).getOrThrow().getFirst();
+            public static final String VARIANT = "lines";
+            public static final MapCodec<Shape> CODEC = Shape
+                .register(VARIANT, RecordCodecBuilder.<Lines>mapCodec(
+                    (i) -> i.group(
+                        Vec3.CODEC.listOf().fieldOf("points").forGetter(l -> l.points),
+                        Codec.INT.listOf().fieldOf("colors").forGetter(l -> l.colors)
+                    ).apply(i, Lines::new)));
 
-                    return DataResult.success(new Lines(points, colors));
-                }
+            @Override
+            protected String variant() {
+                return VARIANT;
+            }
 
-                @Override
-                public <T> RecordBuilder<T> encode(Lines input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-                    RecordBuilder<T> builder = ops.mapBuilder();
-
-                    builder.add("points", Vec3.CODEC.listOf().encode(input.points, ops, ops.empty()));
-                    builder.add("colors", Codec.INT.listOf().encode(input.colors, ops, ops.empty()));
-
-                    return builder;
-                }
-
-                @Override
-                public <T> Stream<T> keys(DynamicOps<T> ops) {
-                    return Stream.of(ops.createString("points"), ops.createString("colors"));
-                }
-            };
             public List<Vec3> points;
             public List<Integer> colors;
 
@@ -401,33 +368,19 @@ public class KDebug {
         }
 
         public static class Box extends Shape {
-            public static final MapCodec<Box> CODEC = new MapCodec<>() {
+            public static final String VARIANT = "box";
+            public static final MapCodec<Shape> CODEC = Shape
+                .register(VARIANT, RecordCodecBuilder.<Box>mapCodec(
+                    (i) -> i.group(
+                        Vec3.CODEC.fieldOf("origin").forGetter(b -> b.origin),
+                        Vec3.CODEC.fieldOf("size").forGetter(b -> b.size),
+                        Codec.INT.fieldOf("color").forGetter(b -> b.color)
+                    ).apply(i, Box::new)));
 
-                @Override
-                public <T> DataResult<Box> decode(DynamicOps<T> ops, MapLike<T> input) {
-                    Vec3 origin = Vec3.CODEC.decode(ops, input.get("origin")).getOrThrow().getFirst();
-                    Vec3 size = Vec3.CODEC.decode(ops, input.get("size")).getOrThrow().getFirst();
-                    int color = Codec.INT.decode(ops, input.get("color")).getOrThrow().getFirst();
-
-                    return DataResult.success(new Box(origin, size, color));
-                }
-
-                @Override
-                public <T> RecordBuilder<T> encode(Box input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-                    RecordBuilder<T> builder = ops.mapBuilder();
-
-                    builder.add("origin", Vec3.CODEC.encode(input.origin, ops, ops.empty()));
-                    builder.add("size", Vec3.CODEC.encode(input.size, ops, ops.empty()));
-                    builder.add("color", Codec.INT.encode(input.color, ops, ops.empty()));
-
-                    return builder;
-                }
-
-                @Override
-                public <T> Stream<T> keys(DynamicOps<T> ops) {
-                    return Stream.of(ops.createString("origin"), ops.createString("size"), ops.createString("color"));
-                }
-            };
+            @Override
+            protected String variant() {
+                return VARIANT;
+            }
 
             public Vec3 origin;
             public Vec3 size;
@@ -469,29 +422,17 @@ public class KDebug {
         }
 
         public static class Entity extends Shape {
-            public static final MapCodec<Entity> CODEC = new MapCodec<>() {
+            public static final String VARIANT = "entity";
+            public static final MapCodec<Shape> CODEC = Shape
+                .register(VARIANT, RecordCodecBuilder.<Entity>mapCodec(
+                    (i) -> i.group(
+                        CompoundTag.CODEC.fieldOf("data").forGetter(e -> e.data)
+                    ).apply(i, Entity::new)));
 
-                @Override
-                public <T> DataResult<Entity> decode(DynamicOps<T> ops, MapLike<T> input) {
-                    CompoundTag data = CompoundTag.CODEC.decode(ops, input.get("data")).getOrThrow().getFirst();
-
-                    return DataResult.success(new Entity(data));
-                }
-
-                @Override
-                public <T> RecordBuilder<T> encode(Entity input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-                    RecordBuilder<T> builder = ops.mapBuilder();
-
-                    builder.add("data", CompoundTag.CODEC.encode(input.data, ops, ops.empty()));
-
-                    return builder;
-                }
-
-                @Override
-                public <T> Stream<T> keys(DynamicOps<T> ops) {
-                    return Stream.of(ops.createString("type"), ops.createString("data"));
-                }
-            };
+            @Override
+            protected String variant() {
+                return VARIANT;
+            }
 
             CompoundTag data;
             net.minecraft.world.entity.Entity entity;
@@ -528,10 +469,18 @@ public class KDebug {
         }
     }
 
+    // If we don't try to access the Shapes here their codecs will not be registered.
+    // Because java is lazy!
+    static {
+        Shape.Lines.CODEC.codec();
+        Shape.Box.CODEC.codec();
+        Shape.Entity.CODEC.codec();
+    }
+
     public static class KDebugPayload implements CustomPacketPayload {
         public static final StreamCodec<FriendlyByteBuf, KDebugPayload> STREAM_CODEC = CustomPacketPayload
             .codec(KDebugPayload::write, KDebugPayload::new);
-        public static final Type<KDebugPayload> TYPE = new Type<>(ScalmythAPI.rl("kdebug"));
+        public static final Type<KDebugPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("kdebug", "payload"));
         public Shape shape;
 
         public KDebugPayload(FriendlyByteBuf buffer) {
@@ -563,36 +512,41 @@ public class KDebug {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> summonCommand(CommandBuildContext pContext) {
-        return Commands.literal("summon").then(Commands.argument("entity", ResourceArgument.resource(pContext, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
-            .then(Commands.argument("pos", Vec3Argument.vec3()).then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
-                .then(Commands.argument("time", FloatArgumentType.floatArg(0)).then(Commands.argument("id", IntegerArgumentType.integer())
-                    .executes(context -> {
-                        if (!ENABLED) {
-                            context.getSource().sendFailure(Component.literal("kdebug is not enabled!"));
-                            return 0;
-                        }
+        return Commands
+            .literal("summon")
+            .then(Commands.argument("entity", ResourceArgument.resource(pContext, Registries.ENTITY_TYPE))
+                .suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("pos", Vec3Argument.vec3())
+                    .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
+                        .then(Commands.argument("time", FloatArgumentType.floatArg(0))
+                            .then(Commands.argument("id", IntegerArgumentType.integer())
+                                .executes(context -> {
+                                    if (!ENABLED) {
+                                        context.getSource().sendFailure(Component.literal("kdebug is not enabled!"));
+                                        return 0;
+                                    }
 
-                        EntityType<?> entityType = ResourceArgument.getEntityType(context, "entity").value();
-                        Vec3 pos = Vec3Argument.getVec3(context, "pos");
-                        CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
-                        data.putString("id", EntityType.getKey(entityType).toString());
-                        float time = FloatArgumentType.getFloat(context, "time");
-                        int id = IntegerArgumentType.getInteger(context, "id");
-                        Level level = context.getSource().getUnsidedLevel();
-                        Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
-                            e.moveTo(pos);
-                            return e;
-                        });
+                                    EntityType<?> entityType = ResourceArgument.getEntityType(context, "entity").value();
+                                    Vec3 pos = Vec3Argument.getVec3(context, "pos");
+                                    CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
+                                    data.putString("id", EntityType.getKey(entityType).toString());
+                                    float time = FloatArgumentType.getFloat(context, "time");
+                                    int id = IntegerArgumentType.getInteger(context, "id");
+                                    Level level = context.getSource().getUnsidedLevel();
+                                    Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
+                                        e.moveTo(pos);
+                                        return e;
+                                    });
 
-                        if (entity == null) {
-                            context.getSource().sendFailure(Component.literal("Cannot summon entity!"));
-                            return 0;
-                        }
+                                    if (entity == null) {
+                                        context.getSource().sendFailure(Component.literal("Cannot summon entity!"));
+                                        return 0;
+                                    }
 
-                        addShape(level, new Shape.Entity(entity).setTime(time).setId(id));
+                                    addShape(level, new Shape.Entity(entity).setTime(time).setId(id));
 
-                        return 0;
-                    }))))));
+                                    return 0;
+                                }))))));
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext pContext) {
@@ -659,9 +613,7 @@ public class KDebug {
 
             shape.time -= delta;
             boolean res = shape.time < 0;
-            if (res) {
-                shape.clean();
-            }
+            if (res) shape.clean();
             return res;
         });
         SHAPES_LOCK.unlockWrite(stamp);
