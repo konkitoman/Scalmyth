@@ -6,6 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -18,6 +19,7 @@ import com.mojang.serialization.RecordBuilder;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.commands.CommandBuildContext;
@@ -36,6 +38,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -196,6 +199,9 @@ public class KDebug {
             for (ServerPlayer player : serverLevel.players()) {
                 player.connection.send(new KDebugPayload(shape));
             }
+            return;
+        } else if (!shape.isClient() && level instanceof ClientLevel) {
+            level.sendPacketToServer(new ServerboundCustomPayloadPacket(new KDebugPayload(shape)));
             return;
         }
 
@@ -556,14 +562,53 @@ public class KDebug {
         }
     }
 
+    private static LiteralArgumentBuilder<CommandSourceStack> summonCommand(CommandBuildContext pContext) {
+        return Commands.literal("summon").then(Commands.argument("entity", ResourceArgument.resource(pContext, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+            .then(Commands.argument("pos", Vec3Argument.vec3()).then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
+                .then(Commands.argument("time", FloatArgumentType.floatArg(0)).then(Commands.argument("id", IntegerArgumentType.integer())
+                    .executes(context -> {
+                        if (!ENABLED) {
+                            context.getSource().sendFailure(Component.literal("kdebug is not enabled!"));
+                            return 0;
+                        }
+
+                        EntityType<?> entityType = ResourceArgument.getEntityType(context, "entity").value();
+                        Vec3 pos = Vec3Argument.getVec3(context, "pos");
+                        CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
+                        data.putString("id", EntityType.getKey(entityType).toString());
+                        float time = FloatArgumentType.getFloat(context, "time");
+                        int id = IntegerArgumentType.getInteger(context, "id");
+                        Level level = context.getSource().getUnsidedLevel();
+                        Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
+                            e.moveTo(pos);
+                            return e;
+                        });
+
+                        if (entity == null) {
+                            context.getSource().sendFailure(Component.literal("Cannot summon entity!"));
+                            return 0;
+                        }
+
+                        addShape(level, new Shape.Entity(entity).setTime(time).setId(id));
+
+                        return 0;
+                    }))))));
+    }
+
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext pContext) {
         dispatcher.register(Commands.literal("kdebug")
             .requires(p -> p.hasPermission(2))
             .then(Commands.literal("enable").executes(s -> {
+                if (!ENABLED) {
+                    s.getSource().sendSystemMessage(Component.literal("kdebug Enabled"));
+                }
                 ENABLED = true;
                 return 0;
             }))
             .then(Commands.literal("disable").executes(s -> {
+                if (ENABLED) {
+                    s.getSource().sendSystemMessage(Component.literal("kdebug Disabled"));
+                }
                 ENABLED = false;
                 return 0;
             }))
@@ -574,40 +619,27 @@ public class KDebug {
                         .executes((context) -> commandNavigate(context, DoubleArgumentType.getDouble(context, "speed"))))
                 ))
             )
-            .then(Commands.literal("summon")
-                .then(Commands.argument("entity", ResourceArgument.resource(pContext, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
-                    .then(Commands.argument("pos", Vec3Argument.vec3())
-                        .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
-                            .then(Commands.argument("time", FloatArgumentType.floatArg(0))
-                                .then(Commands.argument("id", IntegerArgumentType.integer())
-                                    .executes(context -> {
-                                        if (!ENABLED) {
-                                            context.getSource().sendFailure(Component.literal("kdebug is not enabled!"));
-                                            return 0;
-                                        }
+            .then(summonCommand(pContext))
+        );
+    }
 
-                                        EntityType<?> entityType = ResourceArgument.getEntityType(context, "entity").value();
-                                        Vec3 pos = Vec3Argument.getVec3(context, "pos");
-                                        CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
-                                        data.putString("id", EntityType.getKey(entityType).toString());
-                                        float time = FloatArgumentType.getFloat(context, "time");
-                                        int id = IntegerArgumentType.getInteger(context, "id");
-                                        Level level = context.getSource().getLevel();
-                                        Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
-                                            e.moveTo(pos);
-                                            return e;
-                                        });
-
-                                        if (entity == null) {
-                                            context.getSource().sendFailure(Component.literal("Cannot summon entity!"));
-                                            return 0;
-                                        }
-
-                                        addShape(level, new Shape.Entity(entity).setTime(time).setId(id));
-
-                                        return 0;
-                                    }))))))
-            )
+    public static void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext pContext) {
+        dispatcher.register(Commands.literal("kdebug-client")
+            .then(Commands.literal("enable").executes(s -> {
+                if (!ENABLED) {
+                    s.getSource().sendSystemMessage(Component.literal("kdebug Enabled"));
+                }
+                ENABLED = true;
+                return 0;
+            }))
+            .then(Commands.literal("disable").executes(s -> {
+                if (ENABLED) {
+                    s.getSource().sendSystemMessage(Component.literal("kdebug Disabled"));
+                }
+                ENABLED = false;
+                return 0;
+            }))
+            .then(summonCommand(pContext))
         );
     }
 
