@@ -3,21 +3,30 @@ package dev.nyxane.mods.scalmyth;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mojang.datafixers.util.Function3;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,6 +35,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -39,24 +49,44 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.entity.TransientEntitySectionManager;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.ClientCommandHandler;
+import net.neoforged.neoforge.client.ClientCommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.cache.GeckoLibCache;
+import software.bernie.geckolib.loading.object.BakedAnimations;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
@@ -577,9 +607,9 @@ public class KDebug {
             .then(summonCommand(pContext))
             .then(Commands.literal("discard").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> {
                 int count = 0;
-                for (Entity entity: EntityArgument.getEntities(context, "entities")){
+                for (Entity entity : EntityArgument.getEntities(context, "entities")) {
                     context.getSource().sendSystemMessage(Component.literal(String.format("discarding: %s : %s", entity.getType(), entity.getStringUUID())));
-                    if (entity instanceof Player){
+                    if (entity instanceof Player) {
                         context.getSource().sendSystemMessage(Component.literal(String.format("Player %s will not be discarded!", entity.getName().getString())));
                         continue;
                     }
@@ -609,6 +639,71 @@ public class KDebug {
                 return 0;
             }))
             .then(summonCommand(pContext))
+            .then(
+                Commands.literal("geckolib")
+                    .then(Commands.literal("play")
+                        .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
+                                Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+
+                                if (entity instanceof GeoEntity geoEntity) {
+                                    EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+                                    if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
+                                        GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
+                                        ResourceLocation location = model.getAnimationResource(geoEntity);
+                                        BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
+                                        context.getSource().sendSystemMessage(Component.literal("Animations:"));
+                                        bakedAnimations.animations().forEach((name, animation) -> {
+                                            context.getSource().sendSystemMessage(Component.literal(name));
+                                        });
+                                    }
+                                }
+
+                                return 0;
+                            }).then(Commands.argument("animation", new AnimationArgument("entity")).executes(context -> {
+                                Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+                                String animation = AnimationArgument.getAnimation(context, "animation");
+
+
+                                if (entity instanceof GeoEntity geoEntity) {
+                                    AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
+
+                                    EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+                                    if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
+                                        GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
+                                        ResourceLocation location = model.getAnimationResource(geoEntity);
+                                        BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
+                                        if (!bakedAnimations.animations().containsKey(animation)) {
+                                            context.getSource().sendFailure(Component.literal(String.format("Cannot find animation: %s", animation)));
+                                            return 0;
+                                        }
+                                    }
+
+                                    manager.getAnimationControllers().clear();
+
+                                    manager.addController(new AnimationController(geoEntity, "kdebug", 1,
+                                        event -> event.setAndContinue(RawAnimation.begin().thenPlay(animation)
+                                        )));
+                                } else {
+                                    context.getSource().sendFailure(Component.literal("Is not a geckolib entity!"));
+                                }
+
+                                return 0;
+                            }))
+                        )).then(Commands.literal("stop")
+                        .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
+                            Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+                            if (entity instanceof GeoEntity geoEntity) {
+                                AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
+                                manager.removeController("kdebug");
+
+                                AnimatableManager.ControllerRegistrar registrar = new AnimatableManager.ControllerRegistrar(new ArrayList<>());
+                                geoEntity.registerControllers(registrar);
+                                registrar.controllers().forEach(manager::addController);
+                            }
+
+                            return 0;
+                        })))
+            )
         );
     }
 
@@ -654,5 +749,175 @@ public class KDebug {
             }
         }
         return 0;
+    }
+
+    public record AnimationSelector(String animation) {
+    }
+
+    public static class AnimationArgument implements ArgumentType<AnimationSelector> {
+        String entityArgument;
+
+        public AnimationArgument(String pEntityArgument) {
+            entityArgument = pEntityArgument;
+        }
+
+        public static <S> String getAnimation(CommandContext<S> context, String argument) {
+            return context.getArgument(argument, AnimationSelector.class).animation;
+        }
+
+        @Override
+        public AnimationSelector parse(StringReader reader) throws CommandSyntaxException {
+            return new AnimationSelector(reader.readString());
+        }
+
+        @Override
+        public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+            ScalmythAPI.LOGGER.info("Type: {}", context.getSource().getClass().getTypeName());
+
+            CommandContext<ClientCommandSourceStack> newC = (CommandContext<ClientCommandSourceStack>) context.copyFor((S) ClientCommandHandler.getSource());
+
+            Entity entity = null;
+            try {
+                entity = ClientSided.getEntity(newC, entityArgument);
+            } catch (CommandSyntaxException e) {
+                return builder.buildFuture();
+            }
+
+            if (entity instanceof GeoEntity geoEntity) {
+                EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+                if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
+                    GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
+                    ResourceLocation location = model.getAnimationResource(geoEntity);
+                    BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
+                    bakedAnimations.animations().forEach((name, animation) -> {
+                        builder.suggest(name);
+                    });
+                }
+            }
+
+            return builder.buildFuture();
+        }
+    }
+
+    private static class ClientSided {
+        public static Entity getEntity(CommandContext<ClientCommandSourceStack> context, String name) throws CommandSyntaxException {
+            try {
+                return findSingleEntity(context.getArgument(name, EntitySelector.class), context.getSource());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static Entity findSingleEntity(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+            List<? extends Entity> list = findEntities(selector, source);
+            if (list.isEmpty()) {
+                throw EntityArgument.NO_ENTITIES_FOUND.create();
+            } else if (list.size() > 1) {
+                throw EntityArgument.ERROR_NOT_SINGLE_ENTITY.create();
+            } else {
+                return list.getFirst();
+            }
+        }
+
+        public static List<? extends Entity> findEntities(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+            Field field$position = EntitySelector.class.getDeclaredField("position");
+            field$position.setAccessible(true);
+            Function<Vec3, Vec3> position = (Function<Vec3, Vec3>) field$position.get(selector);
+            Method method$getAbsoluteAabb = EntitySelector.class.getDeclaredMethod("getAbsoluteAabb", Vec3.class);
+            method$getAbsoluteAabb.setAccessible(true);
+            Function<Vec3, AABB> getAbsoluteAabb = (pos) -> {
+                try {
+                    return (AABB) method$getAbsoluteAabb.invoke(selector, pos);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+            Field field$currentEntity = EntitySelector.class.getDeclaredField("currentEntity");
+            field$currentEntity.setAccessible(true);
+            boolean currentEntity = field$currentEntity.getBoolean(selector);
+            Method method$getPredicate = EntitySelector.class.getDeclaredMethod("getPredicate", Vec3.class, AABB.class, FeatureFlagSet.class);
+            method$getPredicate.setAccessible(true);
+            Function3<Vec3, AABB, FeatureFlagSet, Predicate<Entity>> getPredicate = (a, b, c) -> {
+                try {
+                    return (Predicate<Entity>) method$getPredicate.invoke(selector, a, b, c);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+            Method method$sortAndLimit = EntitySelector.class.getDeclaredMethod("sortAndLimit", Vec3.class, List.class);
+            method$sortAndLimit.setAccessible(true);
+            BiFunction<Vec3, List<? extends Entity>, List<? extends Entity>> sortAndLimit = (a, b) -> {
+                try {
+                    return (List<? extends Entity>) method$sortAndLimit.invoke(selector, a, b);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+            Field field$entityUUID = EntitySelector.class.getDeclaredField("entityUUID");
+            field$entityUUID.setAccessible(true);
+            UUID entityUUID = (UUID) field$entityUUID.get(selector);
+
+            Field field$entityStorage = ClientLevel.class.getDeclaredField("entityStorage");
+            field$entityStorage.setAccessible(true);
+
+            if (!selector.includesEntities()) {
+                return selector.findPlayers(source);
+            } else if (entityUUID != null) {
+                if (source.getUnsidedLevel() instanceof ClientLevel level) {
+                    TransientEntitySectionManager<Entity> e = (TransientEntitySectionManager<Entity>) field$entityStorage.get(level);
+                    Entity entity = e.getEntityGetter().get(entityUUID);
+                    if (entity != null) {
+                        return List.of(entity);
+                    }
+                }
+
+                return List.of();
+            } else {
+                Vec3 vec3 = (Vec3) position.apply(source.getPosition());
+                AABB aabb = getAbsoluteAabb.apply(vec3);
+                if (currentEntity) {
+                    Predicate<Entity> predicate1 = getPredicate.apply(vec3, aabb, (FeatureFlagSet) null);
+                    return source.getEntity() != null && predicate1.test(source.getEntity()) ? List.of(source.getEntity()) : List.of();
+                } else {
+                    Predicate<Entity> predicate = getPredicate.apply(vec3, aabb, null);
+                    List<Entity> list = new ObjectArrayList();
+                    if (source.getUnsidedLevel() instanceof ClientLevel level) {
+                        addEntities(selector, list, level, aabb, predicate);
+                    }
+
+                    return sortAndLimit.apply(vec3, list);
+                }
+            }
+        }
+
+        private static void addEntities(EntitySelector selector, List<Entity> entities, ClientLevel level, @Nullable AABB box, Predicate<Entity> predicate) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+            Method method$getResultLimit = EntitySelector.class.getDeclaredMethod("getResultLimit");
+            method$getResultLimit.setAccessible(true);
+            Field field$type = EntitySelector.class.getDeclaredField("type");
+            field$type.setAccessible(true);
+            EntityTypeTest<Entity, ?> type = (EntityTypeTest<Entity, ?>) field$type.get(selector);
+
+            int i = (int) method$getResultLimit.invoke(selector);
+            if (entities.size() < i) {
+                if (box != null) {
+                    level.getEntities(type, box, predicate, entities, i);
+                } else {
+
+                    Field field$entityStorage = ClientLevel.class.getDeclaredField("entityStorage");
+                    field$entityStorage.setAccessible(true);
+                    TransientEntitySectionManager<Entity> e = (TransientEntitySectionManager<Entity>) field$entityStorage.get(level);
+                    e.getEntityGetter().get(type, (p_261428_) -> {
+                        if (predicate.test(p_261428_)) {
+                            entities.add(p_261428_);
+                            if (entities.size() >= i) {
+                                return AbortableIterationConsumer.Continuation.ABORT;
+                            }
+                        }
+
+                        return AbortableIterationConsumer.Continuation.CONTINUE;
+                    });
+                }
+            }
+        }
     }
 }
