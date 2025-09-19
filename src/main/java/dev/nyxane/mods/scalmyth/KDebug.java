@@ -42,6 +42,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -574,6 +575,20 @@ public class KDebug {
                 ))
             )
             .then(summonCommand(pContext))
+            .then(Commands.literal("discard").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> {
+                int count = 0;
+                for (Entity entity: EntityArgument.getEntities(context, "entities")){
+                    context.getSource().sendSystemMessage(Component.literal(String.format("discarding: %s : %s", entity.getType(), entity.getStringUUID())));
+                    if (entity instanceof Player){
+                        context.getSource().sendSystemMessage(Component.literal(String.format("Player %s will not be discarded!", entity.getName().getString())));
+                        continue;
+                    }
+                    entity.discard();
+                    count += 1;
+                }
+                context.getSource().sendSystemMessage(Component.literal(String.format("discarded: %d", count)));
+                return 0;
+            })))
         );
     }
 
