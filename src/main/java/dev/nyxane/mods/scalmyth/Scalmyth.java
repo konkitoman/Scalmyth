@@ -2,6 +2,7 @@ package dev.nyxane.mods.scalmyth;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
+import dev.nyxane.mods.scalmyth.client.CrowRenderer;
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -38,6 +39,7 @@ public class Scalmyth {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
+            EntityRenderers.register(ModEntities.CROW.get(), CrowRenderer::new);
 
 
         }
