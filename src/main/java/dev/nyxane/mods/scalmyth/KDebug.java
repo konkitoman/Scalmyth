@@ -18,7 +18,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -114,43 +113,7 @@ public class KDebug {
                 return true;
             }
 
-            Random RANDOM = new Random(shape.id);
-            switch (shape) {
-                case Shape.Lines lines -> {
-                    VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
-
-                    Vec3 first = lines.points.getLast();
-                    buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
-                        (float) (first.z - camZ));
-                    buffer.setColor(0);
-
-                    for (int i = 0; i < lines.points.size(); i++) {
-                        Vec3 point = lines.points.get(i);
-                        int color = lines.colors.get(i);
-                        if (color == 0) {
-                            color = RANDOM.nextInt();
-                        }
-                        buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
-                            (float) (point.z - camZ));
-                        buffer.setColor(color);
-                    }
-
-                    Vec3 last = lines.points.getLast();
-
-                    buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
-                        (float) (last.z - camZ));
-                    buffer.setColor(0);
-                }
-                case Shape.Box box -> {
-                    int color = box.color;
-                    if (color == 0) {
-                        color = RANDOM.nextInt() | 0xff000000;
-                    }
-                    drawBox(matrix, bufferSource, box.origin, box.size, color, new Vec3(camX, camY, camZ));
-                }
-                default -> {
-                }
-            }
+            shape.render(matrix, bufferSource, camX, camY, camZ);
 
             shape.time -= delta;
             boolean res = shape.time < 0;
@@ -160,55 +123,6 @@ public class KDebug {
         SHAPES_LOCK.unlockWrite(stamp);
 
         poseStack.popPose();
-    }
-
-    private static void drawBox(Matrix4f matrix, MultiBufferSource bufferSource, Vec3 origin, Vec3 size, int color,
-                                Vec3 cam) {
-        VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugFilledBox());
-
-        double sx = size.x / 2;
-        double sy = size.y / 2;
-        double sz = size.z / 2;
-
-        // TODO: a better way to draw a box/voxel using triangle strip without flods.
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
     }
 
     public static void addShape(Level level, Shape shape) {
@@ -329,6 +243,10 @@ public class KDebug {
         public void clean() {
         }
 
+        public void render(Matrix4f matrix, MultiBufferSource bufferSource, double camX, double camY,
+                           double camZ) {
+        }
+
         public static class Lines extends Shape {
             public static final String VARIANT = "lines";
             public static final MapCodec<Shape> CODEC = Shape
@@ -396,6 +314,34 @@ public class KDebug {
 
                 return this;
             }
+
+            @Override
+            public void render(Matrix4f matrix, MultiBufferSource bufferSource, double camX, double camY, double camZ) {
+                Random RANDOM = new Random(id);
+                VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
+
+                Vec3 first = points.getLast();
+                buffer.addVertex(matrix, (float) (first.x - camX), (float) (first.y - camY),
+                    (float) (first.z - camZ));
+                buffer.setColor(0);
+
+                for (int i = 0; i < points.size(); i++) {
+                    Vec3 point = points.get(i);
+                    int color = colors.get(i);
+                    if (color == 0) {
+                        color = RANDOM.nextInt();
+                    }
+                    buffer.addVertex(matrix, (float) (point.x - camX), (float) (point.y - camY),
+                        (float) (point.z - camZ));
+                    buffer.setColor(color);
+                }
+
+                Vec3 last = points.getLast();
+
+                buffer.addVertex(matrix, (float) (last.x - camX), (float) (last.y - camY),
+                    (float) (last.z - camZ));
+                buffer.setColor(0);
+            }
         }
 
         public static class Box extends Shape {
@@ -450,6 +396,16 @@ public class KDebug {
                 color = pColor;
                 return this;
             }
+
+            @Override
+            public void render(Matrix4f matrix, MultiBufferSource bufferSource, double camX, double camY, double camZ) {
+                Random RANDOM = new Random(id);
+                int color = this.color;
+                if (color == 0) {
+                    color = RANDOM.nextInt() | 0xff000000;
+                }
+                drawBox(matrix, bufferSource, origin, size, color, new Vec3(camX, camY, camZ));
+            }
         }
 
         public static class Entity extends Shape {
@@ -500,7 +456,66 @@ public class KDebug {
         }
     }
 
-    // If we don't try to access the Shapes here their codecs will not be registered.
+    private static void drawBox(Matrix4f matrix, MultiBufferSource bufferSource, Vec3 origin, Vec3 size, int color,
+                                Vec3 cam) {
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.debugFilledBox());
+
+        double sx = size.x / 2;
+        double sy = size.y / 2;
+        double sz = size.z / 2;
+
+        // Hack, for not losing faces, because we are rendering in triangle strip.
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(0x00000000);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(0x00000000);
+
+        // TODO: find a better way to draw a box/voxel with triangle strip.
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
+        buffer.setColor(color);
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(color);
+
+        // Hack, for not losing faces, because we are rendering in triangle strip.
+        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.setColor(0x00000000);
+    }
+
+    // We need to access all the Shapes for the codecs to register.
     // Because java is lazy!
     static {
         Shape.Lines.CODEC.codec();
@@ -623,8 +638,8 @@ public class KDebug {
     }
 
     public static void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext pContext) {
-        dispatcher.register(Commands.literal("kdebug-client")
-            .then(Commands.literal("enable").executes(s -> {
+        LiteralArgumentBuilder<CommandSourceStack> commands = Commands.literal("kdebug-client");
+        commands.then(Commands.literal("enable").executes(s -> {
                 if (!ENABLED) {
                     s.getSource().sendSystemMessage(Component.literal("kdebug Enabled"));
                 }
@@ -639,72 +654,80 @@ public class KDebug {
                 return 0;
             }))
             .then(summonCommand(pContext))
-            .then(
-                Commands.literal("geckolib")
-                    .then(Commands.literal("play")
-                        .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
-                                Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+            .then(registerGeckolibCommands());
 
-                                if (entity instanceof GeoEntity geoEntity) {
-                                    EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-                                    if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
-                                        GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
-                                        ResourceLocation location = model.getAnimationResource(geoEntity);
-                                        BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
-                                        context.getSource().sendSystemMessage(Component.literal("Animations:"));
-                                        bakedAnimations.animations().forEach((name, animation) -> {
-                                            context.getSource().sendSystemMessage(Component.literal(name));
-                                        });
-                                    }
+
+        dispatcher.register(commands);
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> registerGeckolibCommands() {
+        return Commands.literal("geckolib")
+            .then(Commands.literal("play")
+                .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
+                        Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+
+                        if (entity instanceof GeoEntity geoEntity) {
+                            EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+                            if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
+                                GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
+                                ResourceLocation location = model.getAnimationResource(geoEntity);
+                                BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
+                                context.getSource().sendSystemMessage(Component.literal("Animations:"));
+                                bakedAnimations.animations().forEach((name, animation) -> {
+                                    context.getSource().sendSystemMessage(Component.literal(name));
+                                });
+                                return 1;
+                            }
+                        }
+
+                        return 0;
+                    }).then(Commands.argument("animation", new AnimationArgument("entity")).executes(context -> {
+                        Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+                        String animation = AnimationArgument.getAnimation(context, "animation");
+
+
+                        if (entity instanceof GeoEntity geoEntity) {
+                            AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
+
+                            EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+                            if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
+                                GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
+                                ResourceLocation location = model.getAnimationResource(geoEntity);
+                                BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
+                                if (!bakedAnimations.animations().containsKey(animation)) {
+                                    context.getSource().sendFailure(Component.literal(String.format("Cannot find animation: %s", animation)));
+                                    return 0;
                                 }
-
-                                return 0;
-                            }).then(Commands.argument("animation", new AnimationArgument("entity")).executes(context -> {
-                                Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
-                                String animation = AnimationArgument.getAnimation(context, "animation");
-
-
-                                if (entity instanceof GeoEntity geoEntity) {
-                                    AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
-
-                                    EntityRenderer<?> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-                                    if (entityRenderer instanceof GeoEntityRenderer<?> geoEntityRenderer) {
-                                        GeoModel<GeoEntity> model = (GeoModel<GeoEntity>) geoEntityRenderer.getGeoModel();
-                                        ResourceLocation location = model.getAnimationResource(geoEntity);
-                                        BakedAnimations bakedAnimations = GeckoLibCache.getBakedAnimations().get(location);
-                                        if (!bakedAnimations.animations().containsKey(animation)) {
-                                            context.getSource().sendFailure(Component.literal(String.format("Cannot find animation: %s", animation)));
-                                            return 0;
-                                        }
-                                    }
-
-                                    manager.getAnimationControllers().clear();
-
-                                    manager.addController(new AnimationController(geoEntity, "kdebug", 1,
-                                        event -> event.setAndContinue(RawAnimation.begin().thenPlay(animation)
-                                        )));
-                                } else {
-                                    context.getSource().sendFailure(Component.literal("Is not a geckolib entity!"));
-                                }
-
-                                return 0;
-                            }))
-                        )).then(Commands.literal("stop")
-                        .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
-                            Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
-                            if (entity instanceof GeoEntity geoEntity) {
-                                AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
-                                manager.removeController("kdebug");
-
-                                AnimatableManager.ControllerRegistrar registrar = new AnimatableManager.ControllerRegistrar(new ArrayList<>());
-                                geoEntity.registerControllers(registrar);
-                                registrar.controllers().forEach(manager::addController);
                             }
 
-                            return 0;
-                        })))
-            )
-        );
+                            manager.getAnimationControllers().clear();
+
+                            manager.addController(new AnimationController(geoEntity, "kdebug", 1,
+                                event -> event.setAndContinue(RawAnimation.begin().thenPlay(animation)
+                                )));
+                            return 1;
+                        } else {
+                            context.getSource().sendFailure(Component.literal("Is not a geckolib entity!"));
+                        }
+
+                        return 0;
+                    }))
+                )).then(Commands.literal("stop")
+                .then(Commands.argument("entity", EntityArgument.entity()).executes(context -> {
+                    Entity entity = ClientSided.getEntity((CommandContext<ClientCommandSourceStack>) (Object) context, "entity");
+                    if (entity instanceof GeoEntity geoEntity) {
+                        AnimatableManager<?> manager = geoEntity.getAnimatableInstanceCache().getManagerForId(entity.getId());
+                        manager.removeController("kdebug");
+
+                        AnimatableManager.ControllerRegistrar registrar = new AnimatableManager.ControllerRegistrar(new ArrayList<>());
+                        geoEntity.registerControllers(registrar);
+                        registrar.controllers().forEach(manager::addController);
+
+                        return 1;
+                    }
+
+                    return 0;
+                })));
     }
 
     public static void serverTick() {
@@ -772,14 +795,12 @@ public class KDebug {
 
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-            ScalmythAPI.LOGGER.info("Type: {}", context.getSource().getClass().getTypeName());
-
             CommandContext<ClientCommandSourceStack> newC = (CommandContext<ClientCommandSourceStack>) context.copyFor((S) ClientCommandHandler.getSource());
 
             Entity entity = null;
             try {
                 entity = ClientSided.getEntity(newC, entityArgument);
-            } catch (CommandSyntaxException e) {
+            } catch (Exception e) {
                 return builder.buildFuture();
             }
 
@@ -799,16 +820,20 @@ public class KDebug {
         }
     }
 
+    /// This is needed because {@link EntityArgument#getEntity} is not working on the client side.
     private static class ClientSided {
-        public static Entity getEntity(CommandContext<ClientCommandSourceStack> context, String name) throws CommandSyntaxException {
+        /// Will mostly work the same as {@link EntityArgument#getEntity}, but will only find entities in the current dimension.
+        static Entity getEntity(CommandContext<ClientCommandSourceStack> context, String name) throws CommandSyntaxException {
             try {
                 return findSingleEntity(context.getArgument(name, EntitySelector.class), context.getSource());
+            } catch (CommandSyntaxException e) {
+                throw e;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        public static Entity findSingleEntity(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        static Entity findSingleEntity(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
             List<? extends Entity> list = findEntities(selector, source);
             if (list.isEmpty()) {
                 throw EntityArgument.NO_ENTITIES_FOUND.create();
@@ -819,7 +844,7 @@ public class KDebug {
             }
         }
 
-        public static List<? extends Entity> findEntities(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        static List<? extends Entity> findEntities(EntitySelector selector, CommandSourceStack source) throws CommandSyntaxException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
             Field field$position = EntitySelector.class.getDeclaredField("position");
             field$position.setAccessible(true);
             Function<Vec3, Vec3> position = (Function<Vec3, Vec3>) field$position.get(selector);
@@ -890,7 +915,7 @@ public class KDebug {
             }
         }
 
-        private static void addEntities(EntitySelector selector, List<Entity> entities, ClientLevel level, @Nullable AABB box, Predicate<Entity> predicate) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+        static void addEntities(EntitySelector selector, List<Entity> entities, ClientLevel level, @Nullable AABB box, Predicate<Entity> predicate) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
             Method method$getResultLimit = EntitySelector.class.getDeclaredMethod("getResultLimit");
             method$getResultLimit.setAccessible(true);
             Field field$type = EntitySelector.class.getDeclaredField("type");
