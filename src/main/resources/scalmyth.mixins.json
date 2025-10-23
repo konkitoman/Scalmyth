@@ -4,18 +4,20 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AxeItemMixin",
+    "DebugPacketsMixin",
     "NoiseGeneratorSettingsMixin",
-    "ai_fix.PathNavigationMixin",
     "ai_fix.PathMixin",
-    "ai_fix.WalkNodeEvaluatorMixin",
-    "PathNavigationMixin",
-    "kdebug.MobMixin"
+    "ai_fix.MoveControlMixin",
+    "PathMixin",
+    "kdebug.MobMixin",
+    "vanilla.PathNavigationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
     "BlockElement$DeserializerMixin",
-    "DebugRendererMixin"
+    "DebugRendererMixin",
+    "PathfindingRendererMixin"
   ]
 }

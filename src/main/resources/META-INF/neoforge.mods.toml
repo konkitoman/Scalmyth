@@ -31,7 +31,7 @@ file="META-INF/accesstransformer.cfg"
 [[dependencies.scalmyth]] #optional
     modId="neoforge" #mandatory
     type="required" #mandatory
-    versionRange="[21.1.200,)" #mandatory
+    versionRange="[21.1.211,)" #mandatory
     ordering="NONE"
     side="BOTH"
 

@@ -19,7 +19,7 @@ public class ModEntities {
         SCALMYTH = ENTITY_TYPES.register("scalmyth", () ->
         EntityType.Builder.of(ScalmythEntity::new,
                 MobCategory.MONSTER)
-            .sized(8.0f, 3.0f)
+            .sized(4.9f, 3.0f)
             .spawnDimensionsScale(8f)
             .setTrackingRange(10)
             .clientTrackingRange(10)
