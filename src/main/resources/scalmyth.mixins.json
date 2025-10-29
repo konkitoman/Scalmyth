@@ -6,11 +6,13 @@
     "AxeItemMixin",
     "DebugPacketsMixin",
     "NoiseGeneratorSettingsMixin",
-    "ai_fix.PathMixin",
+    "vanilla.PathNavigationMixin",
     "ai_fix.MoveControlMixin",
+    "ai_fix.PathMixin",
+    "ai_fix.PathNavigationMixin",
+    "ai_fix.WalkNodeEvaluatorMixin",
     "PathMixin",
-    "kdebug.MobMixin",
-    "vanilla.PathNavigationMixin"
+    "kdebug.MobMixin"
   ],
   "injectors": {
     "defaultRequire": 1

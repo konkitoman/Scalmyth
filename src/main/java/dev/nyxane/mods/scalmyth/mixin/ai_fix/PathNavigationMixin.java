@@ -45,17 +45,21 @@ public abstract class PathNavigationMixin {
 
     @Overwrite
     public void followThePath() {
-        Vec3 vec3 = getTempMobPos();
-        maxDistanceToWaypoint = mob.getBbWidth() / 2.0F;
-        Vec3 nPos = path.getNextEntityPos(mob);
-        double d0 = Math.abs(mob.getX() - nPos.x);
-        double d1 = Math.abs(mob.getY() - nPos.y);
-        double d2 = Math.abs(mob.getZ() - nPos.z);
-        boolean flag = d0 < this.maxDistanceToWaypoint && d2 < this.maxDistanceToWaypoint && d1 < 1.0;
-        if (flag || this.canCutCorner(this.path.getNextNode().type) && shouldTargetNextNodeInDirection(vec3)) {
-            this.path.advance();
+        Vec3 vec3 = this.getTempMobPos();
+        this.maxDistanceToWaypoint = this.mob.getBbWidth() > 0.75F ? this.mob.getBbWidth() / 2.0F : 0.75F - this.mob.getBbWidth() / 2.0F;
+        while(path.getNextNodeIndex() < path.getNodeCount()){
+            Vec3 next = this.path.getNextEntityPos(mob);
+            double d0 = Math.abs(this.mob.getX() - next.x);
+            double d1 = Math.abs(this.mob.getY() - next.y);
+            double d2 = Math.abs(this.mob.getZ() - next.z);
+            boolean flag = d0 < (double)this.maxDistanceToWaypoint && d2 < (double)this.maxDistanceToWaypoint && d1 < 1.0D;
+            if (flag || this.canCutCorner(this.path.getNextNode().type) && this.shouldTargetNextNodeInDirection(vec3)) {
+                this.path.advance();
+                continue;
+            }
+            break;
         }
 
-        doStuckDetection(vec3);
+        this.doStuckDetection(vec3);
     }
 }

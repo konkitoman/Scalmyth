@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
 
-@Mixin(PathNavigation.class)
+@Mixin(value = PathNavigation.class, priority = -1000)
 public abstract class PathNavigationMixin {
     @Shadow
     protected abstract Vec3 getTempMobPos();

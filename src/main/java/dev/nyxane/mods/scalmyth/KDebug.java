@@ -765,7 +765,7 @@ public class KDebug {
         BlockPos pos = BlockPosArgument.getBlockPos(context, "to");
         for (Entity entity : EntityArgument.getEntities(context, "target")) {
             if (entity instanceof Mob e) {
-                Path path = e.getNavigation().createPath(pos, 1);
+                Path path = e.getNavigation().createPath(pos, 0);
                 e.getNavigation().moveTo(path, speed);
             } else {
                 context.getSource().sendFailure(Component.literal(String.format("Failed for %s %s", entity.getType(), entity.getUUID())));
