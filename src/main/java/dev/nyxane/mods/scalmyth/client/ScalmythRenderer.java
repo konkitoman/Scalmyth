@@ -9,7 +9,7 @@ import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class ScalmythRenderer extends GeoEntityRenderer<ScalmythEntity> {
     public ScalmythRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DefaultedEntityGeoModel<>(ScalmythAPI.rl("scalmyth")));
+        super(renderManager, new DefaultedEntityGeoModel<>(ScalmythAPI.rl("scalmyth"), true));
 
         addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }

@@ -23,7 +23,7 @@ public class ModEntities {
             .spawnDimensionsScale(8f)
             .setTrackingRange(10)
             .clientTrackingRange(10)
-            .eyeHeight(2)
+            .eyeHeight(4)
             .build(ScalmythAPI.rl("scalmyth").toString()));
     public static final DeferredHolder<EntityType<?>, EntityType<CrowEntity>>
         CROW = ENTITY_TYPES.register("crow", () ->

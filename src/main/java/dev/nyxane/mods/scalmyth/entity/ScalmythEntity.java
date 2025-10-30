@@ -197,18 +197,18 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
             Method method$compileTasks = SmartBrainProvider.class.getDeclaredMethod("compileTasks");
             method$compileTasks.setAccessible(true);
 
-            List<BrainActivityGroup<?>> tasks = (List<BrainActivityGroup<?>>)method$compileTasks.invoke(provider);
-            ImmutableList<MemoryModuleType<?>> memories = (ImmutableList<MemoryModuleType<?>>)method$createMemoryList.invoke(provider, tasks, getSensors());
+            List<BrainActivityGroup<?>> tasks = (List<BrainActivityGroup<?>>) method$compileTasks.invoke(provider);
+            ImmutableList<MemoryModuleType<?>> memories = (ImmutableList<MemoryModuleType<?>>) method$createMemoryList.invoke(provider, tasks, getSensors());
 
-            Codec<Brain<ScalmythEntity>> codec = Brain.codec(memories,  List.of());
+            Codec<Brain<ScalmythEntity>> codec = Brain.codec(memories, List.of());
             field$codec.set(brain, (Supplier) () -> codec);
 
             DataResult parsed = codec.parse(dynamic);
             Objects.requireNonNull(parsed);
             Optional o = parsed.resultOrPartial();
-            if (o.isPresent()){
-                Brain parsed_brain = (Brain)o.get();
-                for (MemoryModuleType<?> memory_type: memories){
+            if (o.isPresent()) {
+                Brain parsed_brain = (Brain) o.get();
+                for (MemoryModuleType<?> memory_type : memories) {
                     brain.setMemory(memory_type, parsed_brain.getMemory(memory_type));
                 }
             }
@@ -223,8 +223,7 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     @Override
     public BrainActivityGroup<? extends ScalmythEntity> getCoreTasks() {
         return BrainActivityGroup.coreTasks(
-            new LookAtTarget()
-                .noTimeout(),
+            new LookAtTarget<>(),
             new MoveToWalkTarget<>()
                 .noTimeout()
         );
@@ -254,9 +253,9 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
                     protected boolean checkExtraStartConditions(ServerLevel level, ScalmythEntity entity) {
                         Integer tmp_saturation = BrainUtils.getMemory(entity, SATURATION);
                         int saturation = 0;
-                        if (tmp_saturation != null){
+                        if (tmp_saturation != null) {
                             saturation = tmp_saturation;
-                        }else{
+                        } else {
                             BrainUtils.setMemory(entity, SATURATION, saturation);
                         }
 
@@ -271,8 +270,15 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
                     }
                 }
                     .attackablePredicate(entity -> entity instanceof CrowEntity)
+                    .noTimeout()
             ),
-            new FollowEntity<ScalmythEntity, LivingEntity>()
+            new FollowEntity<ScalmythEntity, LivingEntity>(){
+                @Override
+                protected void stop(ScalmythEntity entity) {
+                    super.stop(entity);
+                    BrainUtils.clearMemory(entity, MemoryModuleType.LOOK_TARGET);
+                }
+            }
                 .following(mob -> {
                     NearestVisibleLivingEntities entities = BrainUtils.getMemory(mob.getBrain(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
                     assert entities != null;
@@ -283,7 +289,8 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
                             return false;
                         }
                     }).orElse(null);
-                }).canTeleportTo((mob, pos, blockState) -> false)
+                })
+                .canTeleportTo((mob, pos, blockState) -> false)
                 .stopFollowingWithin(10)
                 .noTimeout()
         );
@@ -295,7 +302,8 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
             new InvalidateAttackTarget<ScalmythEntity>(),
             new SetWalkTargetToAttackTarget<>()
                 .closeEnoughDist((e, d) -> 8),
-            new AnimatableMeleeAttack<>(1)
+            new AnimatableMeleeAttack<>(1),
+            new LookAtTarget<>()
         );
     }
 
