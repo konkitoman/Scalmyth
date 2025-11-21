@@ -484,7 +484,7 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
             }
                 .following(mob -> {
                     List<LivingEntity> entities = BrainUtils.getMemory(mob.getBrain(), MemoryModuleType.NEAREST_LIVING_ENTITIES);
-                    assert entities != null;
+                    if (entities == null) return null;
                     for (LivingEntity entity : entities) {
                         if (entity instanceof Player player) {
                             if (!player.isCreative()) {
