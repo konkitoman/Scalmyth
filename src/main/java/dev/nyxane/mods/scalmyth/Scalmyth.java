@@ -3,6 +3,7 @@ package dev.nyxane.mods.scalmyth;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 
 import dev.nyxane.mods.scalmyth.client.CrowRenderer;
+import dev.nyxane.mods.scalmyth.client.MeshBlockRenderer;
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -16,6 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -38,10 +40,17 @@ public class Scalmyth {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            EntityRenderers.register(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
-            EntityRenderers.register(ModEntities.CROW.get(), CrowRenderer::new);
 
+        }
 
+        @SubscribeEvent
+        public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerEntityRenderer(ModEntities.SCALMYTH.get(), ScalmythRenderer::new);
+            event.registerEntityRenderer(ModEntities.CROW.get(), CrowRenderer::new);
+
+            event.registerBlockEntityRenderer(ModBlocks.MESH_ENTITY.get(),
+                context -> new MeshBlockRenderer()
+            );
         }
 
         @SubscribeEvent

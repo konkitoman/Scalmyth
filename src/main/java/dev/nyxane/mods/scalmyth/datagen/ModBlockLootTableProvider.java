@@ -56,6 +56,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.ASHEN_VINES.get(), block ->
             createLeavesDrops(block, ModBlocks.ASHEN_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES)); // TODO higher droprate
         dropSelf(ModBlocks.ASHEN_SAPLING.get());
+        dropSelf(ModBlocks.MESH.get());
     }
 
     protected void dropWhenSheared(Block block) {

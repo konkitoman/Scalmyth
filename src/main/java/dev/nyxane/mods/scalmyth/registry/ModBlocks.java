@@ -1,13 +1,15 @@
 package dev.nyxane.mods.scalmyth.registry;
 
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.blocks.AshenGrassBlock;
-import dev.nyxane.mods.scalmyth.blocks.AshenShortGrassBlock;
-import dev.nyxane.mods.scalmyth.blocks.BloodFlowerBlock;
+import dev.nyxane.mods.scalmyth.blocks.*;
 import dev.nyxane.mods.scalmyth.worldgen.tree.ModTreeGrowers;
+import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -19,9 +21,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ScalmythAPI.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, ScalmythAPI.MOD_ID);
+
     public static final DeferredBlock<Block> ASHEN_GRASS = BLOCKS.register("ashen_grass", AshenGrassBlock::new);
     public static final DeferredBlock<Block> ASHEN_SHORT_GRASS = BLOCKS.register(
           "ashen_short_grass",
@@ -293,8 +298,20 @@ public class ModBlocks {
     public static final DeferredBlock<Block> ASHEN_SAPLING = BLOCKS.register("ashen_sapling",
             () -> new SaplingBlock(ModTreeGrowers.ASHEN_TREE, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)));
 
+    public static final DeferredBlock<Block> MESH = BLOCKS.register("mesh",
+            () -> new MeshBlock(
+                    BlockBehaviour.Properties.of()
+                            .strength(2.0F)
+                            .noOcclusion()
+            ));
+
+    public static final Supplier<BlockEntityType<MeshBlockEntity>> MESH_ENTITY = BLOCK_ENTITY_TYPES.register("mesh",
+        (key) -> BlockEntityType.Builder.of(MeshBlockEntity::new, MESH.get())
+                .build(Util.fetchChoiceType(References.BLOCK_ENTITY, key.toString())));
+
 
     public static void register(IEventBus eventBus) {
-      BLOCKS.register(eventBus);
+        BLOCKS.register(eventBus);
+        BLOCK_ENTITY_TYPES.register(eventBus);
     }
 }
