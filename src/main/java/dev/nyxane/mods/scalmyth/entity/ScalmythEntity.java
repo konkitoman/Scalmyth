@@ -5,8 +5,12 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.nyxane.mods.scalmyth.KDebug;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.registry.ModSounds;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,25 +21,27 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
 import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
@@ -52,6 +58,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -70,6 +77,37 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     protected static final RawAnimation WALKING = RawAnimation.begin().then("walking", Animation.LoopType.LOOP);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     static final MemoryModuleType<Integer> SATURATION = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, ScalmythAPI.rl("saturation"), new MemoryModuleType<>(Optional.of(Codec.INT)));
+    static final MemoryModuleType<GoAround> GO_AROUND = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, ScalmythAPI.rl("go_around"), new MemoryModuleType<>(Optional.of(GoAround.CODEC.codec())));
+
+    public static class GoAround {
+        public boolean enabled = true;
+        public int points = 10;
+        public double distance = 20;
+        public int at = 0;
+
+        public static final MapCodec<GoAround> CODEC = RecordCodecBuilder.mapCodec((i) -> i.group(
+            Codec.BOOL.fieldOf("enabled").forGetter(o -> o.enabled),
+            Codec.INT.fieldOf("points").forGetter(o -> o.points),
+            Codec.DOUBLE.fieldOf("distance").forGetter(o -> o.distance),
+            Codec.INT.fieldOf("at").forGetter(o -> o.at)
+        ).apply(i, GoAround::new));
+
+        public GoAround(boolean pEnabled, int pPoints, double pDistance, int pAt) {
+            this.enabled = pEnabled;
+            this.points = pPoints;
+            this.distance = pDistance;
+            this.at = pAt;
+        }
+
+        public GoAround() {
+        }
+
+        public static void initFor(LivingEntity entity) {
+            if (BrainUtils.getMemory(entity, GO_AROUND) == null) {
+                BrainUtils.setMemory(entity, GO_AROUND, new GoAround());
+            }
+        }
+    }
 
 
     public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
@@ -223,10 +261,175 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     @Override
     public BrainActivityGroup<? extends ScalmythEntity> getCoreTasks() {
         return BrainActivityGroup.coreTasks(
-            new LookAtTarget<>(),
-            new MoveToWalkTarget<>()
-                .noTimeout()
+            new AllApplicableBehaviours(
+                new LookAtTarget<>(),
+                new MoveToWalkTarget<>() {
+                    @Override
+                    protected void startOnNewPath(PathfinderMob entity) {
+                        GoAround.initFor(entity);
+                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
+
+                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
+                            if (tracker.getEntity() instanceof Player) {
+                                if (goAround.enabled) {
+                                    return;
+                                }
+
+                                if (entityLineOfSightWith(entity, tracker.getEntity().position()))
+                                    return;
+                            }
+                        }
+
+                        super.startOnNewPath(entity);
+                    }
+
+                    @Override
+                    protected boolean shouldKeepRunning(PathfinderMob entity) {
+                        GoAround.initFor(entity);
+                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
+
+                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
+                            if (tracker.getEntity() instanceof Player) {
+                                if (goAround.enabled) {
+                                    return true;
+                                }
+
+                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
+                                    WalkTarget walkTarget = BrainUtils.getMemory(entity, MemoryModuleType.WALK_TARGET);
+                                    return walkTarget != null && !hasReachedTarget(entity, walkTarget);
+                                } else {
+                                    if (path == null) {
+                                        WalkTarget walkTarget = BrainUtils.getMemory(entity, MemoryModuleType.WALK_TARGET);
+                                        super.attemptNewPath(entity, walkTarget, false);
+                                        super.startOnNewPath(entity);
+                                    }
+                                }
+                            }
+                        }
+                        return super.shouldKeepRunning(entity);
+                    }
+
+                    @Override
+                    protected boolean attemptNewPath(PathfinderMob entity, WalkTarget walkTarget, boolean reachedCurrentTarget) {
+                        GoAround.initFor(entity);
+                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
+
+                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
+                            if (tracker.getEntity() instanceof Player) {
+                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
+                                    return true;
+                                }
+
+                                if (goAround.enabled) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return super.attemptNewPath(entity, walkTarget, reachedCurrentTarget);
+                    }
+
+                    @Override
+                    protected void tick(PathfinderMob entity) {
+                        GoAround.initFor(entity);
+                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
+
+                        int points = goAround.points;
+                        double length = goAround.distance;
+                        double dt = (Math.PI * 2.0) / (double) points;
+
+                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
+                            if (tracker.getEntity() instanceof Player) {
+                                if (goAround.enabled) {
+                                    for (int i = 0; i < points; i++) {
+                                        double x = Math.cos(i * dt) * length;
+                                        double z = Math.sin(i * dt) * length;
+                                        Vec3 pos = tracker.getEntity().position().add(x, 0, z);
+
+                                        KDebug.addShape(entity.level(), new KDebug.Shape.Box(pos, new Vec3(0.5, 0.5, 0.5)).setId(List.of(entity, i)));
+                                    }
+
+
+                                    goAround.at = goAround.at % points;
+                                    double x = Math.cos(goAround.at * dt) * length;
+                                    double z = Math.sin(goAround.at * dt) * length;
+                                    Vec3 pos = tracker.getEntity().position().add(x, 0, z);
+
+                                    if (entity.position().distanceTo(pos) < 5) {
+                                        goAround.at += 1;
+                                    }
+
+                                    if (entityLineOfSightWith(entity, pos)) {
+                                        Vec3 direction = pos.subtract(entity.position()).normalize()
+                                            .scale(entity.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5f);
+                                        entity.addDeltaMovement(direction);
+                                        entity.lookAt(EntityAnchorArgument.Anchor.FEET, pos);
+                                    } else {
+                                        if (!(path != null && path.getTarget().equals(BlockPos.containing(pos)))) {
+                                            path = entity.getNavigation().createPath(pos.x, pos.y, pos.z, 0);
+                                            speedModifier = 1;
+                                            super.startOnNewPath(entity);
+                                        }
+                                    }
+
+
+                                    return;
+                                }
+
+
+                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
+                                    Vec3 direction = tracker.getEntity().position().subtract(entity.position()).normalize()
+                                        .scale(entity.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5f);
+                                    entity.addDeltaMovement(direction);
+                                    entity.lookAt(tracker.getEntity(), 90, 90);
+                                    path = null;
+                                    BrainUtils.setMemory(brain, MemoryModuleType.PATH, path);
+                                    entity.getNavigation().stop();
+                                    return;
+                                }
+                            }
+                        }
+                        super.tick(entity);
+                    }
+
+                    @Override
+                    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
+                        MemoryTest memories = MemoryTest.builder(4).usesMemory(GO_AROUND);
+                        memories.addAll(super.getMemoryRequirements());
+                        return memories;
+                    }
+                }
+                    .noTimeout()
+            )
         );
+    }
+
+    private static BlockHitResult _entityLineOfSightWith(LivingEntity entity, Vec3 offset, Vec3 target) {
+        Level level = entity.level();
+        BlockHitResult hit = level.clip(new ClipContext(entity.position().add(offset), target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        if (hit.getType() == HitResult.Type.MISS) {
+            KDebug.addShape(level, new KDebug.Shape.Lines(entity.position().add(offset), target, 0xff00ff00)
+                .setId(List.of(10, entity, offset, target)).setTime(0.25f));
+        } else {
+            KDebug.addShape(level, new KDebug.Shape.Lines(entity.position().add(offset), target, 0xffff0000)
+                .setId(List.of(10, entity, offset, target)).setTime(0.25f));
+        }
+
+        return hit;
+    }
+
+    private static boolean entityLineOfSightWith(LivingEntity entity, Vec3 target) {
+        BlockHitResult hit = _entityLineOfSightWith(entity, Vec3.ZERO, target);
+
+        for (int y = 0; y <= entity.getBbHeight(); y++){
+            for (int i = -(int) (entity.getBbWidth() / 2); i < entity.getBbWidth() / 2; i++) {
+                if (hit.getType() == HitResult.Type.BLOCK) break;
+                hit = _entityLineOfSightWith(entity, new Vec3(i, y, 0), target.add(i, y, 0));
+                if (hit.getType() == HitResult.Type.BLOCK) break;
+                hit = _entityLineOfSightWith(entity, new Vec3(0, y, i), target.add(0, y, i));
+            }
+        }
+
+        return hit.getType() == HitResult.Type.MISS;
     }
 
     @Override
@@ -272,7 +475,7 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
                     .attackablePredicate(entity -> entity instanceof CrowEntity)
                     .noTimeout()
             ),
-            new FollowEntity<ScalmythEntity, LivingEntity>(){
+            new FollowEntity<ScalmythEntity, LivingEntity>() {
                 @Override
                 protected void stop(ScalmythEntity entity) {
                     super.stop(entity);
@@ -280,18 +483,19 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
                 }
             }
                 .following(mob -> {
-                    NearestVisibleLivingEntities entities = BrainUtils.getMemory(mob.getBrain(), MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
+                    List<LivingEntity> entities = BrainUtils.getMemory(mob.getBrain(), MemoryModuleType.NEAREST_LIVING_ENTITIES);
                     assert entities != null;
-                    return entities.findClosest(entity -> {
+                    for (LivingEntity entity : entities) {
                         if (entity instanceof Player player) {
-                            return !player.isCreative();
-                        } else {
-                            return false;
+                            if (!player.isCreative()) {
+                                return entity;
+                            }
                         }
-                    }).orElse(null);
+                    }
+                    return null;
                 })
                 .canTeleportTo((mob, pos, blockState) -> false)
-                .stopFollowingWithin(10)
+                .stopFollowingWithin(5)
                 .noTimeout()
         );
     }
