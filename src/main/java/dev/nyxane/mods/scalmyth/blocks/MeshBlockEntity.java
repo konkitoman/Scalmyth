@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class MeshBlockEntity extends BlockEntity {
     public ResourceLocation model_location = ScalmythAPI.rl("model.obj");
+    public ResourceLocation texture = ScalmythAPI.rl("textures/block/ashen_stone_brick.png");
+    public ResourceLocation light_texture = ScalmythAPI.rl("white.png");
 
     public MeshBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlocks.MESH_ENTITY.get(), pos, blockState);
@@ -24,12 +26,16 @@ public class MeshBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putString("model_location", model_location.toString());
+        tag.putString("texture", texture.toString());
+        tag.putString("light_texture", light_texture.toString());
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         model_location = ResourceLocation.parse(tag.getString("model_location"));
+        texture = ResourceLocation.parse(tag.getString("texture"));
+        light_texture = ResourceLocation.parse(tag.getString("light_texture"));
     }
 
     @Override

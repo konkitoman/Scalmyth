@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
@@ -72,7 +73,14 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
         var vp = get_vb(meshBlockEntity);
         vp.bind();
 
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getRendertypeSolidShader);
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        var tex = Minecraft.getInstance().getTextureManager().getTexture(meshBlockEntity.texture);
+        var tex_light = Minecraft.getInstance().getTextureManager().getTexture(meshBlockEntity.light_texture);
+        RenderSystem.setShaderTexture(0, tex.getId());
+        RenderSystem.setShaderTexture(1, 0);
+        RenderSystem.setShaderTexture(2, tex_light.getId());
         vp.drawWithShader(new Matrix4f(RenderSystem.getModelViewMatrix()).mul(poseStack.last().pose()), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
 
         poseStack.popPose();
@@ -165,9 +173,9 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
                             var segments = args[i + 1].split("/");
                             vertices[i] = Integer.parseUnsignedInt(segments[0]);
                             if (segments.length > 1 && !segments[1].isEmpty())
-                                normals[i] = Integer.parseUnsignedInt(segments[1]);
+                                texture_vertices[i] = Integer.parseUnsignedInt(segments[1]);
                             if (segments.length > 2 && !segments[2].isEmpty())
-                                texture_vertices[i] = Integer.parseUnsignedInt(segments[2]);
+                                normals[i] = Integer.parseUnsignedInt(segments[2]);
                         }
 
                         for (String group_name : ActiveGropus) {
@@ -183,56 +191,94 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
                         ScalmythAPI.LOGGER.info("Unknown or unimplemented keyword: {}", args[0]);
                 }
             }
-
-            source.lines().forEach(line -> {
-                line.charAt(0);
-            });
         }
 
         public MeshData buildMeshData(String group_name) throws IllegalAccessException, NoSuchFieldException {
             var group = Groups.get(group_name);
 
-            var buffer = new ByteBufferBuilder(group.vertices.size() * 16);
+            var format = DefaultVertexFormat.NEW_ENTITY;
+            assert (format.getVertexSize() == VERTEX_SIZE);
+            var buffer = new ByteBufferBuilder(group.vertices.size() * VERTEX_SIZE);
 
-            long ptr = buffer.reserve(group.vertices.size() * 16);
-            long i = 0;
-            for (var vertex : group.vertices) {
-                MemoryUtil.memPutFloat(ptr + (i * 16), (float) vertex.x);
-                MemoryUtil.memPutFloat(ptr + (i * 16) + 4, (float) vertex.y);
-                MemoryUtil.memPutFloat(ptr + (i * 16) + 8, (float) vertex.z);
-                MemoryUtil.memPutInt(ptr + (i * 16) + 12, 0xffffffff);
-
-                i++;
-            }
+            final int[] vertices = {0};
 
             var indices = new ByteBufferBuilder(0);
             int indices_count = 0;
             for (var face : group.faces) {
                 if (face.vertices.length == 3) {
-                    ptr = indices.reserve(12);
-                    MemoryUtil.memPutInt(ptr, face.vertices[0] - 1);
-                    MemoryUtil.memPutInt(ptr + 4, face.vertices[1] - 1);
-                    MemoryUtil.memPutInt(ptr + 8, face.vertices[2] - 1);
+                    var ptr = indices.reserve(12);
+                    var v0 = createVertex(group, buffer, vertices, face.vertices[0], face.texture_vertices[0], face.normals[0]);
+                    var v1 = createVertex(group, buffer, vertices, face.vertices[1], face.texture_vertices[1], face.normals[1]);
+                    var v2 = createVertex(group, buffer, vertices, face.vertices[2], face.texture_vertices[2], face.normals[2]);
+                    MemoryUtil.memPutInt(ptr, v0);
+                    MemoryUtil.memPutInt(ptr + 4, v1);
+                    MemoryUtil.memPutInt(ptr + 8, v2);
                     indices_count += 3;
                 }
                 if (face.vertices.length == 4) {
-                    ptr = indices.reserve(24);
-                    MemoryUtil.memPutInt(ptr, face.vertices[0] - 1);
-                    MemoryUtil.memPutInt(ptr + 4, face.vertices[1] - 1);
-                    MemoryUtil.memPutInt(ptr + 8, face.vertices[2] - 1);
-                    MemoryUtil.memPutInt(ptr + 12, face.vertices[0] - 1);
-                    MemoryUtil.memPutInt(ptr + 16, face.vertices[2] - 1);
-                    MemoryUtil.memPutInt(ptr + 20, face.vertices[3] - 1);
+                    var ptr = indices.reserve(24);
+                    var v0 = createVertex(group, buffer, vertices, face.vertices[0], face.texture_vertices[0], face.normals[0]);
+                    var v1 = createVertex(group, buffer, vertices, face.vertices[1], face.texture_vertices[1], face.normals[1]);
+                    var v2 = createVertex(group, buffer, vertices, face.vertices[2], face.texture_vertices[2], face.normals[2]);
+                    var v3 = createVertex(group, buffer, vertices, face.vertices[3], face.texture_vertices[3], face.normals[3]);
+                    MemoryUtil.memPutInt(ptr, v0);
+                    MemoryUtil.memPutInt(ptr + 4, v1);
+                    MemoryUtil.memPutInt(ptr + 8, v2);
+                    MemoryUtil.memPutInt(ptr + 12, v0);
+                    MemoryUtil.memPutInt(ptr + 16, v2);
+                    MemoryUtil.memPutInt(ptr + 20, v3);
                     indices_count += 6;
                 }
             }
-            var format = VertexFormat.builder().add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR).build();
+
             var mesh = new MeshData(Objects.requireNonNull(buffer.build()), new MeshData.DrawState(format, group.vertices.size(), indices_count, VertexFormat.Mode.TRIANGLES, VertexFormat.IndexType.INT));
             var field$indexBuffer = MeshData.class.getDeclaredField("indexBuffer");
             field$indexBuffer.setAccessible(true);
             field$indexBuffer.set(mesh, indices.build());
 
             return mesh;
+        }
+
+        public static int VERTEX_SIZE = 36;
+
+        private static int createVertex(Obj group, ByteBufferBuilder buffer, int[] i, int vertex_i, int texture_vertex_i, int normal_i) {
+            var ret = i[0];
+            var vertex = group.vertices.get(vertex_i - 1);
+            var texture_vertex = new Vector3d(0, 0, 0);
+            if (texture_vertex_i != 0)
+                texture_vertex = group.texture_vertices.get(texture_vertex_i - 1);
+            var normal = new Vector3d(0, 0, 0);
+            if (normal_i != 0)
+                normal = group.normals.get(normal_i - 1);
+
+            long ptr = buffer.reserve(VERTEX_SIZE);
+            // Position
+            MemoryUtil.memPutFloat(ptr, (float) vertex.x);
+            MemoryUtil.memPutFloat(ptr + 4, (float) vertex.y);
+            MemoryUtil.memPutFloat(ptr + 8, (float) vertex.z);
+            // Color
+            MemoryUtil.memPutInt(ptr + 12, 0xffffffff);
+            // UV0
+            MemoryUtil.memPutFloat(ptr + 16, (float) texture_vertex.x);
+            MemoryUtil.memPutFloat(ptr + 20, (float) texture_vertex.y);
+            // UV1
+            MemoryUtil.memPutShort(ptr + 24, (short) 0);
+            MemoryUtil.memPutShort(ptr + 26, (short) 0);
+            // UV2
+            MemoryUtil.memPutShort(ptr + 28, (short) 0);
+            MemoryUtil.memPutShort(ptr + 30, (short) 0);
+            // Normal
+            MemoryUtil.memPutByte(ptr + 32, normalIntValue((float) normal.x));
+            MemoryUtil.memPutByte(ptr + 33, normalIntValue((float) normal.y));
+            MemoryUtil.memPutByte(ptr + 34, normalIntValue((float) normal.z));
+            // Padding
+            MemoryUtil.memPutByte(ptr + 35, (byte) 0xff);
+            i[0] += 1;
+            return ret;
+        }
+
+        private static byte normalIntValue(float value) {
+            return (byte) ((int) (Mth.clamp(value, -1.0F, 1.0F) * 127.0F) & 0xFF);
         }
 
         public static class Obj {
