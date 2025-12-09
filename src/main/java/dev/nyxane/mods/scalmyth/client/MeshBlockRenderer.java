@@ -17,7 +17,6 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
 
 import java.util.*;
 
@@ -27,15 +26,15 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
     private VertexBuffer get_vb(MeshBlockEntity meshBlockEntity) {
         if (MODELS.containsKey(meshBlockEntity.model_location)) {
             var model = MODELS.get(meshBlockEntity.model_location);
-            var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light);
+            try (var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light)){
+                if (meshData != null) {
+                    var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
-            if (meshData != null) {
-                var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
+                    vb.bind();
+                    vb.upload(Objects.requireNonNull(meshData));
 
-                vb.bind();
-                vb.upload(Objects.requireNonNull(meshData));
-
-                return vb;
+                    return vb;
+                }
             }
 
             MODELS.remove(meshBlockEntity.model_location);
@@ -68,14 +67,15 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
         bufferBuilder.addVertex(-0.5f, -0.5f, -0.5f, 0xffff00ff, 0f, 0f, 0, light, 0, 0, -1);
         bufferBuilder.addVertex(0.0f, 0.5f, -0.5f, 0xffff00ff, 0f, 1f, 0, light, 0, 0, -1);
         bufferBuilder.addVertex(0.5f, -0.5f, -0.5f, 0xffff00ff, 1f, 0f, 0, light, 0, 0, -1);
-        var meshData = bufferBuilder.build();
 
-        var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
+        try (var meshData = bufferBuilder.build()){
+            var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
-        vb.bind();
-        vb.upload(Objects.requireNonNull(meshData));
+            vb.bind();
+            vb.upload(Objects.requireNonNull(meshData));
 
-        return vb;
+            return vb;
+        }
     }
 
     @Override
@@ -85,19 +85,19 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
 
-        var vp = get_vb(meshBlockEntity);
-        vp.bind();
-
         var mc = Minecraft.getInstance();
 
-        RenderSystem.setShader(GameRenderer::getRendertypeEntitySolidShader);
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        var tex = mc.getTextureManager().getTexture(meshBlockEntity.texture);
-        mc.gameRenderer.lightTexture().turnOnLightLayer();
-        RenderSystem.setShaderTexture(0, tex.getId());
-        RenderSystem.setShaderTexture(1, 0);
-        vp.drawWithShader(new Matrix4f(RenderSystem.getModelViewMatrix()).mul(poseStack.last().pose()), RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+        try (var vp = get_vb(meshBlockEntity)) {
+            vp.bind();
+            RenderSystem.enableDepthTest();
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            var tex = mc.getTextureManager().getTexture(meshBlockEntity.texture);
+            RenderSystem.setShaderTexture(0, tex.getId());
+            RenderSystem.setShaderTexture(1, 0);
+            mc.gameRenderer.lightTexture().turnOnLightLayer();
+            vp.drawWithShader(new Matrix4f(RenderSystem.getModelViewMatrix()).mul(poseStack.last().pose()), RenderSystem.getProjectionMatrix(), GameRenderer.getRendertypeEntitySolidShader());
+            VertexBuffer.unbind();
+        }
 
         poseStack.popPose();
     }
@@ -216,19 +216,9 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
 
             if (group == null) return null;
 
-            var format = DefaultVertexFormat.NEW_ENTITY;
-            assert (format.getVertexSize() == VERTEX_SIZE);
-            var buffer = new ByteBufferBuilder(group.vertices.size() * VERTEX_SIZE);
-
-            final int[] vertices = {0};
-
-            var indices = new ByteBufferBuilder(0);
-            var builder = new BufferBuilder(buffer, VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
-            int indices_count = 0;
+            var builder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
             for (var face : group.faces) {
                 if (face.vertices.length == 3) {
-                    var ptr = indices.reserve(12);
-
                     int light = 1;
 
                     if (face_light) {
@@ -252,18 +242,11 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
                         KDebug.addShape(level, new KDebug.Shape.Lines(new Vec3(O.x, O.y, O.z), new Vec3(up.x, up.y, up.z), 0xff00ff00).setId(List.of(level, O, up)));
                     }
 
-                    var v0 = createVertex(level, origin, group, builder, vertices, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
-                    var v1 = createVertex(level, origin, group, builder, vertices, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
-                    var v2 = createVertex(level, origin, group, builder, vertices, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
-
-                    MemoryUtil.memPutInt(ptr, v0);
-                    MemoryUtil.memPutInt(ptr + 4, v1);
-                    MemoryUtil.memPutInt(ptr + 8, v2);
-                    indices_count += 3;
+                    createVertex(level, origin, group, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
+                    createVertex(level, origin, group, builder, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
+                    createVertex(level, origin, group, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
                 }
                 if (face.vertices.length == 4) {
-                    var ptr = indices.reserve(24);
-
                     int light = 1;
 
                     if (face_light) {
@@ -289,38 +272,19 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
                         KDebug.addShape(level, new KDebug.Shape.Lines(new Vec3(O.x, O.y, O.z), new Vec3(up.x, up.y, up.z), 0xff00ff00).setId(List.of(level, O, up)));
                     }
 
-                    var v0 = createVertex(level, origin, group, builder, vertices, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
-                    var v1 = createVertex(level, origin, group, builder, vertices, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
-                    var v2 = createVertex(level, origin, group, builder, vertices, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
-                    var v3 = createVertex(level, origin, group, builder, vertices, face.vertices[3], face.texture_vertices[3], face.normals[3], light);
-
-
-                    MemoryUtil.memPutInt(ptr, v0);
-                    MemoryUtil.memPutInt(ptr + 4, v1);
-                    MemoryUtil.memPutInt(ptr + 8, v2);
-                    MemoryUtil.memPutInt(ptr + 12, v0);
-                    MemoryUtil.memPutInt(ptr + 16, v2);
-                    MemoryUtil.memPutInt(ptr + 20, v3);
-                    indices_count += 6;
+                    createVertex(level, origin, group, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
+                    createVertex(level, origin, group, builder, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
+                    createVertex(level, origin, group, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
+                    createVertex(level, origin, group, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
+                    createVertex(level, origin, group, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
+                    createVertex(level, origin, group, builder, face.vertices[3], face.texture_vertices[3], face.normals[3], light);
                 }
             }
 
-            var mesh = new MeshData(Objects.requireNonNull(buffer.build()), new MeshData.DrawState(format, group.vertices.size(), indices_count, VertexFormat.Mode.TRIANGLES, VertexFormat.IndexType.INT));
-            try {
-                var field$indexBuffer = MeshData.class.getDeclaredField("indexBuffer");
-                field$indexBuffer.setAccessible(true);
-                field$indexBuffer.set(mesh, indices.build());
-            } catch (Exception e) {
-                throw new RuntimeException("Possible not compatible mappings, indexBuffer cannot be found on MeshData: ", e);
-            }
-
-            return mesh;
+            return builder.build();
         }
 
-        public static int VERTEX_SIZE = 36;
-
-        private static int createVertex(Level level, BlockPos origin, Obj group, BufferBuilder builder, int[] i, int vertex_i, int texture_vertex_i, int normal_i, int light) {
-            var ret = i[0];
+        private static void createVertex(Level level, BlockPos origin, Obj group, BufferBuilder builder, int vertex_i, int texture_vertex_i, int normal_i, int light) {
             var vertex = group.vertices.get(vertex_i - 1);
             var texture_vertex = new Vector3f(0, 0, 0);
             if (texture_vertex_i != 0)
@@ -329,21 +293,17 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
             if (normal_i != 0)
                 normal = group.normals.get(normal_i - 1);
 
-
             if (light == 1) {
                 var pos = new Vec3(vertex.x, vertex.y, vertex.z).add(Vec3.atCenterOf(origin));
                 var to_pos = pos.add(new Vec3(normal.x, normal.y, normal.z).scale(0.5));
 
                 KDebug.addShape(level, new KDebug.Shape.Lines(pos, to_pos, 0xff0000ff).setId(List.of(level, pos, to_pos)));
 
-                var block_l = level.getBrightness(LightLayer.BLOCK, BlockPos.containing(to_pos.x, to_pos.y, to_pos.z));
-                var sky_l = level.getBrightness(LightLayer.SKY, BlockPos.containing(to_pos.x, to_pos.y, to_pos.z));
-                light = LightTexture.pack(block_l, sky_l);
+                var block_pos = BlockPos.containing(to_pos.x, to_pos.y, to_pos.z);
+                light = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, block_pos), level.getBrightness(LightLayer.SKY, block_pos));
             }
 
             builder.addVertex(vertex.x, vertex.y, vertex.z, 0xffffffff, texture_vertex.x, 0 - texture_vertex.y, 0, light, normal.x, normal.y, normal.z);
-            i[0] += 1;
-            return ret;
         }
 
         public static class Obj {
