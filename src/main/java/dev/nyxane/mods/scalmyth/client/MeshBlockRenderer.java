@@ -26,7 +26,7 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
     private VertexBuffer get_vb(MeshBlockEntity meshBlockEntity) {
         if (MODELS.containsKey(meshBlockEntity.model_location)) {
             var model = MODELS.get(meshBlockEntity.model_location);
-            try (var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light)){
+            try (var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light)) {
                 if (meshData != null) {
                     var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
@@ -68,7 +68,7 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
         bufferBuilder.addVertex(0.0f, 0.5f, -0.5f, 0xffff00ff, 0f, 1f, 0, light, 0, 0, -1);
         bufferBuilder.addVertex(0.5f, -0.5f, -0.5f, 0xffff00ff, 1f, 0f, 0, light, 0, 0, -1);
 
-        try (var meshData = bufferBuilder.build()){
+        try (var meshData = bufferBuilder.build()) {
             var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
             vb.bind();
@@ -284,23 +284,42 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
             return builder.build();
         }
 
+        private static final List<Vec3> SAMPLE_POINTS = List.of(
+            new Vec3(0.5, 0.5, 0), new Vec3(-0.5, 0.5, 0), new Vec3(0.5, -0.5, 0), new Vec3(-0.5, -0.5, 0),
+            new Vec3(0, 0.5, 0.5), new Vec3(0, -0.5, 0.5), new Vec3(0, 0.5, -0.5), new Vec3(0, -0.5, -0.5),
+            new Vec3(0.5, 0, 0.5), new Vec3(-0.5, 0, 0.5), new Vec3(0.5, 0, -0.5), new Vec3(-0.5, 0, -0.5)
+        );
+
         private static void createVertex(Level level, BlockPos origin, Obj group, BufferBuilder builder, int vertex_i, int texture_vertex_i, int normal_i, int light) {
             var vertex = group.vertices.get(vertex_i - 1);
             var texture_vertex = new Vector3f(0, 0, 0);
-            if (texture_vertex_i != 0)
-                texture_vertex = group.texture_vertices.get(texture_vertex_i - 1);
+            if (texture_vertex_i != 0) texture_vertex = group.texture_vertices.get(texture_vertex_i - 1);
             var normal = new Vector3f(0, 0, 0);
-            if (normal_i != 0)
-                normal = group.normals.get(normal_i - 1);
+            if (normal_i != 0) normal = group.normals.get(normal_i - 1);
 
             if (light == 1) {
                 var pos = new Vec3(vertex.x, vertex.y, vertex.z).add(Vec3.atCenterOf(origin));
-                var to_pos = pos.add(new Vec3(normal.x, normal.y, normal.z).scale(0.5));
+
+                var n = new Vec3(normal.x, normal.y, normal.z);
+                var to_pos = pos.add(n.scale(0.5));
 
                 KDebug.addShape(level, new KDebug.Shape.Lines(pos, to_pos, 0xff0000ff).setId(List.of(level, pos, to_pos)));
 
-                var block_pos = BlockPos.containing(to_pos.x, to_pos.y, to_pos.z);
-                light = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, block_pos), level.getBrightness(LightLayer.SKY, block_pos));
+                int block = 0, sky = 0;
+                var i = 0;
+                for (var dir : SAMPLE_POINTS) {
+                    if (Math.abs(dir.dot(n)) > 0.25) continue;
+                    var d = n.cross(dir).scale(0.5);
+                    var s = pos.add(d);
+                    var e = s.add(n.scale(0.25));
+                    KDebug.addShape(level, new KDebug.Shape.Lines(s, e, 0xffff00ff).setId(List.of(level, s, e)));
+                    var block_pos = BlockPos.containing(e.x, e.y, e.z);
+                    block += level.getBrightness(LightLayer.BLOCK, block_pos);
+                    sky += level.getBrightness(LightLayer.SKY, block_pos);
+                    i += 1;
+                }
+
+                light = LightTexture.pack(block / Math.max(i, 1), sky / Math.max(i, 1));
             }
 
             builder.addVertex(vertex.x, vertex.y, vertex.z, 0xffffffff, texture_vertex.x, 0 - texture_vertex.y, 0, light, normal.x, normal.y, normal.z);
