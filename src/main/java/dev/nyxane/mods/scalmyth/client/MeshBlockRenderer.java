@@ -312,7 +312,7 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
                     var d = n.cross(dir).scale(0.5);
                     var s = pos.add(d);
                     var e = s.add(n.scale(0.25));
-                    KDebug.addShape(level, new KDebug.Shape.Lines(s, e, 0xffff00ff).setId(List.of(level, s, e)));
+                    KDebug.addShape(level, new KDebug.Shape.Lines(s, e, 0xffff00ff).setId(List.of(level, dir, s, e)));
                     var block_pos = BlockPos.containing(e.x, e.y, e.z);
                     block += level.getBrightness(LightLayer.BLOCK, block_pos);
                     sky += level.getBrightness(LightLayer.SKY, block_pos);
