@@ -302,12 +302,20 @@ public class ModBlocks {
             () -> new MeshBlock(
                     BlockBehaviour.Properties.of()
                             .strength(2.0F)
-                            .noOcclusion()
+                            .dynamicShape()
             ));
 
     public static final Supplier<BlockEntityType<MeshBlockEntity>> MESH_ENTITY = BLOCK_ENTITY_TYPES.register("mesh",
         (key) -> BlockEntityType.Builder.of(MeshBlockEntity::new, MESH.get())
                 .build(Util.fetchChoiceType(References.BLOCK_ENTITY, key.toString())));
+
+    public static final DeferredBlock<Block> WALL_V1 = BLOCKS.register("wall_v1",
+            () -> new WallV1Block(BlockBehaviour.Properties.of()
+            ));
+
+    public static final DeferredBlock<Block> WALL_V2 = BLOCKS.register("wall_v2",
+        () -> new WallV2Block(BlockBehaviour.Properties.of()
+        ));
 
 
     public static void register(IEventBus eventBus) {

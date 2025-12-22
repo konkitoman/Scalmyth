@@ -1,7 +1,6 @@
 # Blender 4.5.4 LTS
 # www.blender.org
-mtllib default_model.mtl
-o Suzanne
+o default
 v 0.437500 0.164062 0.765625
 v -0.437500 0.164062 0.765625
 v 0.500000 0.093750 0.687500

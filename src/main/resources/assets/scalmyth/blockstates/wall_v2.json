@@ -1,0 +1,39 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "north": true
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_middle"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_middle",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": true
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_middle",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": true
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_middle",
+        "y": 270
+      }
+    }
+  ]
+}

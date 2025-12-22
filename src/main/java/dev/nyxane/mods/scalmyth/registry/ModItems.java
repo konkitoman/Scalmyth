@@ -45,6 +45,8 @@ public class ModItems {
     public static final DeferredItem<Item> ASHEN_FERN = block(ModBlocks.ASHEN_FERN);
     public static final DeferredItem<Item> ASHEN_SAPLING = block(ModBlocks.ASHEN_SAPLING);
     public static final DeferredItem<Item> MESH = block(ModBlocks.MESH);
+    public static final DeferredItem<Item> WALL_V1 = block(ModBlocks.WALL_V1);
+    public static final DeferredItem<Item> WALL_V2 = block(ModBlocks.WALL_V2);
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 
