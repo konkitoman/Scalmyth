@@ -2,31 +2,19 @@ package dev.nyxane.mods.scalmyth.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import dev.nyxane.mods.scalmyth.KDebug;
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
 import dev.nyxane.mods.scalmyth.blocks.MeshBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.ArrayVoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.util.*;
 
 public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
-    private final HashMap<ResourceLocation, BlenderOBJ> MODELS = new HashMap<>();
-
-    public static VertexBuffer error_mesh(MeshBlockEntity meshBlockEntity){
+    public static VertexBuffer error_mesh(MeshBlockEntity meshBlockEntity) {
         var tesselator = Tesselator.getInstance();
         var bufferBuilder = tesselator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
         var level = meshBlockEntity.getLevel();
@@ -47,39 +35,15 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
     }
 
     private VertexBuffer get_vb(MeshBlockEntity meshBlockEntity) {
-        if (MODELS.containsKey(meshBlockEntity.model_location)) {
-            var model = MODELS.get(meshBlockEntity.model_location);
-            try (var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light)) {
-                if (meshData != null) {
-                    var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
+        var model = meshBlockEntity.getModel();
+        try (var meshData = model.buildMeshData(meshBlockEntity.getLevel(), meshBlockEntity.getBlockPos(), "default", meshBlockEntity.face_light)) {
+            if (meshData != null) {
+                var vb = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
-                    vb.bind();
-                    vb.upload(Objects.requireNonNull(meshData));
+                vb.bind();
+                vb.upload(Objects.requireNonNull(meshData));
 
-                    return vb;
-                }
-            }
-
-            MODELS.remove(meshBlockEntity.model_location);
-            return error_mesh(meshBlockEntity);
-        }
-
-        var mc = Minecraft.getInstance();
-        var resource_manager = mc.getResourceManager();
-        var resource = resource_manager.getResource(meshBlockEntity.model_location);
-        if (resource.isPresent()) {
-            try {
-                var file = resource.get().open();
-                var text = new String(file.readAllBytes());
-                ScalmythAPI.LOGGER.info("Model was found");
-                var model = new BlenderOBJ(text);
-                ScalmythAPI.LOGGER.info("Loaded Model: {}", meshBlockEntity.model_location);
-                if (model.isSuccess()) {
-                    MODELS.put(meshBlockEntity.model_location, model);
-                    return get_vb(meshBlockEntity);
-                }
-            } catch (Exception e) {
-                ScalmythAPI.LOGGER.error(e.toString());
+                return vb;
             }
         }
 
@@ -108,266 +72,5 @@ public class MeshBlockRenderer implements BlockEntityRenderer<MeshBlockEntity> {
         }
 
         poseStack.popPose();
-    }
-
-
-    ///  [Reference](https://paulbourke.net/dataformats/obj/)
-    public static class BlenderOBJ {
-        private final HashMap<String, ArrayList<Face>> objects = new HashMap<>();
-        private final ArrayList<Vector3f> vertices = new ArrayList<>();
-        private final ArrayList<Vector3f> normals = new ArrayList<>();
-        private final ArrayList<Vector3f> texture_vertices = new ArrayList<>();
-
-        public BlenderOBJ(String source) throws Exception {
-            String[] activeObjects = new String[1];
-            activeObjects[0] = "default";
-
-            var iterator = source.lines().iterator();
-
-            while (iterator.hasNext()) {
-                var line = iterator.next();
-
-                var args = line.split(" ");
-
-                switch (args[0]) {
-                    case "":
-                    case "#":
-                        continue;
-                    case "g":
-                        break;
-                    case "o":
-                        var names_count = args.length - 1;
-                        if (names_count == 0) continue;
-
-                        if (activeObjects.length < names_count) {
-                            activeObjects = new String[names_count];
-                        }
-                        Arrays.fill(activeObjects, null);
-                        System.arraycopy(args, 1, activeObjects, 0, names_count);
-                        break;
-                    case "v":
-                        if (args.length != 4) throw new Exception("the v keyword needs to have 3 arguments!");
-
-                        add_vertex(Float.parseFloat(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]));
-                        break;
-                    case "vn":
-                        if (args.length != 4) throw new Exception("the vn keyword needs tp have 3 arguments!");
-
-                        add_normal(Float.parseFloat(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]));
-                        break;
-                    case "vt":
-                        if (!(args.length == 2 || args.length == 3 || args.length == 4))
-                            throw new Exception("the vt keyword needs to have 1, 2 or 3 arguments!");
-
-                        float u = Float.parseFloat(args[1]), v = 0, w = 0;
-                        if (args.length > 2) v = Float.parseFloat(args[2]);
-                        if (args.length > 3) w = Float.parseFloat(args[3]);
-                        add_texture_vertex(u, v, w);
-
-                        break;
-                    case "f":
-                        if (args.length < 4) throw new Exception("the f keyword needs tp have at minimum 3 arguments!");
-
-                        var elements = args.length - 1;
-                        int[] vertices = new int[elements];
-                        int[] normals = new int[elements];
-                        int[] texture_vertices = new int[elements];
-
-                        Arrays.fill(vertices, 0);
-                        Arrays.fill(normals, 0);
-                        Arrays.fill(texture_vertices, 0);
-
-                        for (var i = 0; i < elements; i++) {
-                            var segments = args[i + 1].split("/");
-                            vertices[i] = Integer.parseUnsignedInt(segments[0]);
-                            if (segments.length > 1 && !segments[1].isEmpty())
-                                texture_vertices[i] = Integer.parseUnsignedInt(segments[1]);
-                            if (segments.length > 2 && !segments[2].isEmpty())
-                                normals[i] = Integer.parseUnsignedInt(segments[2]);
-                        }
-
-                        for (String group_name : activeObjects) {
-                            if (group_name == null) break;
-
-                            var group = objects.getOrDefault(group_name, new ArrayList<>());
-                            group.add(new Face(vertices, normals, texture_vertices));
-                            objects.put(group_name, group);
-                        }
-
-                        break;
-                    default:
-                        ScalmythAPI.LOGGER.info("Unknown or unimplemented keyword: {}", args[0]);
-                }
-            }
-        }
-
-        public boolean isSuccess() {
-            return !objects.isEmpty();
-        }
-
-        public VoxelShape buildCollision(){
-            var faces = objects.get("collision");
-
-            if (faces == null){
-                ScalmythAPI.LOGGER.error("No collision found!");
-                return Shapes.block();
-            }
-
-            if (faces.size() % 6 != 0){
-                ScalmythAPI.LOGGER.error("Invalid collision, the collision is not made from boxes!");
-                return Shapes.block();
-            }
-
-            var shapes = new VoxelShape[faces.size()/6];
-
-            for (int i = 0; i < faces.size() / 6; i++){
-                double min_x = 0, min_y = 0, min_z = 0, max_x = 0, max_y = 0, max_z = 0;
-                for (int ii = 0; ii < 6; ii++){
-                    var face = faces.get((i * 6) + ii);
-                    for (var vi: face.vertices){
-                        var v = vertices.get(vi - 1);
-                        min_x = Math.min(min_x, v.x);
-                        min_y = Math.min(min_y, v.y);
-                        min_z = Math.min(min_z, v.z);
-                        max_x = Math.max(max_x, v.x);
-                        max_y = Math.max(max_y, v.y);
-                        max_z = Math.max(max_z, v.z);
-                    }
-                }
-
-                shapes[i] = (Shapes.box(min_x + 0.5, min_y + 0.5, min_z + 0.5, max_x + 0.5, max_y + 0.5, max_z + 0.5));
-            }
-
-            return Shapes.or(Shapes.empty(), shapes);
-        }
-
-        public MeshData buildMeshData(Level level, BlockPos origin, String object_name, boolean face_light) {
-            var faces = objects.get(object_name);
-
-            if (faces == null) return null;
-
-            var builder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
-            for (var face : faces) {
-                if (face.vertices.length == 3) {
-                    int light = 1;
-
-                    if (face_light) {
-                        var p0 = vertices.get(face.vertices[0] - 1);
-                        var p1 = vertices.get(face.vertices[1] - 1);
-                        var p2 = vertices.get(face.vertices[2] - 1);
-
-                        var n0 = normals.get(face.normals[0] - 1);
-                        var n1 = normals.get(face.normals[1] - 1);
-                        var n2 = normals.get(face.normals[2] - 1);
-
-                        var o = new Vector3f(p0).add(p1).add(p2).div(3);
-                        var O = new Vector3f(o).add(origin.getX(), origin.getY(), origin.getZ()).add(0.5f, 0.5f, 0.5f);
-                        var n = new Vector3f(n0).add(n1).add(n2).div(3);
-                        var up = new Vector3f(O).add(n.mul(0.5f));
-
-                        var block_l = level.getBrightness(LightLayer.BLOCK, BlockPos.containing(up.x, up.y, up.z));
-                        var sky_l = level.getBrightness(LightLayer.SKY, BlockPos.containing(up.x, up.y, up.z));
-                        light = LightTexture.pack(block_l, sky_l);
-
-                        KDebug.addShape(level, new KDebug.Shape.Lines(new Vec3(O.x, O.y, O.z), new Vec3(up.x, up.y, up.z), 0xff00ff00).setId(List.of(level, O, up)));
-                    }
-
-                    createVertex(level, origin, this, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
-                    createVertex(level, origin, this, builder, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
-                    createVertex(level, origin, this, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
-                }
-                if (face.vertices.length == 4) {
-                    int light = 1;
-
-                    if (face_light) {
-                        var p0 = vertices.get(face.vertices[0] - 1);
-                        var p1 = vertices.get(face.vertices[1] - 1);
-                        var p2 = vertices.get(face.vertices[2] - 1);
-                        var p3 = vertices.get(face.vertices[3] - 1);
-
-                        var n0 = normals.get(face.normals[0] - 1);
-                        var n1 = normals.get(face.normals[1] - 1);
-                        var n2 = normals.get(face.normals[2] - 1);
-                        var n3 = normals.get(face.normals[3] - 1);
-
-                        var o = new Vector3f(p0).add(p1).add(p2).add(p3).div(4);
-                        var O = new Vector3f(o).add(origin.getX(), origin.getY(), origin.getZ()).add(0.5f, 0.5f, 0.5f);
-                        var n = new Vector3f(n0).add(n1).add(n2).add(n3).div(4);
-                        var up = new Vector3f(O).add(n.mul(0.5f));
-
-                        var block_l = level.getBrightness(LightLayer.BLOCK, BlockPos.containing(up.x, up.y, up.z));
-                        var sky_l = level.getBrightness(LightLayer.SKY, BlockPos.containing(up.x, up.y, up.z));
-                        light = LightTexture.pack(block_l, sky_l);
-
-                        KDebug.addShape(level, new KDebug.Shape.Lines(new Vec3(O.x, O.y, O.z), new Vec3(up.x, up.y, up.z), 0xff00ff00).setId(List.of(level, O, up)));
-                    }
-
-                    createVertex(level, origin, this, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
-                    createVertex(level, origin, this, builder, face.vertices[1], face.texture_vertices[1], face.normals[1], light);
-                    createVertex(level, origin, this, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
-                    createVertex(level, origin, this, builder, face.vertices[0], face.texture_vertices[0], face.normals[0], light);
-                    createVertex(level, origin, this, builder, face.vertices[2], face.texture_vertices[2], face.normals[2], light);
-                    createVertex(level, origin, this, builder, face.vertices[3], face.texture_vertices[3], face.normals[3], light);
-                }
-            }
-
-            return builder.build();
-        }
-
-        private void add_vertex(float x, float y, float z) {
-            vertices.add(new Vector3f(x, y, z));
-        }
-
-        private void add_normal(float x, float y, float z) {
-            normals.add(new Vector3f(x, y, z));
-        }
-
-        private void add_texture_vertex(float x, float y, float z) {
-            texture_vertices.add(new Vector3f(x, y, z));
-        }
-
-        private static final List<Vec3> SAMPLE_POINTS = List.of(
-            new Vec3(0.5, 0.5, 0), new Vec3(-0.5, 0.5, 0), new Vec3(0.5, -0.5, 0), new Vec3(-0.5, -0.5, 0),
-            new Vec3(0, 0.5, 0.5), new Vec3(0, -0.5, 0.5), new Vec3(0, 0.5, -0.5), new Vec3(0, -0.5, -0.5),
-            new Vec3(0.5, 0, 0.5), new Vec3(-0.5, 0, 0.5), new Vec3(0.5, 0, -0.5), new Vec3(-0.5, 0, -0.5)
-        );
-
-        private static void createVertex(Level level, BlockPos origin, BlenderOBJ obj, BufferBuilder builder, int vertex_i, int texture_vertex_i, int normal_i, int light) {
-            var vertex = obj.vertices.get(vertex_i - 1);
-            var texture_vertex = new Vector3f(0, 0, 0);
-            if (texture_vertex_i != 0) texture_vertex = obj.texture_vertices.get(texture_vertex_i - 1);
-            var normal = new Vector3f(0, 0, 0);
-            if (normal_i != 0) normal = obj.normals.get(normal_i - 1);
-
-            if (light == 1) {
-                var pos = new Vec3(vertex.x, vertex.y, vertex.z).add(Vec3.atCenterOf(origin));
-
-                var n = new Vec3(normal.x, normal.y, normal.z);
-                var to_pos = pos.add(n.scale(0.5));
-
-                KDebug.addShape(level, new KDebug.Shape.Lines(pos, to_pos, 0xff0000ff).setId(List.of(level, pos, to_pos)));
-
-                int block = 0, sky = 0;
-                var i = 0;
-                for (var dir : SAMPLE_POINTS) {
-                    if (Math.abs(dir.dot(n)) > 0.25) continue;
-                    var d = n.cross(dir).scale(0.5);
-                    var s = pos.add(d);
-                    var e = s.add(n.scale(0.25));
-                    KDebug.addShape(level, new KDebug.Shape.Lines(s, e, 0xffff00ff).setId(List.of(level, dir, s, e)));
-                    var block_pos = BlockPos.containing(e.x, e.y, e.z);
-                    block += level.getBrightness(LightLayer.BLOCK, block_pos);
-                    sky += level.getBrightness(LightLayer.SKY, block_pos);
-                    i += 1;
-                }
-
-                light = LightTexture.pack(block / Math.max(i, 1), sky / Math.max(i, 1));
-            }
-
-            builder.addVertex(vertex.x, vertex.y, vertex.z, 0xffffffff, texture_vertex.x, 0 - texture_vertex.y, 0, light, normal.x, normal.y, normal.z);
-        }
-
-        public record Face(int[] vertices, int[] normals, int[] texture_vertices) {
-        }
     }
 }

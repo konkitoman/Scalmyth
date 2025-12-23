@@ -1,10 +1,7 @@
 package dev.nyxane.mods.scalmyth.blocks;
 
 import com.mojang.serialization.MapCodec;
-import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
-import dev.nyxane.mods.scalmyth.client.MeshBlockRenderer;
 import dev.nyxane.mods.scalmyth.registry.ModBlocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -31,41 +28,11 @@ public class MeshBlock extends BaseEntityBlock {
         return new MeshBlockEntity(blockPos, blockState);
     }
 
-    private VoxelShape shape = null;
-
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (shape != null) return shape;
-
         var o_meshBlockEntity = level.getBlockEntity(pos, ModBlocks.MESH_ENTITY.get());
 
-        if (o_meshBlockEntity.isEmpty()) return Shapes.block();
-
-        var meshBlockEntity = o_meshBlockEntity.get();
-        var mc = Minecraft.getInstance();
-        var resource_manager = mc.getResourceManager();
-        var resource = resource_manager.getResource(meshBlockEntity.model_location);
-        if (resource.isPresent()) {
-            try {
-                var file = resource.get().open();
-                var text = new String(file.readAllBytes());
-                ScalmythAPI.LOGGER.info("Model was found");
-                var model = new MeshBlockRenderer.BlenderOBJ(text);
-                ScalmythAPI.LOGGER.info("Loaded Model: {}", meshBlockEntity.model_location);
-                if (!model.isSuccess()) {
-                    return Shapes.block();
-                }
-
-                ScalmythAPI.LOGGER.info("Collision model loaded!");
-
-                shape = model.buildCollision();
-                return shape;
-            } catch (Exception e) {
-                ScalmythAPI.LOGGER.error(e.toString());
-                return Shapes.block();
-            }
-        }
-
-        return Shapes.block();
+        if (o_meshBlockEntity.isEmpty()) return Shapes.box(0.2, 0.2, 0.2, 0.8, 0.8, 0.8);
+        return o_meshBlockEntity.get().getShape();
     }
 }
