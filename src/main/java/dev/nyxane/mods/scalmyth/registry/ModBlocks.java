@@ -322,6 +322,10 @@ public class ModBlocks {
             .noLootTable()
         ));
 
+    public static final DeferredBlock<Block> ROOF_BLOCK = BLOCKS.register("roof_block",
+        () -> new RoofBlock(BlockBehaviour.Properties.of()
+        ));
+
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

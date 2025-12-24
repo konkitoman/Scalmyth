@@ -83,6 +83,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.ASHEN_VINES);
 
         saplingBlock(ModBlocks.ASHEN_SAPLING);
+
+        blockItem(ModBlocks.ROOF_BLOCK);
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {

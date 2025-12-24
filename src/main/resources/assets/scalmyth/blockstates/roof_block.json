@@ -1,0 +1,190 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north",
+        "full": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "full": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "north|south",
+        "full": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "full": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "full": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "east|west",
+        "full": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "full": false,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "full": false,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "full": false,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "full": false,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "full": false,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "full": false,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "full": false,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "full": false,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_wall_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north|south",
+        "full": true,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full_wall_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "east|west",
+        "full": true,
+        "side": "left"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full_wall_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north|south",
+        "full": true,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full_wall_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "east|west",
+        "full": true,
+        "side": "right"
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_full_wall_right",
+        "y": 90
+      }
+    }
+  ]
+}

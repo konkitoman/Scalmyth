@@ -59,6 +59,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.MESH.get());
         dropSelf(ModBlocks.WALL_V1.get());
         dropSelf(ModBlocks.WALL_V2.get());
+        dropSelf(ModBlocks.ROOF_BLOCK.get());
     }
 
     protected void dropWhenSheared(Block block) {
