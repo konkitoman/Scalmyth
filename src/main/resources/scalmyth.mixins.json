@@ -20,6 +20,7 @@
   "client": [
     "BlockElement$DeserializerMixin",
     "DebugRendererMixin",
-    "PathfindingRendererMixin"
+    "PathfindingRendererMixin",
+    "BlockModelShaperMixin"
   ]
 }

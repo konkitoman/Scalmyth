@@ -317,6 +317,11 @@ public class ModBlocks {
         () -> new WallV2Block(BlockBehaviour.Properties.of()
         ));
 
+    public static final DeferredBlock<Block> DYNAMIC_BLOCK = BLOCKS.register("dynamic_block",
+        () -> new DynamicBlock(BlockBehaviour.Properties.of()
+            .noLootTable()
+        ));
+
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
