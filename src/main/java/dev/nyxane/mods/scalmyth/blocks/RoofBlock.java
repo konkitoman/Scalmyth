@@ -98,7 +98,24 @@ public class RoofBlock extends Block {
 
         if (full) {
             return switch (direction) {
-                case NORTH, SOUTH, WEST, EAST -> Shapes.or(Block.box(0, 0, 0, 16, 1, 16));
+                case NORTH, SOUTH -> Shapes.or(
+                    Block.box(0, 15, 0, 16, 16, 16),
+                    Block.box(0, 0, 0, 16, 16, 1),
+                    Block.box(0, 0, 15, 16, 16, 16),
+                    switch (side) {
+                        case NONE -> Shapes.empty();
+                        case LEFT -> Block.box(0, 0, 0, 1, 16, 16);
+                        case RIGHT -> Block.box(15, 0, 0, 16, 16, 16);
+                    });
+                case WEST, EAST -> Shapes.or(
+                    Block.box(0, 15, 0, 16, 16, 16),
+                    Block.box(0, 0, 0, 1, 16, 16),
+                    Block.box(15, 0, 0, 16, 16, 16),
+                    switch (side) {
+                        case NONE -> Shapes.empty();
+                        case LEFT -> Block.box(0, 0, 0, 16, 16, 1);
+                        case RIGHT -> Block.box(0, 0, 15, 16, 16, 16);
+                    });
                 default -> Shapes.block();
             };
         } else {
