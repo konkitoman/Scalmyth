@@ -22,6 +22,10 @@
     "DebugRendererMixin",
     "PathfindingRendererMixin",
     "BlockModelShaperMixin",
-    "ModelBlockRendererMixin"
+    "slightly_better_lighting.BakedQuadMixin",
+    "slightly_better_lighting.BlockElementFace$DeserializerMixin",
+    "slightly_better_lighting.BlockModelMixin",
+    "slightly_better_lighting.ModelBlockRendererMixin",
+    "slightly_better_lighting.BlockElementFaceMixin"
   ]
 }
