@@ -48,3 +48,9 @@ type="required"
 versionRange="[1.16,)"
 ordering="NONE"
 side="SERVER"
+
+[[dependencies.scalmyth]]
+modId="sodium"
+type="optional"
+ordering="BEFORE"
+side="SERVER"

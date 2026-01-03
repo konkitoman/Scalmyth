@@ -26,6 +26,8 @@
     "slightly_better_lighting.BlockElementFace$DeserializerMixin",
     "slightly_better_lighting.BlockModelMixin",
     "slightly_better_lighting.ModelBlockRendererMixin",
-    "slightly_better_lighting.BlockElementFaceMixin"
+    "slightly_better_lighting.BlockElementFaceMixin",
+    "slightly_better_lighting.Sodium$FlatLightPipelineMixin",
+    "slightly_better_lighting.Sodium$MutableQuadViewImpl"
   ]
 }

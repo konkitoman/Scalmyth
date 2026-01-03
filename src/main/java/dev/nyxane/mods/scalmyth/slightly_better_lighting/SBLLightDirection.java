@@ -2,7 +2,7 @@ package dev.nyxane.mods.scalmyth.slightly_better_lighting;
 
 import net.minecraft.core.Direction;
 
-public interface SBLBakedQuad {
+public interface SBLLightDirection {
     Direction sbl$getLightDirection();
 
     void sbl$setLightDirection(Direction direction);
