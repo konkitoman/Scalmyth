@@ -49,6 +49,7 @@ public class ModItems {
     public static final DeferredItem<Item> WALL_V2 = block(ModBlocks.WALL_V2);
     public static final DeferredItem<Item> DYNAMIC_BLOCK = block(ModBlocks.DYNAMIC_BLOCK);
     public static final DeferredItem<Item> ROOF_BLOCK = block(ModBlocks.ROOF_BLOCK);
+    public static final DeferredItem<Item> ROOF_SLAB = block(ModBlocks.ROOF_SLAB);
 
     public static final TagKey<Item> TAG_LOGS = ItemTags.create(ScalmythAPI.rl("logs"));
 

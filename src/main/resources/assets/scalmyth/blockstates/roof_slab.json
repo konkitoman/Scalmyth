@@ -1,0 +1,90 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north",
+        "full": false,
+        "full_block": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "full": false,
+        "full_block": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "full": false,
+        "full_block": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "full": false,
+        "full_block": false
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "full": false,
+        "full_block": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_full_block"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "full": false,
+        "full_block": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_full_block",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "full": false,
+        "full_block": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_full_block",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "full": false,
+        "full_block": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_full_block",
+        "y": 270
+      }
+    }
+  ]
+}

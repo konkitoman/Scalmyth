@@ -1,0 +1,23 @@
+{
+	"format_version": "1.21.1",
+	"parent": "block/block",
+	"textures": {
+		"particle": "scalmyth:block/wall",
+		"texture": "scalmyth:block/wall"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 15],
+			"to": [16, 17.88854382, 16],
+			"rotation": { "axis": "x", "angle": -63.4349488229, "origin": [0, 0, 16]},
+			"faces": {
+                "up": {"uv": [0, 15, 16, 16], "texture": "#texture", "sbl$light":  "up"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#texture", "sbl$light":  "down"},
+				"east": {"uv": [15, 0, 16, 16], "texture": "#texture"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#texture", "sbl$light":  "up"},
+				"west": {"uv": [15, 0, 16, 16], "texture": "#texture"},
+				"down": {"uv": [0, 15, 16, 16], "texture": "#texture"}
+			}
+		}
+	]
+}
