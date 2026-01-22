@@ -171,6 +171,195 @@
         "model": "scalmyth:block/roof_slab_top_upper",
         "y": 270
       }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "lower",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "lower",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "lower",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "lower",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "lower",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "lower",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "lower",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "lower",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "upper",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "upper",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "upper",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "upper",
+        "top": false,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side",
+        "y": 270
+      }
+    },
+
+    {
+      "when": {
+        "facing": "north",
+        "variant": "upper",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "upper",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "upper",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "upper",
+        "top": false,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side",
+        "y": 270
+      }
     }
   ]
 }

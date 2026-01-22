@@ -20,6 +20,8 @@ public class RoofSlab extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final VariantProperty VARIANT = VariantProperty.create("variant");
     public static final BooleanProperty TOP = BooleanProperty.create("top");
+    public static final BooleanProperty SIDE_LEFT = BooleanProperty.create("side_left");
+    public static final BooleanProperty SIDE_RIGHT = BooleanProperty.create("side_right");
 
     public RoofSlab(Properties properties) {
         super(properties);
@@ -27,23 +29,45 @@ public class RoofSlab extends Block {
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         var blockpos = context.getClickedPos();
-        var blockstate = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(VARIANT, Variant.LOWER).setValue(TOP, false);
+        var blockstate = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection())
+            .setValue(VARIANT, Variant.LOWER)
+            .setValue(TOP, false)
+            .setValue(SIDE_LEFT, false)
+            .setValue(SIDE_RIGHT, false);
 
         return context.getClickLocation().y - (double) blockpos.getY() > (double) 0.5F ? blockstate.setValue(VARIANT, Variant.UPPER) : blockstate;
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING).add(VARIANT).add(TOP);
+        builder.add(FACING, VARIANT, TOP, SIDE_LEFT, SIDE_RIGHT);
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        var facing = state.getValue(FACING);
         var variant = state.getValue(VARIANT);
+        var side_left = state.getValue(SIDE_LEFT);
+        var side_right = state.getValue(SIDE_RIGHT);
+
 
         return switch (variant) {
             case LOWER -> Block.box(0, 0, 0, 16, 8, 16);
-            case UPPER -> Shapes.or(Block.box(0, 8, 0, 16, 16, 16));
+            case UPPER -> Shapes.or(Block.box(0, 8, 0, 16, 16, 16),
+                side_left ? switch (facing) {
+                    case NORTH -> Block.box(0, 0, 0, 2, 16, 16);
+                    case EAST -> Block.box(0, 0, 0, 16, 16, 2);
+                    case SOUTH -> Block.box(14, 0, 0, 16, 16, 16);
+                    case WEST -> Block.box(0, 0, 14, 16, 16, 16);
+                    default -> Shapes.empty();
+                } : Shapes.empty(),
+                side_right ? switch (facing) {
+                    case NORTH -> Block.box(14, 0, 0, 16, 16, 16);
+                    case EAST -> Block.box(0, 0, 14, 16, 16, 16);
+                    case SOUTH -> Block.box(0, 0, 0, 2, 16, 16);
+                    case WEST -> Block.box(0, 0, 0, 16, 16, 2);
+                    default -> Shapes.empty();
+                } : Shapes.empty());
         };
     }
 
