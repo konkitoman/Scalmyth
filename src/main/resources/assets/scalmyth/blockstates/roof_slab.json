@@ -313,7 +313,6 @@
         "y": 270
       }
     },
-
     {
       "when": {
         "facing": "north",
@@ -358,6 +357,194 @@
       },
       "apply": {
         "model": "scalmyth:block/roof_slab_upper_left_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "lower",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side_top"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "lower",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "lower",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "lower",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_left_side_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "lower",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side_top"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "lower",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "lower",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "lower",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_lower_right_side_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "upper",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side_top"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "upper",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "upper",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "upper",
+        "top": true,
+        "side_left": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_left_side_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "variant": "upper",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side_top"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "variant": "upper",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "variant": "upper",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "variant": "upper",
+        "top": true,
+        "side_right": true
+      },
+      "apply": {
+        "model": "scalmyth:block/roof_slab_upper_right_side_top",
         "y": 270
       }
     }

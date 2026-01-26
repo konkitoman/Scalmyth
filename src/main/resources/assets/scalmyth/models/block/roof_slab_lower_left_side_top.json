@@ -1,0 +1,37 @@
+{
+  "format_version": "1.21.1",
+  "parent": "block/block",
+  "textures": {
+    "particle": "scalmyth:block/wall",
+    "texture": "scalmyth:block/wall"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 2],
+      "to": [2, 1, 14],
+      "faces": {
+        "east": {"uv": [2, 15, 14, 16], "texture": "#texture", "sbl$light":  "down"},
+        "west": {"uv": [2, 15, 14, 16], "texture": "#texture"},
+        "down": {"uv": [14, 2, 16, 14], "texture": "#texture"}
+      }
+    },
+    {
+      "from": [0, 1, 4],
+      "to": [2, 2, 12],
+      "faces": {
+        "north": {"uv": [0, 14, 2, 15], "texture": "#texture"},
+        "east": {"uv": [4, 14, 12, 15], "texture": "#texture", "sbl$light":  "down"},
+        "west": {"uv": [4, 14, 12, 15], "texture": "#texture"}
+      }
+    },
+    {
+      "from": [0, 2, 6],
+      "to": [2, 3, 10],
+      "faces": {
+        "north": {"uv": [0, 13, 2, 14], "texture": "#texture"},
+        "east": {"uv": [6, 13, 10, 14], "texture": "#texture", "sbl$light":  "down"},
+        "west": {"uv": [6, 13, 10, 14], "texture": "#texture"}
+      }
+    }
+  ]
+}
