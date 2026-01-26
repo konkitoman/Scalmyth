@@ -26,17 +26,18 @@ public class WallV2Block extends Block {
         builder.add(NORTH, EAST, SOUTH, WEST);
     }
 
-    private VoxelShape getVoxelShape(BlockState state){
+    private VoxelShape getVoxelShape(BlockState state) {
         var north = state.getValue(NORTH);
         var east = state.getValue(EAST);
         var south = state.getValue(SOUTH);
         var west = state.getValue(WEST);
 
         return Shapes.or(
-            north ? Block.box(0, 0, 0,16, 16, 2): Shapes.empty(),
-            east ? Block.box(14, 0, 0,16, 16, 16) : Shapes.empty(),
-            south ? Block.box(0, 0, 14,16, 16, 16) : Shapes.empty(),
-            west ? Block.box(0, 0, 0,2, 16, 16) : Shapes.empty()
+            north ? Block.box(0, 0, 0, 16, 16, 2) : Shapes.empty(),
+            east ? Block.box(14, 0, 0, 16, 16, 16) : Shapes.empty(),
+            south ? Block.box(0, 0, 14, 16, 16, 16) : Shapes.empty(),
+            west ? Block.box(0, 0, 0, 2, 16, 16) : Shapes.empty(),
+            !(north || east || south || west) ? Block.box(2, 2, 2, 14, 14, 14) : Shapes.empty()
         );
     }
 
