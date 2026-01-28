@@ -1,12 +1,14 @@
 package dev.nyxane.mods.scalmyth.blocks;
 
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -16,6 +18,7 @@ public class WallV2Block extends Block {
     public static BooleanProperty EAST = BooleanProperty.create("east");
     public static BooleanProperty SOUTH = BooleanProperty.create("south");
     public static BooleanProperty WEST = BooleanProperty.create("west");
+    public static BooleanProperty UPDATE_SHAPE = BooleanProperty.create("update_shape");
 
     public WallV2Block(Properties properties) {
         super(properties);
@@ -23,7 +26,7 @@ public class WallV2Block extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, SOUTH, WEST);
+        builder.add(NORTH, EAST, SOUTH, WEST, UPDATE_SHAPE);
     }
 
     private VoxelShape getVoxelShape(BlockState state) {
@@ -59,5 +62,24 @@ public class WallV2Block extends Block {
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return false;
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (!state.getValue(UPDATE_SHAPE)) return state;
+
+        if (pos.north().equals(neighborPos)) {
+            return state.setValue(NORTH, !neighborState.is(ModBlocks.WALL_V2));
+        }
+        if (pos.south().equals(neighborPos)) {
+            return state.setValue(SOUTH, !neighborState.is(ModBlocks.WALL_V2));
+        }
+        if (pos.east().equals(neighborPos)) {
+            return state.setValue(EAST, !neighborState.is(ModBlocks.WALL_V2));
+        }
+        if (pos.west().equals(neighborPos)) {
+            return state.setValue(WEST, !neighborState.is(ModBlocks.WALL_V2));
+        }
+        return state;
     }
 }
