@@ -34,6 +34,52 @@
         "model": "scalmyth:block/wall_v2_middle",
         "y": 270
       }
+    },
+    {
+      "when": {
+        "OR": [
+          {"west": true},
+          {"north": true}
+        ]
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_corner_left"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {"north": true},
+          {"east": true}
+        ]
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_corner_right"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {"east": true},
+          {"south": true}
+        ]
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_corner_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {"south": true},
+          {"west": true}
+        ]
+      },
+      "apply": {
+        "model": "scalmyth:block/wall_v2_corner_right",
+        "y": 180
+      }
     }
   ]
 }

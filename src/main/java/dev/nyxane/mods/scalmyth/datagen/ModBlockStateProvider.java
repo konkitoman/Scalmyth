@@ -86,6 +86,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         blockItem(ModBlocks.ROOF_BLOCK);
         blockItem(ModBlocks.ROOF_SLAB);
+        blockItem(ModBlocks.WALL_V2);
     }
 
     private ResourceLocation blockTexture(Block block, String suffix) {
