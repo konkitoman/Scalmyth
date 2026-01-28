@@ -1,9 +1,12 @@
 package dev.nyxane.mods.scalmyth.blocks;
 
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -29,13 +32,9 @@ public class RoofSlab extends Block {
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         var blockpos = context.getClickedPos();
-        var blockstate = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection())
-            .setValue(VARIANT, Variant.LOWER)
-            .setValue(TOP, false)
-            .setValue(SIDE_LEFT, false)
-            .setValue(SIDE_RIGHT, false);
+        var blockstate = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(VARIANT, Variant.LOWER).setValue(TOP, false).setValue(SIDE_LEFT, false).setValue(SIDE_RIGHT, false);
 
-        return context.getClickLocation().y - (double) blockpos.getY() > (double) 0.5F ? blockstate.setValue(VARIANT, Variant.UPPER) : blockstate;
+        return updateSelf(context.getLevel(), blockpos, context.getClickLocation().y - (double) blockpos.getY() > (double) 0.5F ? blockstate.setValue(VARIANT, Variant.UPPER) : blockstate);
     }
 
     @Override
@@ -53,21 +52,19 @@ public class RoofSlab extends Block {
 
         return switch (variant) {
             case LOWER -> Block.box(0, 0, 0, 16, 8, 16);
-            case UPPER -> Shapes.or(Block.box(0, 8, 0, 16, 16, 16),
-                side_left ? switch (facing) {
-                    case NORTH -> Block.box(0, 0, 0, 2, 16, 16);
-                    case EAST -> Block.box(0, 0, 0, 16, 16, 2);
-                    case SOUTH -> Block.box(14, 0, 0, 16, 16, 16);
-                    case WEST -> Block.box(0, 0, 14, 16, 16, 16);
-                    default -> Shapes.empty();
-                } : Shapes.empty(),
-                side_right ? switch (facing) {
-                    case NORTH -> Block.box(14, 0, 0, 16, 16, 16);
-                    case EAST -> Block.box(0, 0, 14, 16, 16, 16);
-                    case SOUTH -> Block.box(0, 0, 0, 2, 16, 16);
-                    case WEST -> Block.box(0, 0, 0, 16, 16, 2);
-                    default -> Shapes.empty();
-                } : Shapes.empty());
+            case UPPER -> Shapes.or(Block.box(0, 8, 0, 16, 16, 16), side_left ? switch (facing) {
+                case NORTH -> Block.box(0, 0, 0, 2, 16, 16);
+                case EAST -> Block.box(0, 0, 0, 16, 16, 2);
+                case SOUTH -> Block.box(14, 0, 0, 16, 16, 16);
+                case WEST -> Block.box(0, 0, 14, 16, 16, 16);
+                default -> Shapes.empty();
+            } : Shapes.empty(), side_right ? switch (facing) {
+                case NORTH -> Block.box(14, 0, 0, 16, 16, 16);
+                case EAST -> Block.box(0, 0, 14, 16, 16, 16);
+                case SOUTH -> Block.box(0, 0, 0, 2, 16, 16);
+                case WEST -> Block.box(0, 0, 0, 16, 16, 2);
+                default -> Shapes.empty();
+            } : Shapes.empty());
         };
     }
 
@@ -82,8 +79,7 @@ public class RoofSlab extends Block {
     }
 
     public enum Variant implements StringRepresentable {
-        LOWER("lower"),
-        UPPER("upper");
+        LOWER("lower"), UPPER("upper");
 
         final String name;
 
@@ -105,5 +101,48 @@ public class RoofSlab extends Block {
         public static RoofSlab.VariantProperty create(String name) {
             return new RoofSlab.VariantProperty(name, Arrays.stream(RoofSlab.Variant.values()).collect(Collectors.toList()));
         }
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        return updateSelf(level, pos, state);
+    }
+
+    private BlockState updateSelf(LevelAccessor level, BlockPos pos, BlockState state) {
+        var west = level.getBlockState(pos.west());
+        var east = level.getBlockState(pos.east());
+        var north = level.getBlockState(pos.north());
+        var south = level.getBlockState(pos.south());
+
+        if (west.is(ModBlocks.ROOF_SLAB) && east.is(ModBlocks.ROOF_SLAB) &&
+            west.getValue(VARIANT) == Variant.LOWER && east.getValue(VARIANT) == Variant.LOWER &&
+            west.getValue(FACING) == Direction.EAST && east.getValue(FACING) == Direction.WEST) {
+            return state.setValue(VARIANT, Variant.UPPER).setValue(TOP, true).setValue(FACING, Direction.EAST);
+        }
+
+        if (north.is(ModBlocks.ROOF_SLAB) && south.is(ModBlocks.ROOF_SLAB) &&
+            north.getValue(VARIANT) == Variant.LOWER && south.getValue(VARIANT) == Variant.LOWER &&
+            north.getValue(FACING) == Direction.SOUTH && south.getValue(FACING) == Direction.NORTH) {
+            return state.setValue(VARIANT, Variant.UPPER).setValue(TOP, true).setValue(FACING, Direction.NORTH);
+        }
+
+        var below_west = level.getBlockState(pos.below().west());
+        var below_east = level.getBlockState(pos.below().east());
+        var below_north = level.getBlockState(pos.below().north());
+        var below_south = level.getBlockState(pos.below().south());
+
+        if (below_west.is(ModBlocks.ROOF_SLAB) && below_east.is(ModBlocks.ROOF_SLAB) &&
+            below_west.getValue(VARIANT) == Variant.UPPER && below_east.getValue(VARIANT) == Variant.UPPER &&
+            below_west.getValue(FACING) == Direction.EAST && below_east.getValue(FACING) == Direction.WEST) {
+            return state.setValue(VARIANT, Variant.LOWER).setValue(TOP, true).setValue(FACING, Direction.EAST);
+        }
+
+        if (below_north.is(ModBlocks.ROOF_SLAB) && below_south.is(ModBlocks.ROOF_SLAB) &&
+            below_north.getValue(VARIANT) == Variant.UPPER && below_south.getValue(VARIANT) == Variant.UPPER &&
+            below_north.getValue(FACING) == Direction.SOUTH && below_south.getValue(FACING) == Direction.NORTH) {
+            return state.setValue(VARIANT, Variant.LOWER).setValue(TOP, true).setValue(FACING, Direction.NORTH);
+        }
+
+        return state;
     }
 }
