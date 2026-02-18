@@ -408,10 +408,10 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
         BlockHitResult hit = level.clip(new ClipContext(entity.position().add(offset), target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
         if (hit.getType() == HitResult.Type.MISS) {
             KDebug.addShape(level, new KDebug.Shape.Lines(entity.position().add(offset), target, 0xff00ff00)
-                .setId(List.of(10, entity, offset, target)).setTime(0.25f));
+                .setId(List.of(10, entity, offset, target)));
         } else {
             KDebug.addShape(level, new KDebug.Shape.Lines(entity.position().add(offset), target, 0xffff0000)
-                .setId(List.of(10, entity, offset, target)).setTime(0.25f));
+                .setId(List.of(10, entity, offset, target)));
         }
 
         return hit;

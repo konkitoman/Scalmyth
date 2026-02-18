@@ -6,7 +6,8 @@ import dev.nyxane.mods.scalmyth.client.CrowRenderer;
 import dev.nyxane.mods.scalmyth.client.MeshBlockRenderer;
 import dev.nyxane.mods.scalmyth.client.ScalmythRenderer;
 import dev.nyxane.mods.scalmyth.registry.*;
-import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.api.distmarker.Dist;
@@ -21,7 +22,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -79,8 +80,13 @@ public class Scalmyth {
         }
 
         @SubscribeEvent
-        public static void onServerTick(ServerTickEvent.Post event) {
-            KDebug.serverTick();
+        public static void onLevelTickPost(LevelTickEvent.Post event) {
+            if (event.getLevel() instanceof ClientLevel level) {
+                KDebug.clientLevelTick(level);
+            }
+            if (event.getLevel() instanceof ServerLevel level) {
+                KDebug.serverLevelTick(level);
+            }
         }
 
         @SubscribeEvent
@@ -105,8 +111,10 @@ public class Scalmyth {
         }
 
         @SubscribeEvent
-        public static void onServerTick(ServerTickEvent.Post event) {
-            KDebug.serverTick();
+        public static void onLevelTick(LevelTickEvent.Post event) {
+            if (event.getLevel() instanceof ServerLevel level) {
+                KDebug.serverLevelTick(level);
+            }
         }
 
         @SubscribeEvent

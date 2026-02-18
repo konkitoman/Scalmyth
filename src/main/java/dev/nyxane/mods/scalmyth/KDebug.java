@@ -4,10 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.FloatArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -77,8 +74,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,8 +85,6 @@ import java.util.function.Predicate;
 public class KDebug {
     private static final ArrayList<Shape> SHAPES = new ArrayList<>();
     private static final StampedLock SHAPES_LOCK = new StampedLock();
-    private static Instant RENDER_LAST_TIME = Instant.now();
-    private static Instant TICK_LAST_TIME = Instant.now();
     private static final AtomicInteger NEXT = new AtomicInteger((int) Math.pow(2, 16));
     private static boolean ENABLED = false;
 
@@ -99,10 +92,6 @@ public class KDebug {
                               double camZ) {
         poseStack.pushPose();
         Matrix4f matrix = poseStack.last().pose();
-
-        Duration elapsed = Duration.between(RENDER_LAST_TIME, Instant.now());
-        RENDER_LAST_TIME = Instant.now();
-        float delta = (float) (((double) elapsed.getNano() / Math.pow(10.0, 9)) + (double) elapsed.getSeconds());
 
         long stamp = SHAPES_LOCK.writeLock();
         SHAPES.removeIf(shape -> {
@@ -114,11 +103,7 @@ public class KDebug {
             }
 
             shape.render(matrix, bufferSource, camX, camY, camZ);
-
-            shape.time -= delta;
-            boolean res = shape.time < 0;
-            if (res) shape.clean();
-            return res;
+            return false;
         });
         SHAPES_LOCK.unlockWrite(stamp);
 
@@ -127,6 +112,11 @@ public class KDebug {
 
     public static void addShape(Level level, Shape shape) {
         if (!ENABLED) return;
+        if (!shape.true_time) {
+            shape.time += level.getGameTime();
+            shape.true_time = true;
+        }
+
         if (level instanceof ServerLevel serverLevel) {
             if (!shape.isClient()) {
                 if (addShapeOrReplace(shape)) {
@@ -196,7 +186,8 @@ public class KDebug {
 
         public static final MapCodec<Shape> CODEC = RecordCodecBuilder.mapCodec(
             (i) -> i.group(
-                Codec.FLOAT.fieldOf("time").forGetter(s -> s.time),
+                Codec.LONG.fieldOf("time").forGetter(s -> s.time),
+                Codec.BOOL.fieldOf("true_time").forGetter(s -> s.true_time),
                 Codec.INT.fieldOf("id").forGetter(s -> s.id),
                 Codec.STRING.fieldOf("variant").forGetter(Shape::variant),
                 CompoundTag.CODEC.fieldOf("inner").forGetter(s -> {
@@ -208,7 +199,7 @@ public class KDebug {
                     }
                 })).apply(i, Shape::decode));
 
-        private static Shape decode(float time, int id, String variant, CompoundTag inner) {
+        private static Shape decode(long time, boolean true_time, int id, String variant, CompoundTag inner) {
             MapCodec<Shape> codec = CODECS.get(variant);
             if (codec == null)
                 throw new RuntimeException(String.format("KDebug: a codec could not be found for variant: `%s`", variant));
@@ -216,6 +207,7 @@ public class KDebug {
             Shape shape = codec.compressedDecode(NbtOps.INSTANCE, inner).getOrThrow();
 
             shape.time = time;
+            shape.true_time = true_time;
             shape.id = id;
 
             return shape;
@@ -223,10 +215,11 @@ public class KDebug {
 
         protected abstract String variant();
 
-        float time = 1;
+        long time = 0;
+        boolean true_time = false;
         int id = 0;
 
-        public Shape setTime(float pTimme) {
+        public Shape setTime(long pTimme) {
             time = pTimme;
             return this;
         }
@@ -564,7 +557,7 @@ public class KDebug {
                 .suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                 .then(Commands.argument("pos", Vec3Argument.vec3())
                     .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
-                        .then(Commands.argument("time", FloatArgumentType.floatArg(0))
+                        .then(Commands.argument("time", LongArgumentType.longArg(1))
                             .then(Commands.argument("id", IntegerArgumentType.integer())
                                 .executes(context -> {
                                     if (!ENABLED) {
@@ -576,7 +569,7 @@ public class KDebug {
                                     Vec3 pos = Vec3Argument.getVec3(context, "pos");
                                     CompoundTag data = CompoundTagArgument.getCompoundTag(context, "nbt").copy();
                                     data.putString("id", EntityType.getKey(entityType).toString());
-                                    float time = FloatArgumentType.getFloat(context, "time");
+                                    long time = LongArgumentType.getLong(context, "time");
                                     int id = IntegerArgumentType.getInteger(context, "id");
                                     Level level = context.getSource().getUnsidedLevel();
                                     Entity entity = EntityType.loadEntityRecursive(data, level, e -> {
@@ -730,25 +723,47 @@ public class KDebug {
                 })));
     }
 
-    public static void serverTick() {
-        Duration elapsed = Duration.between(TICK_LAST_TIME, Instant.now());
-        TICK_LAST_TIME = Instant.now();
-        float delta = (float) (((double) elapsed.getNano() / Math.pow(10.0, 9)) + (double) elapsed.getSeconds());
+    public static void clientLevelTick(ClientLevel level) {
+        var stamp = SHAPES_LOCK.writeLock();
+        var time = level.getGameTime();
 
-        long stamp = SHAPES_LOCK.writeLock();
         SHAPES.removeIf(shape -> {
-            if (shape.isClient()) return false;
-
+            if (!shape.isClient()) return false;
             if (!ENABLED) {
                 shape.clean();
                 return true;
             }
 
-            shape.time -= delta;
-            boolean res = shape.time < 0;
-            if (res) shape.clean();
+            var res = shape.time < time;
+            if (res) {
+                shape.clean();
+            }
+
             return res;
         });
+
+        SHAPES_LOCK.unlockWrite(stamp);
+    }
+
+    public static void serverLevelTick(ServerLevel level) {
+        var stamp = SHAPES_LOCK.writeLock();
+        var time = level.getGameTime();
+
+        SHAPES.removeIf(shape -> {
+            if (shape.isClient()) return false;
+            if (!ENABLED) {
+                shape.clean();
+                return true;
+            }
+
+            var res = shape.time < time;
+            if (res) {
+                shape.clean();
+            }
+
+            return res;
+        });
+
         SHAPES_LOCK.unlockWrite(stamp);
     }
 
