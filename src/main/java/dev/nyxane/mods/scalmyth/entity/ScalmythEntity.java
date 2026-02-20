@@ -1,114 +1,72 @@
 package dev.nyxane.mods.scalmyth.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.nyxane.mods.scalmyth.KDebug;
 import dev.nyxane.mods.scalmyth.api.ScalmythAPI;
+import dev.nyxane.mods.scalmyth.registry.ModBlocks;
 import dev.nyxane.mods.scalmyth.registry.ModSounds;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.GameEventTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.EntityTracker;
+import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.DynamicGameEventListener;
+import net.minecraft.world.level.gameevent.EntityPositionSource;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.PositionSource;
+import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.AllApplicableBehaviours;
-import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowEntity;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import net.tslat.smartbrainlib.object.MemoryTest;
-import net.tslat.smartbrainlib.util.BrainUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
-public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwner<ScalmythEntity> {
+public class ScalmythEntity extends Monster implements GeoEntity, VibrationSystem {
     protected static final RawAnimation IDLE_1 = RawAnimation.begin().then("idle_1", Animation.LoopType.LOOP);
     protected static final RawAnimation IDLE_2 = RawAnimation.begin().then("idle_2", Animation.LoopType.LOOP);
     protected static final RawAnimation IDLE_3 = RawAnimation.begin().then("idle_3", Animation.LoopType.LOOP);
     protected static final RawAnimation WALK = RawAnimation.begin().then("walk", Animation.LoopType.LOOP);
     protected static final RawAnimation WALKING = RawAnimation.begin().then("walking", Animation.LoopType.LOOP);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    static final MemoryModuleType<Integer> SATURATION = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, ScalmythAPI.rl("saturation"), new MemoryModuleType<>(Optional.of(Codec.INT)));
-    static final MemoryModuleType<GoAround> GO_AROUND = Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, ScalmythAPI.rl("go_around"), new MemoryModuleType<>(Optional.of(GoAround.CODEC.codec())));
-
-    public static class GoAround {
-        public boolean enabled = true;
-        public int points = 10;
-        public double distance = 20;
-        public int at = 0;
-
-        public static final MapCodec<GoAround> CODEC = RecordCodecBuilder.mapCodec((i) -> i.group(
-            Codec.BOOL.fieldOf("enabled").forGetter(o -> o.enabled),
-            Codec.INT.fieldOf("points").forGetter(o -> o.points),
-            Codec.DOUBLE.fieldOf("distance").forGetter(o -> o.distance),
-            Codec.INT.fieldOf("at").forGetter(o -> o.at)
-        ).apply(i, GoAround::new));
-
-        public GoAround(boolean pEnabled, int pPoints, double pDistance, int pAt) {
-            this.enabled = pEnabled;
-            this.points = pPoints;
-            this.distance = pDistance;
-            this.at = pAt;
-        }
-
-        public GoAround() {
-        }
-
-        public static void initFor(LivingEntity entity) {
-            if (BrainUtils.getMemory(entity, GO_AROUND) == null) {
-                BrainUtils.setMemory(entity, GO_AROUND, new GoAround());
-            }
-        }
-    }
-
+    private final DynamicGameEventListener<Listener> dynamicGameEventListener = new DynamicGameEventListener(new VibrationSystem.Listener(this));
+    private final VibrationSystem.User vibrationUser = new ScalmythEntity.VibrationUser();
+    private final VibrationSystem.Data vibrationData = new VibrationSystem.Data();
 
     public ScalmythEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -123,12 +81,21 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        tickBrain(this);
         ServerLevel serverlevel = (ServerLevel) this.level();
 
         if ((this.tickCount + this.getId()) % 120 == 0) {
             applyDarknessAround(serverlevel, this.position(), this, 50);
         }
+    }
+
+    @Override
+    protected Brain<ScalmythEntity> makeBrain(Dynamic<?> dynamic) {
+        return Ai.makeBrain(this, dynamic);
+    }
+
+    @Override
+    public Brain<ScalmythEntity> getBrain() {
+        return (Brain<ScalmythEntity>) super.getBrain();
     }
 
     @Override
@@ -217,192 +184,6 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
         return super.getAttackBoundingBox().inflate(4);
     }
 
-    @Override
-    protected Brain.Provider<?> brainProvider() {
-        return new SmartBrainProvider<>(this);
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic) {
-        Brain brain = super.makeBrain(dynamic);
-
-        SmartBrainProvider provider = new SmartBrainProvider(this);
-        try {
-            Field field$codec = Brain.class.getDeclaredField("codec");
-            field$codec.setAccessible(true);
-            Method method$createMemoryList = SmartBrainProvider.class.getDeclaredMethod("createMemoryList", List.class, List.class);
-            method$createMemoryList.setAccessible(true);
-            Method method$compileTasks = SmartBrainProvider.class.getDeclaredMethod("compileTasks");
-            method$compileTasks.setAccessible(true);
-
-            List<BrainActivityGroup<?>> tasks = (List<BrainActivityGroup<?>>) method$compileTasks.invoke(provider);
-            ImmutableList<MemoryModuleType<?>> memories = (ImmutableList<MemoryModuleType<?>>) method$createMemoryList.invoke(provider, tasks, getSensors());
-
-            Codec<Brain<ScalmythEntity>> codec = Brain.codec(memories, List.of());
-            field$codec.set(brain, (Supplier) () -> codec);
-
-            DataResult parsed = codec.parse(dynamic);
-            Objects.requireNonNull(parsed);
-            Optional o = parsed.resultOrPartial();
-            if (o.isPresent()) {
-                Brain parsed_brain = (Brain) o.get();
-                for (MemoryModuleType<?> memory_type : memories) {
-                    brain.setMemory(memory_type, parsed_brain.getMemory(memory_type));
-                }
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return brain;
-    }
-
-    @Override
-    public BrainActivityGroup<? extends ScalmythEntity> getCoreTasks() {
-        return BrainActivityGroup.coreTasks(
-            new AllApplicableBehaviours(
-                new LookAtTarget<>(),
-                new MoveToWalkTarget<>() {
-                    @Override
-                    protected void startOnNewPath(PathfinderMob entity) {
-                        GoAround.initFor(entity);
-                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
-
-                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
-                            if (tracker.getEntity() instanceof Player) {
-                                if (goAround.enabled) {
-                                    return;
-                                }
-
-                                if (entityLineOfSightWith(entity, tracker.getEntity().position()))
-                                    return;
-                            }
-                        }
-
-                        super.startOnNewPath(entity);
-                    }
-
-                    @Override
-                    protected boolean shouldKeepRunning(PathfinderMob entity) {
-                        GoAround.initFor(entity);
-                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
-
-                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
-                            if (tracker.getEntity() instanceof Player) {
-                                if (goAround.enabled) {
-                                    return true;
-                                }
-
-                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
-                                    WalkTarget walkTarget = BrainUtils.getMemory(entity, MemoryModuleType.WALK_TARGET);
-                                    return walkTarget != null && !hasReachedTarget(entity, walkTarget);
-                                } else {
-                                    if (path == null) {
-                                        WalkTarget walkTarget = BrainUtils.getMemory(entity, MemoryModuleType.WALK_TARGET);
-                                        super.attemptNewPath(entity, walkTarget, false);
-                                        super.startOnNewPath(entity);
-                                    }
-                                }
-                            }
-                        }
-                        return super.shouldKeepRunning(entity);
-                    }
-
-                    @Override
-                    protected boolean attemptNewPath(PathfinderMob entity, WalkTarget walkTarget, boolean reachedCurrentTarget) {
-                        GoAround.initFor(entity);
-                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
-
-                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
-                            if (tracker.getEntity() instanceof Player) {
-                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
-                                    return true;
-                                }
-
-                                if (goAround.enabled) {
-                                    return true;
-                                }
-                            }
-                        }
-                        return super.attemptNewPath(entity, walkTarget, reachedCurrentTarget);
-                    }
-
-                    @Override
-                    protected void tick(PathfinderMob entity) {
-                        GoAround.initFor(entity);
-                        GoAround goAround = BrainUtils.getMemory(entity, GO_AROUND);
-
-                        int points = goAround.points;
-                        double length = goAround.distance;
-                        double dt = (Math.PI * 2.0) / (double) points;
-
-                        if (BrainUtils.getMemory(entity, MemoryModuleType.LOOK_TARGET) instanceof EntityTracker tracker) {
-                            if (tracker.getEntity() instanceof Player) {
-                                if (goAround.enabled) {
-                                    for (int i = 0; i < points; i++) {
-                                        double x = Math.cos(i * dt) * length;
-                                        double z = Math.sin(i * dt) * length;
-                                        Vec3 pos = tracker.getEntity().position().add(x, 0, z);
-
-                                        KDebug.addShape(entity.level(), new KDebug.Shape.Box(pos, new Vec3(0.5, 0.5, 0.5)).setId(List.of(entity, i)));
-                                    }
-
-
-                                    goAround.at = goAround.at % points;
-                                    double x = Math.cos(goAround.at * dt) * length;
-                                    double z = Math.sin(goAround.at * dt) * length;
-                                    Vec3 pos = tracker.getEntity().position().add(x, 0, z);
-
-                                    if (entity.position().distanceTo(pos) < 5) {
-                                        goAround.at += 1;
-                                    }
-
-                                    if (entityLineOfSightWith(entity, pos)) {
-                                        Vec3 direction = pos.subtract(entity.position()).normalize()
-                                            .scale(entity.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5f);
-                                        entity.addDeltaMovement(direction);
-                                        entity.lookAt(EntityAnchorArgument.Anchor.FEET, pos);
-                                    } else {
-                                        if (!(path != null && path.getTarget().equals(BlockPos.containing(pos)))) {
-                                            path = entity.getNavigation().createPath(pos.x, pos.y, pos.z, 0);
-                                            speedModifier = 1;
-                                            super.startOnNewPath(entity);
-                                        }
-                                    }
-
-
-                                    return;
-                                }
-
-
-                                if (entityLineOfSightWith(entity, tracker.getEntity().position())) {
-                                    Vec3 direction = tracker.getEntity().position().subtract(entity.position()).normalize()
-                                        .scale(entity.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5f);
-                                    entity.addDeltaMovement(direction);
-                                    entity.lookAt(tracker.getEntity(), 90, 90);
-                                    path = null;
-                                    BrainUtils.setMemory(brain, MemoryModuleType.PATH, path);
-                                    entity.getNavigation().stop();
-                                    return;
-                                }
-                            }
-                        }
-                        super.tick(entity);
-                    }
-
-                    @Override
-                    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
-                        MemoryTest memories = MemoryTest.builder(4).usesMemory(GO_AROUND);
-                        memories.addAll(super.getMemoryRequirements());
-                        return memories;
-                    }
-                }
-                    .noTimeout()
-            )
-        );
-    }
-
     private static BlockHitResult _entityLineOfSightWith(LivingEntity entity, Vec3 offset, Vec3 target) {
         Level level = entity.level();
         BlockHitResult hit = level.clip(new ClipContext(entity.position().add(offset), target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
@@ -420,7 +201,7 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     private static boolean entityLineOfSightWith(LivingEntity entity, Vec3 target) {
         BlockHitResult hit = _entityLineOfSightWith(entity, Vec3.ZERO, target);
 
-        for (int y = 0; y <= entity.getBbHeight(); y++){
+        for (int y = 0; y <= entity.getBbHeight(); y++) {
             for (int i = -(int) (entity.getBbWidth() / 2); i < entity.getBbWidth() / 2; i++) {
                 if (hit.getType() == HitResult.Type.BLOCK) break;
                 hit = _entityLineOfSightWith(entity, new Vec3(i, y, 0), target.add(i, y, 0));
@@ -433,89 +214,169 @@ public class ScalmythEntity extends Monster implements GeoEntity, SmartBrainOwne
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
-        boolean result = super.doHurtTarget(entity);
-        if (!entity.isAlive()) {
-            if (entity instanceof CrowEntity) {
-                int saturation = BrainUtils.getMemory(this, SATURATION);
-                saturation += 1;
-                BrainUtils.setMemory(this, SATURATION, saturation);
-
-            }
+    public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> listenerConsumer) {
+        super.updateDynamicGameEventListener(listenerConsumer);
+        if (level() instanceof ServerLevel serverLevel) {
+            listenerConsumer.accept(dynamicGameEventListener, serverLevel);
         }
-
-        return result;
     }
 
     @Override
-    public BrainActivityGroup<? extends ScalmythEntity> getIdleTasks() {
-        return BrainActivityGroup.idleTasks(
-            new FirstApplicableBehaviour<ScalmythEntity>(
-                new TargetOrRetaliate<ScalmythEntity>() {
-                    @Override
-                    protected boolean checkExtraStartConditions(ServerLevel level, ScalmythEntity entity) {
-                        Integer tmp_saturation = BrainUtils.getMemory(entity, SATURATION);
-                        int saturation = 0;
-                        if (tmp_saturation != null) {
-                            saturation = tmp_saturation;
-                        } else {
-                            BrainUtils.setMemory(entity, SATURATION, saturation);
-                        }
+    public void tick() {
+        super.tick();
+        var level = level();
 
-                        return saturation < 2 && super.checkExtraStartConditions(level, entity);
-                    }
+        if (level instanceof ServerLevel serverLevel) {
+            VibrationSystem.Ticker.tick(serverLevel, vibrationData, vibrationUser);
+            getBrain().tick(serverLevel, this);
+        }
+    }
 
-                    @Override
-                    protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
-                        MemoryTest memories = MemoryTest.builder(5).usesMemory(SATURATION);
-                        memories.addAll(super.getMemoryRequirements());
-                        return memories;
-                    }
-                }
-                    .attackablePredicate(entity -> entity instanceof CrowEntity)
-                    .noTimeout()
-            ),
-            new FollowEntity<ScalmythEntity, LivingEntity>() {
-                @Override
-                protected void stop(ScalmythEntity entity) {
-                    super.stop(entity);
-                    BrainUtils.clearMemory(entity, MemoryModuleType.LOOK_TARGET);
+    @Override
+    public Data getVibrationData() {
+        return vibrationData;
+    }
+
+    @Override
+    public User getVibrationUser() {
+        return vibrationUser;
+    }
+
+    class VibrationUser implements VibrationSystem.User {
+        private final PositionSource positionSource = new EntityPositionSource(ScalmythEntity.this, ScalmythEntity.this.getEyeHeight());
+
+        public int getListenerRadius() {
+            return 16;
+        }
+
+        public @NotNull PositionSource getPositionSource() {
+            return this.positionSource;
+        }
+
+        public @NotNull TagKey<GameEvent> getListenableEvents() {
+            return GameEventTags.VIBRATIONS;
+        }
+
+        public boolean canTriggerAvoidVibration() {
+            return true;
+        }
+
+        public boolean canReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> event, GameEvent.Context c) {
+            ScalmythAPI.LOGGER.info("Can receive vibration from: {}, event: {}, context: {}", pos, event, c);
+
+            return true;
+        }
+
+        public void onReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> event, @Nullable Entity e1, @Nullable Entity e2, float f) {
+            ScalmythAPI.LOGGER.info("Vibration from: {}, event: {}, e1: {}, e2: {}, f: {}", pos, event, e1, e2, f);
+        }
+    }
+
+    public static class Ai {
+        public static final SensorType<NearestCorruptedBlock> NEAREST_CORRUPTED_BLOCK = new SensorType<NearestCorruptedBlock>(NearestCorruptedBlock::new);
+        public static final MemoryModuleType<ArrayList<BlockPos>> CURE_BLOCKS = new MemoryModuleType<>(Optional.empty());
+
+        public static class NearestCorruptedBlock extends Sensor<ScalmythEntity> {
+
+            @Override
+            protected void doTick(ServerLevel serverLevel, ScalmythEntity scalmythEntity) {
+                if (scalmythEntity.getBrain().getMemory(CURE_BLOCKS).isPresent()) return;
+
+                var blocks_to_cure = findNearestBlock(scalmythEntity, s -> s.is(ModBlocks.ASHEN_GRASS), 21);
+
+                if (!blocks_to_cure.isEmpty()) {
+                    scalmythEntity.getBrain().setMemory(CURE_BLOCKS, blocks_to_cure);
                 }
             }
-                .following(mob -> {
-                    List<LivingEntity> entities = BrainUtils.getMemory(mob.getBrain(), MemoryModuleType.NEAREST_LIVING_ENTITIES);
-                    if (entities == null) return null;
-                    for (LivingEntity entity : entities) {
-                        if (entity instanceof Player player) {
-                            if (!player.isCreative()) {
-                                return entity;
+
+            @Override
+            public Set<MemoryModuleType<?>> requires() {
+                return Set.of();
+            }
+
+            private static ArrayList<BlockPos> findNearestBlock(LivingEntity entity, Predicate<BlockState> predicate, double distance) {
+                var blocks = new ArrayList<BlockPos>();
+                BlockPos blockpos = entity.blockPosition();
+                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+                for (int i = -1; (double) i <= 0; i += 1) {
+                    for (int j = 0; (double) j < distance; ++j) {
+                        for (int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
+                            for (int l = k < j && k > -j ? j : 0; l <= j; l = l > 0 ? -l : 1 - l) {
+                                blockpos$mutableblockpos.setWithOffset(blockpos, k, i - 1, l);
+                                if (blockpos.closerThan(blockpos$mutableblockpos, distance)) {
+                                    if (predicate.test(entity.level().getBlockState(blockpos$mutableblockpos))) {
+                                        KDebug.addShape(entity.level(), new KDebug.Shape.Box(blockpos$mutableblockpos.immutable()).setColor(0x2000ff00));
+                                        blocks.add(blockpos$mutableblockpos.immutable());
+                                    } else {
+                                        KDebug.addShape(entity.level(), new KDebug.Shape.Box(blockpos$mutableblockpos.immutable()).setColor(0x20ff0000));
+                                    }
+                                }
                             }
                         }
                     }
-                    return null;
-                })
-                .canTeleportTo((mob, pos, blockState) -> false)
-                .stopFollowingWithin(5)
-                .noTimeout()
-        );
-    }
+                }
 
-    @Override
-    public BrainActivityGroup<? extends ScalmythEntity> getFightTasks() {
-        return BrainActivityGroup.fightTasks(
-            new InvalidateAttackTarget<ScalmythEntity>(),
-            new SetWalkTargetToAttackTarget<>()
-                .closeEnoughDist((e, d) -> 8),
-            new AnimatableMeleeAttack<>(1),
-            new LookAtTarget<>()
-        );
-    }
+                Collections.reverse(blocks);
 
-    @Override
-    public List<? extends ExtendedSensor<? extends ScalmythEntity>> getSensors() {
-        return List.of(
-            new NearbyLivingEntitySensor<>(),
-            new HurtBySensor<>()
-        );
+                return blocks;
+            }
+        }
+
+        private static class Cure extends Behavior<ScalmythEntity> {
+            Path path;
+
+            public Cure() {
+                super(Map.of(CURE_BLOCKS, MemoryStatus.VALUE_PRESENT));
+            }
+
+            @Override
+            protected boolean canStillUse(ServerLevel level, ScalmythEntity entity, long gameTime) {
+                return entity.getBrain().getMemory(CURE_BLOCKS).isPresent();
+            }
+
+            @Override
+            protected void tick(ServerLevel level, ScalmythEntity owner, long gameTime) {
+                var to_cure = owner.getBrain().getMemory(CURE_BLOCKS).get();
+
+                to_cure.forEach(blockPos -> KDebug.addShape(level, new KDebug.Shape.Box(blockPos).setColor(0xaa00ff00).setId(blockPos)));
+
+                if (to_cure.isEmpty()) {
+                    owner.getBrain().setMemory(CURE_BLOCKS, Optional.empty());
+                    return;
+                }
+
+                if (to_cure.getLast().distManhattan(owner.blockPosition()) <= 5) {
+                    level.setBlockAndUpdate(to_cure.getLast(), Blocks.GRASS_BLOCK.defaultBlockState());
+                    to_cure.removeLast();
+                    path = null;
+                } else {
+                    if (path == null) {
+                        path = owner.getNavigation().createPath(to_cure.getLast(), 0);
+                    }
+                    owner.getNavigation().moveTo(path, 1);
+                }
+            }
+
+            @Override
+            protected void stop(ServerLevel level, ScalmythEntity entity, long gameTime) {
+                path = null;
+                entity.getNavigation().stop();
+            }
+        }
+
+        private static final List<SensorType<? extends Sensor<? super ScalmythEntity>>> SENSOR_TYPES = List.of(NEAREST_CORRUPTED_BLOCK);
+        private static final List<MemoryModuleType<?>> MEMORY_TYPES = List.of(CURE_BLOCKS);
+
+        protected static Brain<ScalmythEntity> makeBrain(ScalmythEntity scalmyth, Dynamic<?> ops) {
+            Brain.Provider<ScalmythEntity> provider = Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+            Brain<ScalmythEntity> brain = provider.makeBrain(ops);
+            brain.addActivity(Activity.CORE, 0, ImmutableList.of(new Cure()));
+            brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
+            brain.setDefaultActivity(Activity.IDLE);
+            brain.useDefaultActivity();
+
+            return brain;
+        }
     }
 }
