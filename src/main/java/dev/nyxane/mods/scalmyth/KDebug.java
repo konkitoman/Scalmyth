@@ -457,55 +457,44 @@ public class KDebug {
         double sy = size.y / 2;
         double sz = size.z / 2;
 
-        // Hack, for not losing faces, because we are rendering in triangle strip.
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(0x00000000);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(0x00000000);
+        // Source: [Optimizing Triangle Strips for Fast Rendering](https://www.cs.umd.edu/gvil/papers/av_ts.pdf)
+        var v1 = new Vec3(sx - cam.x, sy - cam.y, -sz - cam.z);
+        var v2 = new Vec3(-sx - cam.x, sy - cam.y, -sz - cam.z);
+        var v3 = new Vec3(sx - cam.x, -sy - cam.y, -sz - cam.z);
+        var v4 = new Vec3(-sx - cam.x, -sy - cam.y, -sz - cam.z);
+        var v5 = new Vec3(sx - cam.x, sy - cam.y, sz - cam.z);
+        var v6 = new Vec3(-sx - cam.x, sy - cam.y, sz - cam.z);
+        var v7 = new Vec3(-sx - cam.x, -sy - cam.y, sz - cam.z);
+        var v8 = new Vec3(sx - cam.x, -sy - cam.y, sz - cam.z);
 
-        // TODO: find a better way to draw a box/voxel with triangle strip.
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v4).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v3).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v7).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v8).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v5).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v3).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v1).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v4).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v2).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v7).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
+        buffer.addVertex(matrix.transformPosition(origin.add(v6).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, -sz - cam.z).toVector3f()));// FOLD
+        buffer.addVertex(matrix.transformPosition(origin.add(v5).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v2).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
+        buffer.addVertex(matrix.transformPosition(origin.add(v1).toVector3f()));
         buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, -sy - cam.y, sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(sx - cam.x, sy - cam.y, sz - cam.z).toVector3f()));// FOLD
-        buffer.setColor(color);
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(color);
-
-        // Hack, for not losing faces, because we are rendering in triangle strip.
-        buffer.addVertex(matrix.transformPosition(origin.add(-sx - cam.x, sy - cam.y, -sz - cam.z).toVector3f()));
-        buffer.setColor(0x00000000);
     }
 
     // We need to access all the Shapes for the codecs to register.
